@@ -1,0 +1,10 @@
+make a invoice in next.js and telwindcss following requirement : 
+1) Heading is "AVIROSA PHARMACHEM PVT.LTD" & in bottom " DAILY CALL REPORTS ".
+2) reports is in table formats 
+3) in heading table 3 rows and 6 columns--
+ 1-(in all three row-3 & ,col-1 add this field )  : Executive Name : ,Designation : , HEADQUARTER : 
+2-(in all three row-3 & ,col-2 add this field ) : name of Executive:,Designation of emp: , HEADQUARTER of Executive : 
+3-(in all three row-3 & ,col-3 add this field) : Date : ,Actule Tp : , Work With : ,
+4-(in all three row-3 & ,col-4 add this field) : values of 3rd columns
+5-(in all three row-3 & ,col-5 add this field) : DCR NUmber : ,Work At : 
+3-(in all three row-3 & ,col-6 add this field) : For Administration Department remark only

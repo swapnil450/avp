@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
 
-module.exports = nextConfig
+module.exports = {
+    publicRuntimeConfig: {
+      SERVER: process.env.NEXT_PUBLIC_SERVER_NAME,
+     
+    }
+  };
+  
