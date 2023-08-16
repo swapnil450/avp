@@ -67,9 +67,7 @@ export default function AllDataContext({ children }) {
         });
 
         setFlag(true);
-      } catch (error) {
-    
-      }
+      } catch (error) {}
     };
 
     fetchData();
@@ -79,7 +77,6 @@ export default function AllDataContext({ children }) {
     (key) => key.HeadQuaterName
   );
   const AreasOption = allArea?.areaData?.data?.map((key) => key.AreaName);
-
 
   const memoizedContextValue = useMemo(() => {
     return {
