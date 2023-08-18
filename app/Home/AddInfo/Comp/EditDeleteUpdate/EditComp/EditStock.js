@@ -35,28 +35,50 @@ export default function EditStockiest({ item }) {
     onOpen();
   };
 
+  const [approved, setApproved] = React.useState(true);
+
   const [formData, setFormData] = React.useState({
     Code: "",
     Name: "",
+    contactPer: "",
     mobile: "",
+    DLNo: "",
+    GSTNo: "",
     address: "",
     Area: "",
     Active: true,
+    approved: true,
   });
-
+  formData.approved = approved;
   React.useEffect(() => {
     // Destructure the properties from the 'item'
-    const { Code, Name, mobile, address, Area, Active } = item || {};
+    const {
+      Code,
+      Name,
+      mobile,
+      contactPer,
+      DLNo,
+      GSTNo,
+      address,
+      Area,
+      Active,
+      approved,
+    } = item || {};
 
     // Update the 'formData' state with the values from 'item'
     setFormData({
       Code,
       Name,
       mobile,
+      contactPer,
+      DLNo,
+      GSTNo,
       address,
       Area,
       Active,
+      approved,
     });
+    setApproved(approved);
   }, [item]);
 
   const [errors, setErrors] = React.useState({});
@@ -95,7 +117,6 @@ export default function EditStockiest({ item }) {
   const [response, setResponse] = React.useState({});
 
   const handleSubmit = (idparam) => {
-
     if (validateForm()) {
       const apiUrl = `${Server}/add/stock/${idparam}`;
       setIsLoading(true);
@@ -107,18 +128,11 @@ export default function EditStockiest({ item }) {
           const responseData = response.data;
           setResponse(responseData);
 
-          if (response.status === 200) {
-            // Perform any necessary actions on success
-            notify();
-          } else if (response.status === 404) {
-            toast.error(response.message || " Stockiest not Found !");
-          } else {
-            setHasError(true);
-          }
+          toast.success(`${response?.data?.message}`);
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.message || "Something Went Wrong !");
+          toast.error(error?.response?.data?.message);
         })
         .finally(() => {
           setIsLoading(false);
@@ -126,10 +140,6 @@ export default function EditStockiest({ item }) {
     } else {
       toast.error("Please fill All Details");
     }
-  };
-
-  const notify = () => {
-    toast.success(response.message || " Stockiest Updated !");
   };
 
   const handleDelete = (idparam) => {
@@ -143,25 +153,15 @@ export default function EditStockiest({ item }) {
         const responseData = response.data;
         setResponse(responseData);
 
-        if (response.status === 200) {
-          // Perform any necessary actions on success
-          notifyd();
-        } else {
-          setHasError(true);
-        }
+        toast.success(`${response?.data?.message}`);
       })
       .catch((error) => {
         setHasError(true);
-        toast.error(error?.message || "Something Went Wrong !");
+        toast.error(error?.response?.data?.message);
       })
       .finally(() => {
         setIsLoading(false);
-        notifyd();
       });
-  };
-
-  const notifyd = () => {
-    toast.success(response?.message || "Stockiest Deleted !");
   };
 
   return (
@@ -204,6 +204,24 @@ export default function EditStockiest({ item }) {
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
+                  {formData.approved === true ? (
+                    <Button
+                      className="text-white"
+                      onClick={() => setApproved(false)}
+                      color="danger"
+                    >
+                      Set-Not-Approved
+                    </Button>
+                  ) : (
+                    <Button
+                      className="text-white"
+                      onClick={() => setApproved(true)}
+                      color="success"
+                    >
+                      Set-Approved
+                    </Button>
+                  )}
+
                   <div className="grid lg:grid-cols-2 grid-cols-1  gap-4">
                     <div className="flex flex-col justify-center ">
                       <Input
@@ -236,7 +254,21 @@ export default function EditStockiest({ item }) {
                         </p>
                       )}
                     </div>
-
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="text"
+                        label="Contact person"
+                        name="contactPer"
+                        value={formData.contactPer}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.contactPer && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.contactPer}
+                        </p>
+                      )}
+                    </div>
                     <div className="flex flex-col justify-center ">
                       <Input
                         type="tel"
@@ -252,6 +284,39 @@ export default function EditStockiest({ item }) {
                         </p>
                       )}
                     </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="number"
+                        label="GST NO"
+                        name="GSTNo"
+                        value={formData.GSTNo}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.GSTNo && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.GSTNo}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="number"
+                        label="DLNo"
+                        name="DLNo"
+                        value={formData.DLNo}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.DLNo && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.DLNo}
+                        </p>
+                      )}
+                    </div>
+
                     <div className="flex flex-col justify-center ">
                       <select
                         className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
@@ -265,7 +330,9 @@ export default function EditStockiest({ item }) {
                         {AreasOption?.map((a) => {
                           return (
                             <>
-                              <option key={a} value={a}>{a}</option>
+                              <option key={a} value={a}>
+                                {a}
+                              </option>
                             </>
                           );
                         })}

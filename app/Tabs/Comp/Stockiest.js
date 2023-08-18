@@ -6,6 +6,7 @@ import {
   TableColumn,
   TableBody,
   TableRow,
+  Button,
   TableCell,
 } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
@@ -50,7 +51,21 @@ export default function ListOfStock() {
                   key={columnKey}
                 >
                   {columnKey === "Actions" ? (
-                    <EditStockiest key={item?._id} item={item ? item : item} />
+                    <div className="flex flex-row justify-center items-center gap-3">
+                      <EditStockiest
+                        key={item?._id}
+                        item={item ? item : item}
+                      />
+                      {item?.approved === true ? (
+                        <Button color="success" className="text-white">
+                          Approved ✅
+                        </Button>
+                      ) : (
+                        <Button color="danger" className="text-white">
+                          NotApproved ❌
+                        </Button>
+                      )}
+                    </div>
                   ) : (
                     item[columnKey]
                   )}

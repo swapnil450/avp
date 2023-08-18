@@ -25,6 +25,7 @@ const AcmeLogo = () => (
 const tabs = [
   { name: "Dashboard", link: "/" },
   { name: "Details", link: "/Tabs" },
+  { name: "Tour Program", link: "/TourProgram" },
 ];
 
 export default function App() {

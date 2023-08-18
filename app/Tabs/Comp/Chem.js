@@ -7,6 +7,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Button,
 } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 
@@ -14,7 +15,7 @@ import ChemEdit from "@/app/Home/AddInfo/Comp/EditDeleteUpdate/EditComp/ChemEdit
 export default function ListOfChem() {
   const { allChem } = useGlobalContext();
 
-  const user = allChem.chemData;
+  const user = allChem?.chemData;
 
   if (!user || user.length === 0) {
     return <div>No data available.</div>;
@@ -26,7 +27,9 @@ export default function ListOfChem() {
     "GSTNo",
     "address",
     "chemCode",
+    "contactPer",
     "chemName",
+
     "Actions",
   ];
 
@@ -50,7 +53,20 @@ export default function ListOfChem() {
                   key={columnKey}
                 >
                   {columnKey === "Actions" ? (
-                    <ChemEdit key={item?._id} item={item ? item : item} />
+                    <>
+                      <div className="flex flex-row justify-center items-center gap-3">
+                        <ChemEdit key={item?._id} item={item ? item : item} />
+                        {item?.approved === true ? (
+                          <Button color="success" className="text-white">
+                            Approved ✅
+                          </Button>
+                        ) : (
+                          <Button color="danger" className="text-white">
+                            NotApproved ❌
+                          </Button>
+                        )}
+                      </div>
+                    </>
                   ) : (
                     item[columnKey]
                   )}

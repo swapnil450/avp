@@ -26,9 +26,10 @@ export default function ChemEdit({ item }) {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
-
+  const [approved, setApproved] = React.useState(true);
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
@@ -37,28 +38,44 @@ export default function ChemEdit({ item }) {
   const [formData, setFormData] = React.useState({
     chemCode: "",
     chemName: "",
+    contactPer: "",
     mobile: "",
     address: "",
     Area: "",
     DLNo: "",
     GSTNo: "",
+    approved: true,
   });
+  formData.approved = approved;
 
   React.useEffect(() => {
     // Destructure the properties from the 'item'
-    const { chemCode, chemName, mobile, address, Area, DLNo, GSTNo } =
-      item || {};
+    const {
+      chemCode,
+      chemName,
+      contactPer,
+      mobile,
+      address,
+      Area,
+      DLNo,
+      GSTNo,
+      approved,
+    } = item || {};
 
     // Update the 'formData' state with the values from 'item'
     setFormData({
       chemCode,
+      contactPer,
       chemName,
       mobile,
       address,
       Area,
       DLNo,
       GSTNo,
+      approved,
     });
+
+    setApproved(approved);
   }, [item]); // Dependency array with 'item'
 
   const [errors, setErrors] = React.useState({});
@@ -71,6 +88,9 @@ export default function ChemEdit({ item }) {
     }
     if (!formData.chemName) {
       newErrors.chemName = "Chemist Name is required";
+    }
+    if (!formData.contactPer) {
+      newErrors.contactPer = "contact person is required";
     }
     if (!formData.mobile) {
       newErrors.mobile = "Mobile No. is required";
@@ -108,7 +128,6 @@ export default function ChemEdit({ item }) {
   const [response, setResponse] = React.useState({});
 
   const handleSubmit = (idparam) => {
-
     if (validateForm()) {
       const apiUrl = `${Server}/add/chem/${idparam}`;
       setIsLoading(true);
@@ -120,18 +139,11 @@ export default function ChemEdit({ item }) {
           const responseData = response.data;
           setResponse(responseData);
 
-          if (response.status === 200) {
-            // Perform any necessary actions on success
-            notify();
-          } else if (response.status === 404) {
-            toast.error(response.message || " User not Found !");
-          } else {
-            setHasError(true);
-          }
+          toast.success(`${response?.data?.message}`);
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.message || "Something Went Wrong !");
+          toast.error(error?.response?.data?.message);
         })
         .finally(() => {
           setIsLoading(false);
@@ -141,9 +153,7 @@ export default function ChemEdit({ item }) {
     }
   };
 
-  const notify = () => {
-    toast.success(response.message || " User Updated !");
-  };
+  
 
   const handleDelete = (idparam) => {
     const apiUrl = `${Server}/add/chem/${idparam}`;
@@ -156,25 +166,15 @@ export default function ChemEdit({ item }) {
         const responseData = response.data;
         setResponse(responseData);
 
-        if (response.status === 200) {
-          // Perform any necessary actions on success
-          notifyd();
-        } else {
-          setHasError(true);
-        }
+        toast.success(`${response?.data?.message}`);
       })
       .catch((error) => {
         setHasError(true);
-        toast.error(error?.message || "Something Went Wrong !");
+        toast.error(error?.response?.data?.message);
       })
       .finally(() => {
         setIsLoading(false);
-        notifyd();
       });
-  };
-
-  const notifyd = () => {
-    toast.success("User Deleted");
   };
 
   return (
@@ -216,7 +216,17 @@ export default function ChemEdit({ item }) {
                 Edit Chemist 💊
               </ModalHeader>
               <ModalBody>
-                <form className="flex flex-col gap-4 justify-center items-center">
+                <form className="flex flex-col gap-8 justify-center items-center">
+                  {formData.approved === true ? (
+                    <Button onClick={() => setApproved(false)} color="danger">
+                      Set-Not-Approved
+                    </Button>
+                  ) : (
+                    <Button onClick={() => setApproved(true)} color="success">
+                      Set-Approved
+                    </Button>
+                  )}
+
                   <div className="grid lg:grid-cols-2 grid-cols-1  gap-4">
                     <div className="flex flex-col justify-center ">
                       <Input
@@ -246,6 +256,22 @@ export default function ChemEdit({ item }) {
                       {errors.chemName && (
                         <p className="text-red-500  text-xs p-1">
                           {errors.chemName}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="text"
+                        label="Contact person"
+                        name="contactPer"
+                        value={formData.contactPer}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.contactPer && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.contactPer}
                         </p>
                       )}
                     </div>

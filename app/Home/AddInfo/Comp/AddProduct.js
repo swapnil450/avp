@@ -109,6 +109,14 @@ export default function AddProduct() {
         })
         .finally(() => {
           setIsLoading(false);
+          setFormData({
+            ProductName: "",
+            Packing: "",
+            MRP: "",
+            PTR: "",
+            PTS: "",
+            scheme: [],
+          });
         });
     } else {
       toast.error("Please fill All Details");

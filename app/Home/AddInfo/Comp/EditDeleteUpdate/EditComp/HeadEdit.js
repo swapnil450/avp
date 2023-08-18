@@ -76,7 +76,6 @@ export default function EditHeadQ({ item }) {
   const [response, setResponse] = React.useState({});
 
   const handleSubmit = (idparam) => {
-
     if (validateForm()) {
       const apiUrl = `${Server}/add/headq/${idparam}`;
       setIsLoading(true);
@@ -124,16 +123,11 @@ export default function EditHeadQ({ item }) {
         const responseData = response.data;
         setResponse(responseData);
 
-        if (response.status === 200) {
-          // Perform any necessary actions on success
-          notifyd();
-        } else {
-          setHasError(true);
-        }
+        toast.success(`${response?.data?.message}`);
       })
       .catch((error) => {
         setHasError(true);
-        toast.error(error?.message || "Something Went Wrong !");
+        toast.error(error?.response?.data?.message);
       })
       .finally(() => {
         setIsLoading(false);

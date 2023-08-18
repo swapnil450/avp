@@ -6,6 +6,7 @@ import {
   TableColumn,
   TableBody,
   TableRow,
+  Button,
   TableCell,
 } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
@@ -15,7 +16,8 @@ export default function ListOfDoc() {
   const { allDoc } = useGlobalContext();
 
   const user = allDoc.docData;
- 
+
+  console.log(allDoc, "doc");
 
   if (!user || user.length === 0) {
     return <div>No data available.</div>;
@@ -24,12 +26,13 @@ export default function ListOfDoc() {
   const columnsToShow = [
     "DoctorCode",
     "DoctorName",
+    "HosName",
     "Speciality",
     "Degree",
     "mobile",
     "address",
     "Dob",
-    "Doa",
+
     "Area",
     "Actions",
   ];
@@ -54,7 +57,18 @@ export default function ListOfDoc() {
                   key={columnKey}
                 >
                   {columnKey === "Actions" ? (
-                    <DocEdit key={item?._id} item={item ? item : item} />
+                    <div className="flex flex-row justify-center items-center gap-3">
+                      <DocEdit key={item?._id} item={item ? item : item} />
+                      {item?.approved === true ? (
+                        <Button color="success" className="text-white">
+                          Approved ✅
+                        </Button>
+                      ) : (
+                        <Button color="danger" className="text-white">
+                          NotApproved ❌
+                        </Button>
+                      )}
+                    </div>
                   ) : (
                     item[columnKey]
                   )}

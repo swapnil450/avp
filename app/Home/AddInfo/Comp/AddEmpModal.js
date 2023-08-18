@@ -17,7 +17,7 @@ import { CheckboxGroup } from "@nextui-org/react";
 import { CustomCheckbox } from "./styleComp/CustomCheckbox";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 export default function AddEmpModal() {
-  const { allHeadQ, allArea, headquaters, AreasOption } = useGlobalContext();
+  const { headquaters, AreasOption } = useGlobalContext();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
@@ -32,6 +32,7 @@ export default function AddEmpModal() {
   const [formData, setFormData] = React.useState({
     Code: "",
     empName: "",
+    userId: "",
     pass: "",
     mobile1: "",
     Secmob: "",
@@ -66,6 +67,9 @@ export default function AddEmpModal() {
     }
     if (!formData.empName) {
       newErrors.empName = "Emp Name is required";
+    }
+    if (!formData.userId) {
+      newErrors.userId = "userId is required";
     }
 
     const MIN_LENGTH = 8;
@@ -121,26 +125,40 @@ export default function AddEmpModal() {
         .then((response) => {
           const responseData = response.data;
           setResponse(responseData);
-          notify();
-          if (responseData.success) {
-            // Perform any necessary actions on success
-          } else {
-            setHasError(true);
-          }
+          toast.success(`${response?.data?.message}`);
         })
         .catch((error) => {
           setHasError(true);
+          toast.error(error?.response?.data?.message);
         })
         .finally(() => {
           setIsLoading(false);
+          setFormData({
+            Code: "",
+            empName: "",
+            userId: "",
+            pass: "",
+            mobile1: "",
+            Secmob: "",
+            address: "",
+            email: "",
+            post: "",
+            headquarters: "",
+            panNo: "",
+            adharNo: "",
+            bankAccountNo: "",
+            ifscCode: "",
+            dob: "",
+            joiningDate: "",
+            anniversaryDate: "",
+            resignationDate: "",
+            selectedAreas: [],
+            pvrRemark: "",
+          });
         });
     } else {
       toast.error("Please fill All Details");
     }
-  };
-
-  const notify = () => {
-    toast.success(response?.message || " User Added Sucessfuly !");
   };
 
   return (
@@ -208,6 +226,21 @@ export default function AddEmpModal() {
                       {errors.Code && (
                         <p className="text-red-500 text-xs font-semibold p-1">
                           {errors.Code}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <Input
+                        type="text"
+                        label="User Id"
+                        name="userId"
+                        value={formData.userId}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.userId && (
+                        <p className="text-red-500 text-xs font-semibold p-1">
+                          {errors.userId}
                         </p>
                       )}
                     </div>

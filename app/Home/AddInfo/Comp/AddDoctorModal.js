@@ -29,6 +29,7 @@ export default function AddDoctorModal() {
   const [formData, setFormData] = React.useState({
     DoctorCode: "",
     DoctorName: "",
+    HosName: " ",
     mobile: "",
     address: "",
     Area: "",
@@ -36,6 +37,7 @@ export default function AddDoctorModal() {
     Speciality: "",
     Dob: "",
     Doa: "",
+    approved: true,
   });
 
   const [errors, setErrors] = React.useState({});
@@ -49,17 +51,8 @@ export default function AddDoctorModal() {
     if (!formData.DoctorName) {
       newErrors.DoctorName = "Doctor Name is required";
     }
-    if (!formData.mobile) {
-      newErrors.mobile = "Mobile No. is required";
-    }
-    if (!formData.address) {
-      newErrors.address = "Address is required";
-    }
-    if (!formData.Degree) {
-      newErrors.Degree = "Degree is required";
-    }
-    if (!formData.Speciality) {
-      newErrors.Speciality = "Speciality is required";
+    if (!formData.HosName) {
+      newErrors.HosName = "Hospital Name is required";
     }
 
     if (!formData.Area) {
@@ -86,7 +79,7 @@ export default function AddDoctorModal() {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
   const handleSubmit = () => {
     if (validateForm()) {
-      const apiUrl = `${Server}/add/area`;
+      const apiUrl = `${Server}/add/doc`;
       setIsLoading(true);
       setHasError(false);
 
@@ -96,27 +89,30 @@ export default function AddDoctorModal() {
           const responseData = response.data;
           setResponse(responseData);
 
-          if (response.status === 200) {
-            // Perform any necessary actions on success
-            notify();
-          } else {
-            setHasError(true);
-          }
+          toast.success(`${response?.data?.message}`);
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.message || "Something Went Wrong !");
+          toast.error(error?.response?.data?.message);
         })
         .finally(() => {
           setIsLoading(false);
+          setFormData({
+            DoctorCode: "",
+            DoctorName: "",
+            HosName: " ",
+            mobile: "",
+            address: "",
+            Area: "",
+            Degree: "",
+            Speciality: "",
+            Dob: "",
+            Doa: "",
+          });
         });
     } else {
       toast.error("Please fill All Details");
     }
-  };
-
-  const notify = () => {
-    toast.success(response?.message || " Doctor Added Successfuly !");
   };
 
   return (
@@ -189,6 +185,22 @@ export default function AddDoctorModal() {
                       {errors.DoctorName && (
                         <p className="text-red-500  text-xs p-1">
                           {errors.DoctorName}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="text"
+                        label="Hospital Name"
+                        name="HosName"
+                        value={formData.HosName}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.HosName && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.HosName}
                         </p>
                       )}
                     </div>
@@ -273,7 +285,9 @@ export default function AddDoctorModal() {
                         {AreasOption.map((i) => {
                           return (
                             <>
-                              <option key={i} value={i}>{i}</option>
+                              <option key={i} value={i}>
+                                {i}
+                              </option>
                             </>
                           );
                         })}

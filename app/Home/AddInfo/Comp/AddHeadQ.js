@@ -14,8 +14,7 @@ import {
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 
-
-export default function AddEmpModal() {
+export default function AddHeadQ() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const [typSel, setTypSel] = React.useState("");
@@ -83,6 +82,7 @@ export default function AddEmpModal() {
         })
         .finally(() => {
           setIsLoading(false);
+          setFormData({ HeadQuaterName: "" });
         });
     } else {
       toast.error("Please fill All Details");
@@ -95,7 +95,7 @@ export default function AddEmpModal() {
   // const Types = ["HQ", "EX", "OS"];
   return (
     <>
-     <ToastContainer
+      <ToastContainer
         position="bottom-center"
         autoClose={1000}
         hideProgressBar={false}
@@ -147,7 +147,7 @@ export default function AddEmpModal() {
                     {errors.HeadQuaterName && (
                       <p className="text-red-500  text-xs p-1">
                         {errors.HeadQuaterName}
-                      </p>  
+                      </p>
                     )}
                   </div>
 

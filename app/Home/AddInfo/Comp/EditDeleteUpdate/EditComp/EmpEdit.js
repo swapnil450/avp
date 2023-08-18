@@ -40,6 +40,7 @@ export default function EmpEdit({ item }) {
   const [formData, setFormData] = React.useState({
     Code: "",
     empName: "",
+    userId: "",
     pass: "",
     mobile1: "",
     Secmob: "",
@@ -67,6 +68,7 @@ export default function EmpEdit({ item }) {
     const {
       Code,
       empName,
+      userId,
       pass,
       mobile1,
       Secmob,
@@ -93,6 +95,7 @@ export default function EmpEdit({ item }) {
     setFormData({
       Code,
       empName,
+      userId,
       pass,
       mobile1,
       Secmob,
@@ -132,7 +135,9 @@ export default function EmpEdit({ item }) {
     if (!formData.empName) {
       newErrors.empName = "Emp Name is required";
     }
-
+    if (!formData.userId) {
+      newErrors.userId = "userId is required";
+    }
     const MIN_LENGTH = 8;
     if (formData.pass.length !== MIN_LENGTH) {
       newErrors.pass = "password is required";
@@ -176,7 +181,6 @@ export default function EmpEdit({ item }) {
   const [response, setResponse] = React.useState({});
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
   const handleSubmit = (idparam) => {
-
     if (validateForm()) {
       const apiUrl = `${Server}/user/signup/${idparam}`;
       setIsLoading(true);
@@ -224,25 +228,15 @@ export default function EmpEdit({ item }) {
         const responseData = response.data;
         setResponse(responseData);
 
-        if (response.status === 200) {
-          // Perform any necessary actions on success
-          notifyd();
-        } else {
-          setHasError(true);
-        }
+        toast.success(`${response?.data?.message}`);
       })
       .catch((error) => {
         setHasError(true);
-        toast.error(error?.message || "Something Went Wrong !");
+        toast.error(error?.response?.data?.message);
       })
       .finally(() => {
         setIsLoading(false);
-        notifyd();
       });
-  };
-
-  const notifyd = () => {
-    toast.success("User Deleted");
   };
 
   return (
@@ -328,6 +322,22 @@ export default function EmpEdit({ item }) {
                         </p>
                       )}
                     </div>
+                    <div className="flex flex-col gap-1">
+                      <Input
+                        type="text"
+                        label="User Id"
+                        name="userId"
+                        value={formData.userId}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.userId && (
+                        <p className="text-red-500 text-xs font-semibold p-1">
+                          {errors.userId}
+                        </p>
+                      )}
+                    </div>
+
                     <div className="flex flex-col gap-1">
                       <Input
                         type="tel"

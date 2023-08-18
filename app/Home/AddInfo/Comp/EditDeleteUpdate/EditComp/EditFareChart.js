@@ -119,18 +119,11 @@ export default function EditFarChart({ item }) {
           const responseData = response.data;
           setResponse(responseData);
 
-          if (response.status === 200) {
-            // Perform any necessary actions on success
-            notify();
-          } else if (response.status === 404) {
-            toast.error(response.message || " Fare Chart not Found !");
-          } else {
-            setHasError(true);
-          }
+          toast.success(`${response?.data?.message}`);
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.message || "Something Went Wrong !");
+          toast.error(error?.response?.data?.message);
         })
         .finally(() => {
           setIsLoading(false);

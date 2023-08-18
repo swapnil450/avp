@@ -48,7 +48,7 @@ export default function EditProdRate({ item }) {
     Active: true,
   });
   formData.scheme = inputList;
-  
+
   React.useEffect(() => {
     // Destructure the properties from the 'item'
     const { ProductName, Packing, MRP, PTR, PTS, scheme, Active } = item || {};
@@ -65,7 +65,6 @@ export default function EditProdRate({ item }) {
     });
 
     setInputList(scheme);
-
   }, [item]);
 
   const [errors, setErrors] = React.useState({});
@@ -107,7 +106,6 @@ export default function EditProdRate({ item }) {
   const [response, setResponse] = React.useState({});
 
   const handleSubmit = (idparam) => {
-    
     if (validateForm()) {
       const apiUrl = `${Server}/add/proRate/${idparam}`;
       setIsLoading(true);
@@ -119,18 +117,11 @@ export default function EditProdRate({ item }) {
           const responseData = response.data;
           setResponse(responseData);
 
-          if (response.status === 200) {
-            // Perform any necessary actions on success
-            notify();
-          } else if (response.status === 404) {
-            toast.error(response.message || " Product & Rate not Found !");
-          } else {
-            setHasError(true);
-          }
+          toast.success(`${response?.data?.message}`);
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.message || "Something Went Wrong !");
+          toast.error(error?.response?.data?.message);
         })
         .finally(() => {
           setIsLoading(false);

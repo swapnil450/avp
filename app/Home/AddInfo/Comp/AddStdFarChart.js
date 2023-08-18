@@ -102,6 +102,14 @@ export default function AddStdFarChart() {
         })
         .finally(() => {
           setIsLoading(false);
+          setFormData({
+            FareName: "",
+            HeadQuaterName: "",
+            AreaName: "",
+            OneWayKM: "",
+            FarePrice: "",
+            TravelMode: "",
+          });
         });
     } else {
       toast.error("Please fill All Details");
@@ -168,7 +176,9 @@ export default function AddStdFarChart() {
                         {headquaters?.map((i) => {
                           return (
                             <>
-                              <option key={i} value={i}>{i}</option>
+                              <option key={i} value={i}>
+                                {i}
+                              </option>
                             </>
                           );
                         })}
@@ -193,7 +203,9 @@ export default function AddStdFarChart() {
                         {AreasOption?.map((i) => {
                           return (
                             <>
-                              <option key={i} value={i}>{i}</option>
+                              <option key={i} value={i}>
+                                {i}
+                              </option>
                             </>
                           );
                         })}

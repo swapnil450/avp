@@ -21,18 +21,20 @@ import {
   Radio,
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
-
+import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 export default function DocEdit({ item }) {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
-  console.log(Server);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
-
+  const [approved, setApproved] = React.useState(true);
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
+
+  const { AreasOption } = useGlobalContext();
 
   const [formData, setFormData] = React.useState({
     DoctorCode: "",
@@ -44,8 +46,9 @@ export default function DocEdit({ item }) {
     Dob: "",
     Doa: "",
     Area: "",
+    approved: true,
   });
-
+  formData.approved = approved;
   React.useEffect(() => {
     // Destructure the properties from the 'item'
     const {
@@ -58,6 +61,7 @@ export default function DocEdit({ item }) {
       Dob,
       Doa,
       Area,
+      approved,
     } = item || {};
 
     // Update the 'formData' state with the values from 'item'
@@ -71,7 +75,9 @@ export default function DocEdit({ item }) {
       Dob,
       Doa,
       Area,
+      approved,
     });
+    setApproved(approved);
   }, [item]); // Dependency array with 'item'
   const [errors, setErrors] = React.useState({});
 
@@ -120,7 +126,6 @@ export default function DocEdit({ item }) {
   const [response, setResponse] = React.useState({});
 
   const handleSubmit = (idparam) => {
-   
     if (validateForm()) {
       const apiUrl = `${Server}/add/doc/${idparam}`;
       setIsLoading(true);
@@ -167,26 +172,15 @@ export default function DocEdit({ item }) {
       .then((response) => {
         const responseData = response.data;
         setResponse(responseData);
-
-        if (response.status === 200) {
-          // Perform any necessary actions on success
-          notifyd();
-        } else {
-          setHasError(true);
-        }
+        toast.success(`${response?.data?.message}`);
       })
       .catch((error) => {
         setHasError(true);
-        toast.error(error?.message || "Something Went Wrong !");
+        toast.error(error?.response?.data?.message);
       })
       .finally(() => {
         setIsLoading(false);
-        notifyd();
       });
-  };
-
-  const notifyd = () => {
-    toast.success("Doctor Deleted");
   };
 
   return (
@@ -230,6 +224,15 @@ export default function DocEdit({ item }) {
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
+                  {formData.approved === true ? (
+                    <Button className="text-white" onClick={() => setApproved(false)} color="danger">
+                      Set-Not-Approved
+                    </Button>
+                  ) : (
+                    <Button className="text-white" onClick={() => setApproved(true)} color="success">
+                      Set-Approved
+                    </Button>
+                  )}
                   <div className="grid lg:grid-cols-2 grid-cols-1  gap-4">
                     <div className="flex flex-col justify-center ">
                       <Input
@@ -340,9 +343,9 @@ export default function DocEdit({ item }) {
                         required
                       >
                         <option value="">Select Area</option>
-                        <option value="Sale manager">Sale manager</option>
-                        <option value="Executive">Executive</option>
-                        <option value="Zone sales">Zone sales</option>
+                        {AreasOption?.map((i) => {
+                          return <option value={i}>{i}</option>;
+                        })}
                       </select>
                       {errors.Area && (
                         <p className="text-red-500  text-xs p-1">

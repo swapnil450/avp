@@ -14,7 +14,7 @@ import {
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 
-export default function AddEmpModal() {
+export default function AddArea() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const [typSel, setTypSel] = React.useState("");
@@ -86,6 +86,7 @@ export default function AddEmpModal() {
         })
         .finally(() => {
           setIsLoading(false);
+          setFormData({ AreaName: "", Type: "" });
         });
     } else {
       toast.error("Please fill All Details");
