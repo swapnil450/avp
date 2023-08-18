@@ -344,7 +344,7 @@ export default function DocEdit({ item }) {
                       >
                         <option value="">Select Area</option>
                         {AreasOption?.map((i) => {
-                          return <option value={i}>{i}</option>;
+                          return <option key={i} value={i}>{i}</option>;
                         })}
                       </select>
                       {errors.Area && (
