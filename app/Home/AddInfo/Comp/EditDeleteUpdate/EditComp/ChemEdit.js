@@ -172,45 +172,18 @@ export default function ChemEdit({ item }) {
         pauseOnHover
         theme="dark"
       />
-      {item.approved === true ? (
-        <Button color="success" size="sm" className="text-white font-semibold ">
-          Approved
-        </Button>
-      ) : (
-        <div className="flex flex-wrap gap-3">
-          {sizes.map((size) => (
-            <div
-              key={size}
-              className="flex flex-row justify-center items-center gap-3"
-            >
-              <Button
-                color="danger"
-                size="sm"
-                className="text-white font-semibold "
-              >
-                UnApproved
-              </Button>
-
-              <Image
-                onClick={() => handleOpen(size)}
-                className="cursor-pointer"
-                src={edit}
-                width={20}
-                height={20}
-                alt="icons"
-              />
-              <Image
-                className="cursor-pointer"
-                src={del}
-                width={20}
-                height={20}
-                alt="icons"
-                onClick={() => handleDelete(item._id)}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="flex flex-wrap gap-3">
+        {sizes.map((size) => (
+          <Button
+            key={size}
+            size="sm"
+            className="text-black font-bold "
+            onPress={() => handleOpen(size)}
+          >
+            + Edit
+          </Button>
+        ))}
+      </div>
       <Modal
         size={size}
         isOpen={isOpen}

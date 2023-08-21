@@ -195,6 +195,7 @@ export default function DocEdit({ item }) {
 
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
+<<<<<<< HEAD
           <div
             key={size}
             className="flex flex-row justify-center items-center gap-3"
@@ -207,6 +208,9 @@ export default function DocEdit({ item }) {
               UnApproved
             </Button>
 
+=======
+          <div key={size} className="flex flex-row justify-center items-center">
+>>>>>>> eb540361390eeef1ff5284aeda21e7f222c04fcf
             <Image
               onClick={() => handleOpen(size)}
               className="cursor-pointer"

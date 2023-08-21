@@ -2,8 +2,6 @@
 import React from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import shop from "../../../../../img/shop.webp";
-import Image from "next/image";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Modal,
@@ -16,48 +14,35 @@ import {
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 
-import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
-export default function AddDcrStock() {
-  const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
-
+export default function AddArea() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
-  const sizes = ["5xl"];
-  const { AreasOption } = useGlobalContext();
+  const [typSel, setTypSel] = React.useState("");
+  const sizes = ["xl"];
+
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
 
   const [formData, setFormData] = React.useState({
-    Code: "",
-    Name: "",
-    mobile: "",
-    address: "",
-    Area: "",
+    AreaName: "",
+    Type: "",
     Active: true,
-    approved: false,
   });
 
+  formData.Type = typSel;
   const [errors, setErrors] = React.useState({});
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.Code) {
-      newErrors.Code = "ist Code is required";
+    if (formData.AreaName.length <= 3) {
+      newErrors.AreaName = "AreaName is required";
     }
-    if (!formData.Name) {
-      newErrors.Name = "Chemist Name is required";
+    if (!formData.Type) {
+      newErrors.Type = "Please Select Type";
     }
-    if (!formData.mobile) {
-      newErrors.mobile = "Mobile No. is required";
-    }
-    if (!formData.address) {
-      newErrors.address = "Address is required";
-    }
-
-    // Add similar validation for other fields
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -75,9 +60,10 @@ export default function AddDcrStock() {
   const [hasError, setHasError] = React.useState(false);
   const [response, setResponse] = React.useState({});
 
+  const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
   const handleSubmit = () => {
     if (validateForm()) {
-      const apiUrl = `${Server}/add/stock`;
+      const apiUrl = `${Server}/add/area`;
       setIsLoading(true);
       setHasError(false);
 
@@ -100,14 +86,7 @@ export default function AddDcrStock() {
         })
         .finally(() => {
           setIsLoading(false);
-          setFormData({
-            ProductName: "",
-            Packing: "",
-            MRP: "",
-            PTR: "",
-            PTS: "",
-            scheme: [],
-          });
+          setFormData({ AreaName: "", Type: "" });
         });
     } else {
       toast.error("Please fill All Details");
@@ -115,12 +94,12 @@ export default function AddDcrStock() {
   };
 
   const notify = () => {
-    toast.success(response.message || " Stockiest Added Successfuly !");
+    toast.success(response?.message || " Area Added Successfuly !");
   };
-
+  const Types = ["HQ", "EX", "OS"];
   return (
     <>
-      {/* <ToastContainer
+      <ToastContainer
         position="bottom-center"
         autoClose={1000}
         hideProgressBar={false}
@@ -131,29 +110,17 @@ export default function AddDcrStock() {
         draggable
         pauseOnHover
         theme="dark"
-      /> */}
-      <div className="flex flex-col justify-center items-center gap-3">
+      />
+      <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
-          <div
+          <Button
             key={size}
-            onClick={() => handleOpen(size)}
-            className="flex flex-col gap-1 justify-center items-center"
+            size="lg"
+            className="text-black font-bold "
+            onPress={() => handleOpen(size)}
           >
-            <Image
-              width={20}
-              height={20}
-              src={shop}
-              className=" cursor-pointer "
-            />
-            <p
-              key={size}
-              size="xs"
-              className=" text-[12px] cursor-pointer  "
-              onClick={() => handleOpen(size)}
-            >
-              +Stokiest
-            </p>
-          </div>
+            + Add Area 🏴󠁰󠁫󠁴󠁡󠁿
+          </Button>
         ))}
       </div>
       <Modal
@@ -166,7 +133,7 @@ export default function AddDcrStock() {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add Stockiest
+                Add Area!
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
@@ -174,89 +141,42 @@ export default function AddDcrStock() {
                     <div className="flex flex-col justify-center ">
                       <Input
                         type="text"
-                        label="Stokiest Code"
-                        name="Code"
-                        value={formData.Code}
+                        label="AreaName"
+                        name="AreaName"
+                        value={formData.AreaName}
                         onChange={handleInputChange}
                         required
                       />
-                      {errors.Code && (
+                      {errors.AreaName && (
                         <p className="text-red-500  text-xs p-1">
-                          {errors.Code}
+                          {errors.AreaName}
                         </p>
                       )}
                     </div>
 
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
-                        label="stockist Name"
-                        name="Name"
-                        value={formData.Name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.Name && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.Name}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="tel"
-                        label="Mobile"
-                        name="mobile"
-                        value={formData.mobile}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.mobile && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.mobile}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex flex-col justify-center ">
-                      <select
-                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
-                        id="Area"
-                        name="Area"
-                        value={formData.Area}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="">Select Area</option>
-                        {AreasOption?.map((a) => {
+                    <div className="flex flex-col gap-4 justify-center items-center ">
+                      <div className="flex flex-row gap-4 justify-center items-center">
+                        {Types.map((itm) => {
                           return (
                             <>
-                              <option key={a} value={a}>
-                                {a}
-                              </option>
+                              <p
+                                onClick={() => setTypSel(itm)}
+                                className={
+                                  itm === typSel
+                                    ? ` font-semibold bg-black text-white cursor-pointer rounded-lg p-2`
+                                    : `bg-gray-200 text-black font-semibold cursor-pointer hover:bg-black hover:text-white rounded-lg p-2`
+                                }
+                                key={itm}
+                              >
+                                {itm}
+                              </p>
                             </>
                           );
                         })}
-                      </select>
-                      {errors.Area && (
+                      </div>
+                      {errors.Type && (
                         <p className="text-red-500  text-xs p-1">
-                          {errors.Area}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="textarea"
-                        label="Address"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.address && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.address}
+                          {errors.Type}
                         </p>
                       )}
                     </div>

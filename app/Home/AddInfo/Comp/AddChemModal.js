@@ -33,6 +33,7 @@ export default function AddChemist() {
   const [formData, setFormData] = React.useState({
     chemCode: "",
     chemName: "",
+    contactPer: "",
     mobile: "",
     address: "",
     Area: "",
@@ -41,6 +42,7 @@ export default function AddChemist() {
     createdBy: "",
     createdAt: new Date().toISOString().slice(0, 10),
     approved: false,
+    approved: true,
   });
 
   formData.createdBy = user.userId;
@@ -56,21 +58,11 @@ export default function AddChemist() {
     if (!formData.chemName) {
       newErrors.chemName = "Chemist Name is required";
     }
+    if (!formData.chemName) {
+      newErrors.chemName = "Contact person  is required";
+    }
     if (!formData.mobile) {
       newErrors.mobile = "Mobile No. is required";
-    }
-    if (!formData.address) {
-      newErrors.address = "Address is required";
-    }
-    if (!formData.GSTNo) {
-      newErrors.GSTNo = "GST is required";
-    }
-    if (!formData.DLNo) {
-      newErrors.DLNo = "DL.No is required";
-    }
-
-    if (!formData.Area) {
-      newErrors.Area = "Area is required";
     }
 
     // Add similar validation for other fields
@@ -102,29 +94,31 @@ export default function AddChemist() {
         .then((response) => {
           const responseData = response.data;
           setResponse(responseData);
-
-          if (response.status === 200) {
-            // Perform any necessary actions on success
-            notify();
-          } else {
-            setHasError(true);
-          }
+          toast.success(`${response?.data?.message}`);
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.message || "Something Went Wrong !");
+
+          toast.error(error?.response?.data?.message);
         })
         .finally(() => {
           setIsLoading(false);
+          setFormData({
+            chemCode: "",
+            chemName: "",
+            contactPer: "",
+            mobile: "",
+            address: "",
+            Area: "",
+            DLNo: "",
+            GSTNo: "",
+          });
         });
     } else {
       toast.error("Please fill All Details");
     }
   };
 
-  const notify = () => {
-    toast.success(response?.message || " Chemist Added Successfuly !");
-  };
   return (
     <>
       <ToastContainer
@@ -214,6 +208,22 @@ export default function AddChemist() {
 
                     <div className="flex flex-col justify-center ">
                       <Input
+                        type="text"
+                        label="Contact person"
+                        name="contactPer"
+                        value={formData.contactPer}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.contactPer && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.contactPer}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <Input
                         type="tel"
                         label="Mobile"
                         name="mobile"
@@ -228,7 +238,9 @@ export default function AddChemist() {
                       )}
                     </div>
                     <div className="flex flex-col justify-center ">
+
                       <p className="text-sm p-1 text-gray-600">Select Area</p>
+                    <p className="text-sm p-1 text-gray-600">Select Area</p>
                       <select
                         className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
                         id="Area"
