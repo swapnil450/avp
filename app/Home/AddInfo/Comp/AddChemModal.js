@@ -217,6 +217,7 @@ export default function AddChemist() {
                       )}
                     </div>
                     <div className="flex flex-col justify-center ">
+                    <p className="text-sm p-1 text-gray-600">Select Area</p>
                       <select
                         className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
                         id="Area"

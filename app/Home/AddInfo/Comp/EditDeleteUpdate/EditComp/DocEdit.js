@@ -3,6 +3,10 @@ import React from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import edit from "../../../../../icons/edit.webp";
+import del from "../../../../../icons/delete-outline.webp";
+import Image from "next/image";
+import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 import {
   Modal,
   ModalContent,
@@ -21,34 +25,35 @@ import {
   Radio,
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
-import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
+
 export default function DocEdit({ item }) {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
-  const [approved, setApproved] = React.useState(true);
+  const { AreasOption, allProdRate } = useGlobalContext();
+
+  const Pro2 = allProdRate?.proRateData?.map((i) => i.ProductName);
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
-
-  const { AreasOption } = useGlobalContext();
 
   const [formData, setFormData] = React.useState({
     DoctorCode: "",
     DoctorName: "",
     Speciality: "",
     Degree: "",
-    Mobile: "",
+    mobile: "",
     address: "",
     Dob: "",
     Doa: "",
+    P1: "",
+    P2: "",
     Area: "",
-    approved: true,
   });
-  formData.approved = approved;
+
   React.useEffect(() => {
     // Destructure the properties from the 'item'
     const {
@@ -60,8 +65,9 @@ export default function DocEdit({ item }) {
       address,
       Dob,
       Doa,
+      P1,
+      P2,
       Area,
-      approved,
     } = item || {};
 
     // Update the 'formData' state with the values from 'item'
@@ -75,9 +81,9 @@ export default function DocEdit({ item }) {
       Dob,
       Doa,
       Area,
-      approved,
+      P1,
+      P2,
     });
-    setApproved(approved);
   }, [item]); // Dependency array with 'item'
   const [errors, setErrors] = React.useState({});
 
@@ -137,18 +143,11 @@ export default function DocEdit({ item }) {
           const responseData = response.data;
           setResponse(responseData);
 
-          if (response.status === 200) {
-            // Perform any necessary actions on success
-            notify();
-          } else if (response.status === 404) {
-            toast.error(response.message || " Doctor not Found !");
-          } else {
-            setHasError(true);
-          }
+          toast.success(`${response?.data?.message}`);
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.message || "Something Went Wrong !");
+          toast.error(error?.response?.data?.message);
         })
         .finally(() => {
           setIsLoading(false);
@@ -156,10 +155,6 @@ export default function DocEdit({ item }) {
     } else {
       toast.error("Please fill All Details");
     }
-  };
-
-  const notify = () => {
-    toast.success(response.message || " Doctor Updated !");
   };
 
   const handleDelete = (idparam) => {
@@ -200,14 +195,24 @@ export default function DocEdit({ item }) {
 
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
-          <Button
-            key={size}
-            size="sm"
-            className="text-black font-bold "
-            onPress={() => handleOpen(size)}
-          >
-            + Edit👨‍⚕️
-          </Button>
+          <div key={size} className="flex flex-row justify-center items-center">
+            <Image
+              onClick={() => handleOpen(size)}
+              className="cursor-pointer"
+              src={edit}
+              width={20}
+              height={20}
+              alt="icons"
+            />
+            <Image
+              className="cursor-pointer"
+              src={del}
+              width={20}
+              height={20}
+              alt="icons"
+              onClick={() => handleDelete(item._id)}
+            />
+          </div>
         ))}
       </div>
       <Modal
@@ -224,15 +229,6 @@ export default function DocEdit({ item }) {
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
-                  {formData.approved === true ? (
-                    <Button className="text-white" onClick={() => setApproved(false)} color="danger">
-                      Set-Not-Approved
-                    </Button>
-                  ) : (
-                    <Button className="text-white" onClick={() => setApproved(true)} color="success">
-                      Set-Approved
-                    </Button>
-                  )}
                   <div className="grid lg:grid-cols-2 grid-cols-1  gap-4">
                     <div className="flex flex-col justify-center ">
                       <Input
@@ -344,7 +340,11 @@ export default function DocEdit({ item }) {
                       >
                         <option value="">Select Area</option>
                         {AreasOption?.map((i) => {
-                          return <option key={i} value={i}>{i}</option>;
+                          return (
+                            <>
+                              <option value={i}>{i}</option>
+                            </>
+                          );
                         })}
                       </select>
                       {errors.Area && (
@@ -367,6 +367,52 @@ export default function DocEdit({ item }) {
                           {errors.address}
                         </p>
                       )}
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <p className="text-sm p-1">Product 1</p>
+                      <select
+                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
+                        id="Area"
+                        name="P1"
+                        value={formData.P1}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Select Product</option>
+                        {Pro2?.map((i) => {
+                          return (
+                            <>
+                              <option key={i} value={i}>
+                                {i}
+                              </option>
+                            </>
+                          );
+                        })}
+                      </select>
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <p className="text-sm p-1">Product 2</p>
+                      <select
+                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
+                        id="P2"
+                        name="P2"
+                        value={formData.P2}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Select Product</option>
+                        {Pro2?.map((i) => {
+                          return (
+                            <>
+                              <option key={i} value={i}>
+                                {i}
+                              </option>
+                            </>
+                          );
+                        })}
+                      </select>
                     </div>
                   </div>
                 </form>

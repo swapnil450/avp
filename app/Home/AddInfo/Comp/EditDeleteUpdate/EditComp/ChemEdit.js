@@ -2,6 +2,9 @@
 import React from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import edit from "../../../../../icons/edit.webp";
+import del from "../../../../../icons/delete-outline.webp";
+import Image from "next/image";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Modal,
@@ -21,15 +24,14 @@ import {
   Radio,
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
-
+import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 export default function ChemEdit({ item }) {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
-
+  const { AreasOption } = useGlobalContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
-  const [approved, setApproved] = React.useState(true);
+
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
@@ -38,44 +40,28 @@ export default function ChemEdit({ item }) {
   const [formData, setFormData] = React.useState({
     chemCode: "",
     chemName: "",
-    contactPer: "",
     mobile: "",
     address: "",
     Area: "",
     DLNo: "",
     GSTNo: "",
-    approved: true,
   });
-  formData.approved = approved;
 
   React.useEffect(() => {
     // Destructure the properties from the 'item'
-    const {
-      chemCode,
-      chemName,
-      contactPer,
-      mobile,
-      address,
-      Area,
-      DLNo,
-      GSTNo,
-      approved,
-    } = item || {};
+    const { chemCode, chemName, mobile, address, Area, DLNo, GSTNo } =
+      item || {};
 
     // Update the 'formData' state with the values from 'item'
     setFormData({
       chemCode,
-      contactPer,
       chemName,
       mobile,
       address,
       Area,
       DLNo,
       GSTNo,
-      approved,
     });
-
-    setApproved(approved);
   }, [item]); // Dependency array with 'item'
 
   const [errors, setErrors] = React.useState({});
@@ -88,9 +74,6 @@ export default function ChemEdit({ item }) {
     }
     if (!formData.chemName) {
       newErrors.chemName = "Chemist Name is required";
-    }
-    if (!formData.contactPer) {
-      newErrors.contactPer = "contact person is required";
     }
     if (!formData.mobile) {
       newErrors.mobile = "Mobile No. is required";
@@ -153,8 +136,6 @@ export default function ChemEdit({ item }) {
     }
   };
 
-  
-
   const handleDelete = (idparam) => {
     const apiUrl = `${Server}/add/chem/${idparam}`;
     setIsLoading(true);
@@ -193,14 +174,27 @@ export default function ChemEdit({ item }) {
       />
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
-          <Button
+          <div
             key={size}
-            size="sm"
-            className="text-black font-bold "
-            onPress={() => handleOpen(size)}
+            className="flex flex-row justify-center items-center gap-3"
           >
-            + Edit
-          </Button>
+            <Image
+              onClick={() => handleOpen(size)}
+              className="cursor-pointer"
+              src={edit}
+              width={20}
+              height={20}
+              alt="icons"
+            />
+            <Image
+              className="cursor-pointer"
+              src={del}
+              width={20}
+              height={20}
+              alt="icons"
+              onClick={() => handleDelete(item._id)}
+            />
+          </div>
         ))}
       </div>
       <Modal
@@ -216,17 +210,7 @@ export default function ChemEdit({ item }) {
                 Edit Chemist 💊
               </ModalHeader>
               <ModalBody>
-                <form className="flex flex-col gap-8 justify-center items-center">
-                  {formData.approved === true ? (
-                    <Button onClick={() => setApproved(false)} color="danger">
-                      Set-Not-Approved
-                    </Button>
-                  ) : (
-                    <Button onClick={() => setApproved(true)} color="success">
-                      Set-Approved
-                    </Button>
-                  )}
-
+                <form className="flex flex-col gap-4 justify-center items-center">
                   <div className="grid lg:grid-cols-2 grid-cols-1  gap-4">
                     <div className="flex flex-col justify-center ">
                       <Input
@@ -262,22 +246,6 @@ export default function ChemEdit({ item }) {
 
                     <div className="flex flex-col justify-center ">
                       <Input
-                        type="text"
-                        label="Contact person"
-                        name="contactPer"
-                        value={formData.contactPer}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.contactPer && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.contactPer}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
                         type="tel"
                         label="Mobile"
                         name="mobile"
@@ -292,6 +260,7 @@ export default function ChemEdit({ item }) {
                       )}
                     </div>
                     <div className="flex flex-col justify-center ">
+                      <p className="text-sm p-1 text-gray-600">Select Area</p>
                       <select
                         className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
                         id="Area"
@@ -301,9 +270,13 @@ export default function ChemEdit({ item }) {
                         required
                       >
                         <option value="">Select Area</option>
-                        <option value="Sale manager">Sale manager</option>
-                        <option value="Executive">Executive</option>
-                        <option value="Zone sales">Zone sales</option>
+                        {AreasOption.map((i) => {
+                          return (
+                            <>
+                              <option value={i}>{i}</option>
+                            </>
+                          );
+                        })}
                       </select>
                       {errors.Area && (
                         <p className="text-red-500  text-xs p-1">
@@ -394,38 +367,12 @@ export default function ChemEdit({ item }) {
                   </Button>
                 ) : (
                   <>
-                    <Dropdown>
-                      <DropdownTrigger>
-                        <Button
-                          color="danger"
-                          variant="solid"
-                          className="capitalize"
-                        >
-                          Delete user
-                        </Button>
-                      </DropdownTrigger>
-                      <DropdownMenu
-                        aria-label="Dropdown Variants"
-                        color="default"
-                        variant="solid"
-                      >
-                        <DropdownItem
-                          key="delete"
-                          className="text-danger"
-                          color="danger"
-                          onClick={() => handleDelete(item._id)}
-                        >
-                          Confirm Delete
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-
                     <Button
                       color="black"
                       className="bg-black text-white"
                       onClick={() => handleSubmit(item._id)}
                     >
-                      Save
+                      Update
                     </Button>
                   </>
                 )}

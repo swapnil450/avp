@@ -2,6 +2,8 @@
 import React from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import doc from "../../../img/doc.webp";
+import Image from "next/image";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Modal,
@@ -19,17 +21,20 @@ export default function AddDoctorModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
-  const { AreasOption } = useGlobalContext();
+
+  const { AreasOption, allProdRate } = useGlobalContext();
+
+  const Pro2 = allProdRate?.proRateData?.map((i) => i.ProductName);
 
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
+  const user = JSON.parse(localStorage?.getItem("user")) || "admin";
 
   const [formData, setFormData] = React.useState({
     DoctorCode: "",
     DoctorName: "",
-    HosName: " ",
     mobile: "",
     address: "",
     Area: "",
@@ -37,8 +42,14 @@ export default function AddDoctorModal() {
     Speciality: "",
     Dob: "",
     Doa: "",
-    approved: true,
+    P1: "",
+    P2: "",
+    createdBy: "",
+    createdAt: new Date().toISOString().slice(0, 10),
+    approved: false,
   });
+
+  formData.createdBy = user.userId;
 
   const [errors, setErrors] = React.useState({});
 
@@ -51,8 +62,17 @@ export default function AddDoctorModal() {
     if (!formData.DoctorName) {
       newErrors.DoctorName = "Doctor Name is required";
     }
-    if (!formData.HosName) {
-      newErrors.HosName = "Hospital Name is required";
+    if (!formData.mobile) {
+      newErrors.mobile = "Mobile No. is required";
+    }
+    if (!formData.address) {
+      newErrors.address = "Address is required";
+    }
+    if (!formData.Degree) {
+      newErrors.Degree = "Degree is required";
+    }
+    if (!formData.Speciality) {
+      newErrors.Speciality = "Speciality is required";
     }
 
     if (!formData.Area) {
@@ -100,7 +120,6 @@ export default function AddDoctorModal() {
           setFormData({
             DoctorCode: "",
             DoctorName: "",
-            HosName: " ",
             mobile: "",
             address: "",
             Area: "",
@@ -108,6 +127,8 @@ export default function AddDoctorModal() {
             Speciality: "",
             Dob: "",
             Doa: "",
+            P1: "",
+            P2: "",
           });
         });
     } else {
@@ -132,14 +153,25 @@ export default function AddDoctorModal() {
 
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
-          <Button
-            key={size}
-            size="lg"
-            className="text-black font-bold "
-            onPress={() => handleOpen(size)}
+          <div
+            onClick={() => handleOpen(size)}
+            className="flex flex-col gap-1 justify-center items-center"
           >
-            + Add Doctor 👨‍⚕️
-          </Button>
+            <Image
+              width={20}
+              height={20}
+              src={doc}
+              className=" cursor-pointer "
+            />
+            <p
+              key={size}
+              size="xs"
+              className=" text-[12px] cursor-pointer  "
+              onClick={() => handleOpen(size)}
+            >
+              +Doctor
+            </p>
+          </div>
         ))}
       </div>
       <Modal
@@ -185,22 +217,6 @@ export default function AddDoctorModal() {
                       {errors.DoctorName && (
                         <p className="text-red-500  text-xs p-1">
                           {errors.DoctorName}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
-                        label="Hospital Name"
-                        name="HosName"
-                        value={formData.HosName}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.HosName && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.HosName}
                         </p>
                       )}
                     </div>
@@ -272,7 +288,9 @@ export default function AddDoctorModal() {
                         onChange={handleInputChange}
                       />
                     </div>
+
                     <div className="flex flex-col justify-center ">
+                      <p className="text-sm p-1 text-gray-600">Select Area</p>
                       <select
                         className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
                         id="Area"
@@ -282,7 +300,7 @@ export default function AddDoctorModal() {
                         required
                       >
                         <option value="">Select Area</option>
-                        {AreasOption.map((i) => {
+                        {AreasOption?.map((i) => {
                           return (
                             <>
                               <option key={i} value={i}>
@@ -312,6 +330,52 @@ export default function AddDoctorModal() {
                           {errors.address}
                         </p>
                       )}
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <p className="text-sm p-1">Product 1</p>
+                      <select
+                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
+                        id="Area"
+                        name="P1"
+                        value={formData.P1}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Select Product</option>
+                        {Pro2?.map((i) => {
+                          return (
+                            <>
+                              <option key={i} value={i}>
+                                {i}
+                              </option>
+                            </>
+                          );
+                        })}
+                      </select>
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <p className="text-sm p-1">Product 2</p>
+                      <select
+                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
+                        id="P2"
+                        name="P2"
+                        value={formData.P2}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Select Product</option>
+                        {Pro2?.map((i) => {
+                          return (
+                            <>
+                              <option key={i} value={i}>
+                                {i}
+                              </option>
+                            </>
+                          );
+                        })}
+                      </select>
                     </div>
                   </div>
                 </form>
