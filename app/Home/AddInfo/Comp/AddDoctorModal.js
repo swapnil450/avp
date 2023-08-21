@@ -30,11 +30,7 @@ export default function AddDoctorModal() {
     setSize(size);
     onOpen();
   };
-<<<<<<< HEAD
   const user = JSON.parse(localStorage?.getItem("user"));
-=======
-  const user = JSON.parse(localStorage?.getItem("user")) || "admin";
->>>>>>> eb540361390eeef1ff5284aeda21e7f222c04fcf
 
   const [formData, setFormData] = React.useState({
     DoctorCode: "",
@@ -113,11 +109,16 @@ export default function AddDoctorModal() {
           const responseData = response.data;
           setResponse(responseData);
 
-          toast.success(`${response?.data?.message}`);
+          if (response.status === 200) {
+            // Perform any necessary actions on success
+            notify();
+          } else {
+            setHasError(true);
+          }
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.response?.data?.message);
+          toast.error(error?.message || "Something Went Wrong !");
         })
         .finally(() => {
           setIsLoading(false);
@@ -140,6 +141,10 @@ export default function AddDoctorModal() {
     }
   };
 
+  const notify = () => {
+    toast.success(response?.message || " Doctor Added Successfuly !");
+  };
+
   return (
     <>
       <ToastContainer
@@ -158,19 +163,13 @@ export default function AddDoctorModal() {
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
           <div
-<<<<<<< HEAD
           key={size}
-=======
->>>>>>> eb540361390eeef1ff5284aeda21e7f222c04fcf
             onClick={() => handleOpen(size)}
             className="flex flex-col gap-1 justify-center items-center"
           >
             <Image
               width={20}
-<<<<<<< HEAD
               alt="icon"
-=======
->>>>>>> eb540361390eeef1ff5284aeda21e7f222c04fcf
               height={20}
               src={doc}
               className=" cursor-pointer "

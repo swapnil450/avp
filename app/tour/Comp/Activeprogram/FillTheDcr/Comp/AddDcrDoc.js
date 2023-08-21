@@ -123,7 +123,6 @@ export default function AddDcrDoc() {
         .finally(() => {
           setIsLoading(false);
           setFormData({
-<<<<<<< HEAD:app/tour/Comp/Activeprogram/FillTheDcr/Comp/AddDcrDoc.js
             DoctorCode: "",
             DoctorName: "",
             mobile: "",
@@ -135,14 +134,6 @@ export default function AddDcrDoc() {
             Doa: "",
             P1: "",
             P2: "",
-=======
-            FareName: "",
-            HeadQuaterName: "",
-            AreaName: "",
-            OneWayKM: "",
-            FarePrice: "",
-            TravelMode: "",
->>>>>>> eb540361390eeef1ff5284aeda21e7f222c04fcf:app/Home/AddInfo/Comp/AddStdFarChart.js
           });
         });
     } else {
@@ -219,55 +210,10 @@ export default function AddDcrDoc() {
                         value={formData.DoctorCode}
                         onChange={handleInputChange}
                         required
-<<<<<<< HEAD:app/tour/Comp/Activeprogram/FillTheDcr/Comp/AddDcrDoc.js
                       />
                       {errors.DoctorCode && (
                         <p className="text-red-500  text-xs p-1">
                           {errors.DoctorCode}
-=======
-                      >
-                        <option value="">Select HeadQuater⛳️</option>
-                        {headquaters?.map((i) => {
-                          return (
-                            <>
-                              <option key={i} value={i}>
-                                {i}
-                              </option>
-                            </>
-                          );
-                        })}
-                      </select>
-                      {errors.HeadQuaterName && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.HeadQuaterName}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <select
-                        className="outline-none border-1  border-gray-400 font-semibold text-gray-600  bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
-                        id="AreaName"
-                        name="AreaName"
-                        value={formData.AreaName}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="">Select AreaName</option>
-                        {AreasOption?.map((i) => {
-                          return (
-                            <>
-                              <option key={i} value={i}>
-                                {i}
-                              </option>
-                            </>
-                          );
-                        })}
-                      </select>
-                      {errors.AreaName && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.AreaName}
->>>>>>> eb540361390eeef1ff5284aeda21e7f222c04fcf:app/Home/AddInfo/Comp/AddStdFarChart.js
                         </p>
                       )}
                     </div>

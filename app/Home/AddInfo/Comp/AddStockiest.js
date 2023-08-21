@@ -33,18 +33,11 @@ export default function AddStockiest() {
   const [formData, setFormData] = React.useState({
     Code: "",
     Name: "",
-    contactPer: "",
     mobile: "",
-    DLNo: "",
-    GSTNo: "",
     address: "",
     Area: "",
     Active: true,
-<<<<<<< HEAD
     approved: false,
-=======
-    approved: true,
->>>>>>> eb540361390eeef1ff5284aeda21e7f222c04fcf
   });
 
   const [errors, setErrors] = React.useState({});
@@ -94,28 +87,28 @@ export default function AddStockiest() {
         .then((response) => {
           const responseData = response.data;
           setResponse(responseData);
-          toast.success(`${response?.data?.message}`);
+
+          if (response.status === 200) {
+            // Perform any necessary actions on success
+            notify();
+          } else {
+            setHasError(true);
+          }
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.response?.data?.message);
+          toast.error(error?.message || "Something Went Wrong !");
         })
         .finally(() => {
           setIsLoading(false);
-          setFormData({
-            Code: "",
-            Name: "",
-            contactPer: "",
-            mobile: "",
-            DLNo: "",
-            GSTNo: "",
-            address: "",
-            Area: "",
-          });
         });
     } else {
       toast.error("Please fill All Details");
     }
+  };
+
+  const notify = () => {
+    toast.success(response.message || " Stockiest Added Successfuly !");
   };
 
   return (
@@ -202,21 +195,6 @@ export default function AddStockiest() {
                         </p>
                       )}
                     </div>
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
-                        label="Contact person"
-                        name="contactPer"
-                        value={formData.contactPer}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.contactPer && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.contactPer}
-                        </p>
-                      )}
-                    </div>
 
                     <div className="flex flex-col justify-center ">
                       <Input
@@ -259,37 +237,7 @@ export default function AddStockiest() {
                         </p>
                       )}
                     </div>
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="number"
-                        label="GST NO"
-                        name="GSTNo"
-                        value={formData.GSTNo}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.GSTNo && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.GSTNo}
-                        </p>
-                      )}
-                    </div>
 
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="number"
-                        label="DLNo"
-                        name="DLNo"
-                        value={formData.DLNo}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.DLNo && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.DLNo}
-                        </p>
-                      )}
-                    </div>
                     <div className="flex flex-col justify-center ">
                       <Input
                         type="textarea"
