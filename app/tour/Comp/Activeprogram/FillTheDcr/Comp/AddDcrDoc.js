@@ -2,11 +2,9 @@
 import React from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import edit from "../../../../../icons/edit.webp";
-import del from "../../../../../icons/delete-outline.webp";
+import doc from "../../../../../img/doc.webp";
 import Image from "next/image";
-import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Modal,
   ModalContent,
@@ -16,75 +14,43 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  RadioGroup,
-  Radio,
-} from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
+import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 
-export default function DocEdit({ item }) {
-  const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
-
+export default function AddDcrDoc() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
+
   const { AreasOption, allProdRate } = useGlobalContext();
 
   const Pro2 = allProdRate?.proRateData?.map((i) => i.ProductName);
+
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
+  const user = JSON.parse(localStorage?.getItem("user"));
 
   const [formData, setFormData] = React.useState({
     DoctorCode: "",
     DoctorName: "",
-    Speciality: "",
-    Degree: "",
     mobile: "",
     address: "",
+    Area: "",
+    Degree: "",
+    Speciality: "",
     Dob: "",
     Doa: "",
     P1: "",
     P2: "",
-    Area: "",
+    createdBy: "",
+    createdAt: new Date().toISOString().slice(0, 10),
+    approved: false,
   });
 
-  React.useEffect(() => {
-    // Destructure the properties from the 'item'
-    const {
-      DoctorCode,
-      DoctorName,
-      Speciality,
-      Degree,
-      mobile,
-      address,
-      Dob,
-      Doa,
-      P1,
-      P2,
-      Area,
-    } = item || {};
+  formData.createdBy = user.userId;
 
-    // Update the 'formData' state with the values from 'item'
-    setFormData({
-      DoctorCode,
-      DoctorName,
-      Speciality,
-      Degree,
-      mobile,
-      address,
-      Dob,
-      Doa,
-      Area,
-      P1,
-      P2,
-    });
-  }, [item]); // Dependency array with 'item'
   const [errors, setErrors] = React.useState({});
 
   const validateForm = () => {
@@ -126,61 +92,62 @@ export default function DocEdit({ item }) {
       [name]: value,
     }));
   };
-
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
   const [response, setResponse] = React.useState({});
 
-  const handleSubmit = (idparam) => {
+  const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
+  const handleSubmit = () => {
     if (validateForm()) {
-      const apiUrl = `${Server}/add/doc/${idparam}`;
+      const apiUrl = `${Server}/add/doc`;
       setIsLoading(true);
       setHasError(false);
 
       axios
-        .put(apiUrl, formData)
+        .post(apiUrl, formData)
         .then((response) => {
           const responseData = response.data;
           setResponse(responseData);
 
-          toast.success(`${response?.data?.message}`);
+          if (response.status === 200) {
+            // Perform any necessary actions on success
+            notify();
+          } else {
+            setHasError(true);
+          }
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.response?.data?.message);
+          toast.error(error?.message || "Something Went Wrong !");
         })
         .finally(() => {
           setIsLoading(false);
+          setFormData({
+            DoctorCode: "",
+            DoctorName: "",
+            mobile: "",
+            address: "",
+            Area: "",
+            Degree: "",
+            Speciality: "",
+            Dob: "",
+            Doa: "",
+            P1: "",
+            P2: "",
+          });
         });
     } else {
       toast.error("Please fill All Details");
     }
   };
 
-  const handleDelete = (idparam) => {
-    const apiUrl = `${Server}/add/doc/${idparam}`;
-    setIsLoading(true);
-    setHasError(false);
-
-    axios
-      .delete(apiUrl, formData)
-      .then((response) => {
-        const responseData = response.data;
-        setResponse(responseData);
-        toast.success(`${response?.data?.message}`);
-      })
-      .catch((error) => {
-        setHasError(true);
-        toast.error(error?.response?.data?.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+  const notify = () => {
+    toast.success(response?.message || " Doctor Added Successfuly !");
   };
 
   return (
     <>
-      <ToastContainer
+      {/* <ToastContainer
         position="bottom-center"
         autoClose={1000}
         hideProgressBar={false}
@@ -191,38 +158,30 @@ export default function DocEdit({ item }) {
         draggable
         pauseOnHover
         theme="dark"
-      />
+      /> */}
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-col justify-center items-center gap-3">
         {sizes.map((size) => (
           <div
             key={size}
-            className="flex flex-row justify-center items-center gap-3"
+            onClick={() => handleOpen(size)}
+            className="flex flex-col gap-1 justify-center items-center"
           >
-            <Button
-              color="danger"
-              size="sm"
-              className="text-white font-semibold "
-            >
-              UnApproved
-            </Button>
-
             <Image
+              width={20}
+              alt="icon"
+              height={20}
+              src={doc}
+              className=" cursor-pointer "
+            />
+            <p
+              key={size}
+              size="xs"
+              className=" text-[12px] cursor-pointer  "
               onClick={() => handleOpen(size)}
-              className="cursor-pointer"
-              src={edit}
-              width={20}
-              height={20}
-              alt="icons"
-            />
-            <Image
-              className="cursor-pointer"
-              src={del}
-              width={20}
-              height={20}
-              alt="icons"
-              onClick={() => handleDelete(item._id)}
-            />
+            >
+              +Doctor
+            </p>
           </div>
         ))}
       </div>
@@ -238,7 +197,7 @@ export default function DocEdit({ item }) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Edit Doctor 👨‍⚕️
+                Add Doctor 👨‍⚕️
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
@@ -337,12 +296,14 @@ export default function DocEdit({ item }) {
                       <Input
                         type="date"
                         label=""
-                        name="joiningDate"
-                        value={formData.joiningDate}
+                        name="Doa"
+                        value={formData.Doa}
                         onChange={handleInputChange}
                       />
                     </div>
+
                     <div className="flex flex-col justify-center ">
+                      <p className="text-sm p-1 text-gray-600">Select Area</p>
                       <select
                         className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
                         id="Area"
@@ -355,7 +316,9 @@ export default function DocEdit({ item }) {
                         {AreasOption?.map((i) => {
                           return (
                             <>
-                              <option value={i}>{i}</option>
+                              <option key={i} value={i}>
+                                {i}
+                              </option>
                             </>
                           );
                         })}
@@ -464,15 +427,13 @@ export default function DocEdit({ item }) {
                     Wait..
                   </Button>
                 ) : (
-                  <>
-                    <Button
-                      color="black"
-                      className="bg-black text-white"
-                      onClick={() => handleSubmit(item._id)}
-                    >
-                      Update
-                    </Button>
-                  </>
+                  <Button
+                    color="black"
+                    className="bg-black text-white"
+                    onClick={handleSubmit}
+                  >
+                    Save
+                  </Button>
                 )}
               </ModalFooter>
             </>

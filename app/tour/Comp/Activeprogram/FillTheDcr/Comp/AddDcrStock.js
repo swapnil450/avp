@@ -2,6 +2,8 @@
 import React from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import shop from "../../../../../img/shop.webp";
+import Image from "next/image";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Modal,
@@ -12,58 +14,50 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  RadioGroup,
-  Radio,
-} from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 
-export default function EditArea({ item }) {
+import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
+export default function AddDcrStock() {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
-  const [typSel, setTypSel] = React.useState("");
-  const sizes = ["xl"];
-
+  const sizes = ["5xl"];
+  const { AreasOption } = useGlobalContext();
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
 
   const [formData, setFormData] = React.useState({
-    AreaName: "",
-    Type: "",
+    Code: "",
+    Name: "",
+    mobile: "",
+    address: "",
+    Area: "",
     Active: true,
+    approved: false,
   });
-
-  React.useEffect(() => {
-    // Destructure the properties from the 'item'
-    const { AreaName, Type, Active } = item || {};
-
-    // Update the 'formData' state with the values from 'item'
-    setFormData({
-      AreaName,
-      Type,
-      Active,
-    });
-    setTypSel(Type);
-  }, [item]); // Dependency array with 'item'
 
   const [errors, setErrors] = React.useState({});
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (formData.AreaName.length <= 3) {
-      newErrors.AreaName = "AreaName is required";
+    if (!formData.Code) {
+      newErrors.Code = "ist Code is required";
     }
-    if (!formData.Type) {
-      newErrors.Type = "Please Select Type";
+    if (!formData.Name) {
+      newErrors.Name = "Chemist Name is required";
     }
+    if (!formData.mobile) {
+      newErrors.mobile = "Mobile No. is required";
+    }
+    if (!formData.address) {
+      newErrors.address = "Address is required";
+    }
+
+    // Add similar validation for other fields
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -76,18 +70,19 @@ export default function EditArea({ item }) {
       [name]: value,
     }));
   };
+
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
   const [response, setResponse] = React.useState({});
 
-  const handleSubmit = (idparam) => {
+  const handleSubmit = () => {
     if (validateForm()) {
-      const apiUrl = `${Server}/add/area/${idparam}`;
+      const apiUrl = `${Server}/add/stock`;
       setIsLoading(true);
       setHasError(false);
 
       axios
-        .put(apiUrl, formData)
+        .post(apiUrl, formData)
         .then((response) => {
           const responseData = response.data;
           setResponse(responseData);
@@ -95,8 +90,6 @@ export default function EditArea({ item }) {
           if (response.status === 200) {
             // Perform any necessary actions on success
             notify();
-          } else if (response.status === 404) {
-            toast.error(response.message || " Area not Found !");
           } else {
             setHasError(true);
           }
@@ -114,45 +107,12 @@ export default function EditArea({ item }) {
   };
 
   const notify = () => {
-    toast.success(response.message || " Area Updated !");
+    toast.success(response.message || " Stockiest Added Successfuly !");
   };
 
-  const handleDelete = (idparam) => {
-    const apiUrl = `${Server}/add/area/${idparam}`;
-    setIsLoading(true);
-    setHasError(false);
-
-    axios
-      .delete(apiUrl, formData)
-      .then((response) => {
-        const responseData = response.data;
-        setResponse(responseData);
-
-        if (response.status === 200) {
-          // Perform any necessary actions on success
-          notifyd();
-        } else {
-          setHasError(true);
-        }
-      })
-      .catch((error) => {
-        setHasError(true);
-        toast.error(error?.message || "Something Went Wrong !");
-      })
-      .finally(() => {
-        setIsLoading(false);
-        notifyd();
-      });
-  };
-
-  const notifyd = () => {
-    toast.success("Area Deleted");
-  };
-
-  const Types = ["HQ", "EX", "OS"];
   return (
     <>
-      <ToastContainer
+      {/* <ToastContainer
         position="bottom-center"
         autoClose={1000}
         hideProgressBar={false}
@@ -163,17 +123,29 @@ export default function EditArea({ item }) {
         draggable
         pauseOnHover
         theme="dark"
-      />
-      <div className="flex flex-wrap gap-3">
+      /> */}
+      <div className="flex flex-col justify-center items-center gap-3">
         {sizes.map((size) => (
-          <Button
+          <div
             key={size}
-            size="sm"
-            className="text-black font-bold "
-            onPress={() => handleOpen(size)}
+            onClick={() => handleOpen(size)}
+            className="flex flex-col gap-1 justify-center items-center"
           >
-            + Edit 🏴󠁰󠁫󠁴󠁡󠁿
-          </Button>
+            <Image
+              width={20}
+              height={20}
+              src={shop}
+              className=" cursor-pointer "
+            />
+            <p
+              key={size}
+              size="xs"
+              className=" text-[12px] cursor-pointer  "
+              onClick={() => handleOpen(size)}
+            >
+              +Stokiest
+            </p>
+          </div>
         ))}
       </div>
       <Modal
@@ -186,7 +158,7 @@ export default function EditArea({ item }) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Edit Area!
+                Add Stockiest
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
@@ -194,42 +166,89 @@ export default function EditArea({ item }) {
                     <div className="flex flex-col justify-center ">
                       <Input
                         type="text"
-                        label="AreaName"
-                        name="AreaName"
-                        value={formData.AreaName}
+                        label="Stokiest Code"
+                        name="Code"
+                        value={formData.Code}
                         onChange={handleInputChange}
                         required
                       />
-                      {errors.AreaName && (
+                      {errors.Code && (
                         <p className="text-red-500  text-xs p-1">
-                          {errors.AreaName}
+                          {errors.Code}
                         </p>
                       )}
                     </div>
 
-                    <div className="flex flex-col gap-4 justify-center items-center ">
-                      <div className="flex flex-row gap-4 justify-center items-center">
-                        {Types.map((itm) => {
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="text"
+                        label="stockist Name"
+                        name="Name"
+                        value={formData.Name}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.Name && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.Name}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="tel"
+                        label="Mobile"
+                        name="mobile"
+                        value={formData.mobile}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.mobile && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.mobile}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex flex-col justify-center ">
+                      <select
+                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
+                        id="Area"
+                        name="Area"
+                        value={formData.Area}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Select Area</option>
+                        {AreasOption?.map((a) => {
                           return (
                             <>
-                              <p
-                                onClick={() => setTypSel(itm)}
-                                className={
-                                  itm === typSel
-                                    ? ` font-semibold bg-black text-white cursor-pointer rounded-lg p-2`
-                                    : `bg-gray-200 text-black font-semibold cursor-pointer hover:bg-black hover:text-white rounded-lg p-2`
-                                }
-                                key={itm}
-                              >
-                                {itm}
-                              </p>
+                              <option key={a} value={a}>
+                                {a}
+                              </option>
                             </>
                           );
                         })}
-                      </div>
-                      {errors.Type && (
+                      </select>
+                      {errors.Area && (
                         <p className="text-red-500  text-xs p-1">
-                          {errors.Type}
+                          {errors.Area}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="textarea"
+                        label="Address"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.address && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.address}
                         </p>
                       )}
                     </div>
@@ -270,41 +289,13 @@ export default function EditArea({ item }) {
                     Wait..
                   </Button>
                 ) : (
-                  <>
-                    <Dropdown>
-                      <DropdownTrigger>
-                        <Button
-                          color="danger"
-                          variant="solid"
-                          className="capitalize"
-                        >
-                          Delete Area
-                        </Button>
-                      </DropdownTrigger>
-                      <DropdownMenu
-                        aria-label="Dropdown Variants"
-                        color="default"
-                        variant="solid"
-                      >
-                        <DropdownItem
-                          key="delete"
-                          className="text-danger"
-                          color="danger"
-                          onClick={() => handleDelete(item._id)}
-                        >
-                          Confirm Delete
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-
-                    <Button
-                      color="black"
-                      className="bg-black text-white"
-                      onClick={() => handleSubmit(item._id)}
-                    >
-                      Save
-                    </Button>
-                  </>
+                  <Button
+                    color="black"
+                    className="bg-black text-white"
+                    onClick={handleSubmit}
+                  >
+                    Save
+                  </Button>
                 )}
               </ModalFooter>
             </>

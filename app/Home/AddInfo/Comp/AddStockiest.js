@@ -2,6 +2,8 @@
 import React from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import shop from "../../../img/shop.webp";
+import Image from "next/image";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Modal,
@@ -13,12 +15,12 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
-import { CheckboxGroup } from "@nextui-org/react";
+
 import { CustomCheckbox } from "./styleComp/CustomCheckbox";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 export default function AddStockiest() {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
-  
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
@@ -35,6 +37,7 @@ export default function AddStockiest() {
     address: "",
     Area: "",
     Active: true,
+    approved: false,
   });
 
   const [errors, setErrors] = React.useState({});
@@ -124,14 +127,26 @@ export default function AddStockiest() {
       />
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
-          <Button
+          <div
             key={size}
-            size="lg"
-            className="text-black font-bold "
-            onPress={() => handleOpen(size)}
+            onClick={() => handleOpen(size)}
+            className="flex flex-col gap-1 justify-center items-center"
           >
-            + Add Stockiest
-          </Button>
+            <Image
+              width={20}
+              height={20}
+              src={shop}
+              className=" cursor-pointer "
+            />
+            <p
+              key={size}
+              size="xs"
+              className=" text-[12px] cursor-pointer  "
+              onClick={() => handleOpen(size)}
+            >
+              +Stokiest
+            </p>
+          </div>
         ))}
       </div>
       <Modal
@@ -209,7 +224,9 @@ export default function AddStockiest() {
                         {AreasOption?.map((a) => {
                           return (
                             <>
-                              <option key={a} value={a}>{a}</option>
+                              <option key={a} value={a}>
+                                {a}
+                              </option>
                             </>
                           );
                         })}

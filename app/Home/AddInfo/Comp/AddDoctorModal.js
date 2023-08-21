@@ -2,6 +2,8 @@
 import React from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import doc from "../../../img/doc.webp";
+import Image from "next/image";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Modal,
@@ -19,12 +21,16 @@ export default function AddDoctorModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
-  const { AreasOption } = useGlobalContext();
+
+  const { AreasOption, allProdRate } = useGlobalContext();
+
+  const Pro2 = allProdRate?.proRateData?.map((i) => i.ProductName);
 
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
+  const user = JSON.parse(localStorage?.getItem("user"));
 
   const [formData, setFormData] = React.useState({
     DoctorCode: "",
@@ -36,7 +42,14 @@ export default function AddDoctorModal() {
     Speciality: "",
     Dob: "",
     Doa: "",
+    P1: "",
+    P2: "",
+    createdBy: "",
+    createdAt: new Date().toISOString().slice(0, 10),
+    approved: false,
   });
+
+  formData.createdBy = user.userId;
 
   const [errors, setErrors] = React.useState({});
 
@@ -86,7 +99,7 @@ export default function AddDoctorModal() {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
   const handleSubmit = () => {
     if (validateForm()) {
-      const apiUrl = `${Server}/add/area`;
+      const apiUrl = `${Server}/add/doc`;
       setIsLoading(true);
       setHasError(false);
 
@@ -109,6 +122,19 @@ export default function AddDoctorModal() {
         })
         .finally(() => {
           setIsLoading(false);
+          setFormData({
+            DoctorCode: "",
+            DoctorName: "",
+            mobile: "",
+            address: "",
+            Area: "",
+            Degree: "",
+            Speciality: "",
+            Dob: "",
+            Doa: "",
+            P1: "",
+            P2: "",
+          });
         });
     } else {
       toast.error("Please fill All Details");
@@ -136,19 +162,33 @@ export default function AddDoctorModal() {
 
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
-          <Button
-            key={size}
-            size="lg"
-            className="text-black font-bold "
-            onPress={() => handleOpen(size)}
+          <div
+          key={size}
+            onClick={() => handleOpen(size)}
+            className="flex flex-col gap-1 justify-center items-center"
           >
-            + Add Doctor 👨‍⚕️
-          </Button>
+            <Image
+              width={20}
+              alt="icon"
+              height={20}
+              src={doc}
+              className=" cursor-pointer "
+            />
+            <p
+              key={size}
+              size="xs"
+              className=" text-[12px] cursor-pointer  "
+              onClick={() => handleOpen(size)}
+            >
+              +Doctor
+            </p>
+          </div>
         ))}
       </div>
       <Modal
         size={size}
         isOpen={isOpen}
+        placement={`center`}
         scrollBehavior={`inside`}
         onClose={onClose}
       >
@@ -260,7 +300,9 @@ export default function AddDoctorModal() {
                         onChange={handleInputChange}
                       />
                     </div>
+
                     <div className="flex flex-col justify-center ">
+                      <p className="text-sm p-1 text-gray-600">Select Area</p>
                       <select
                         className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
                         id="Area"
@@ -270,10 +312,12 @@ export default function AddDoctorModal() {
                         required
                       >
                         <option value="">Select Area</option>
-                        {AreasOption.map((i) => {
+                        {AreasOption?.map((i) => {
                           return (
                             <>
-                              <option key={i} value={i}>{i}</option>
+                              <option key={i} value={i}>
+                                {i}
+                              </option>
                             </>
                           );
                         })}
@@ -298,6 +342,52 @@ export default function AddDoctorModal() {
                           {errors.address}
                         </p>
                       )}
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <p className="text-sm p-1">Product 1</p>
+                      <select
+                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
+                        id="Area"
+                        name="P1"
+                        value={formData.P1}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Select Product</option>
+                        {Pro2?.map((i) => {
+                          return (
+                            <>
+                              <option key={i} value={i}>
+                                {i}
+                              </option>
+                            </>
+                          );
+                        })}
+                      </select>
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <p className="text-sm p-1">Product 2</p>
+                      <select
+                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
+                        id="P2"
+                        name="P2"
+                        value={formData.P2}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Select Product</option>
+                        {Pro2?.map((i) => {
+                          return (
+                            <>
+                              <option key={i} value={i}>
+                                {i}
+                              </option>
+                            </>
+                          );
+                        })}
+                      </select>
                     </div>
                   </div>
                 </form>

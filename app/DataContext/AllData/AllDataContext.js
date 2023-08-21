@@ -70,7 +70,10 @@ export default function AllDataContext({ children }) {
       } catch (error) {}
     };
 
+    // const interval = setInterval(() => {
     fetchData();
+    // }, 10000);
+    // return () => clearInterval(interval);
   }, []);
 
   const headquaters = allHeadQ?.headqData?.data?.map(
@@ -90,6 +93,7 @@ export default function AllDataContext({ children }) {
       headquaters,
       AreasOption,
       allProdRate,
+
       flag,
     };
   }, [allEmpData]);

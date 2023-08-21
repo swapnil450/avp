@@ -1,9 +1,11 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import med from "../../../img/med.webp";
+import med from "../../../../../img/med.webp";
+import { User } from "@nextui-org/react";
 import Image from "next/image";
+import { Switch } from "@nextui-org/react";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Modal,
@@ -14,21 +16,50 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Divider,
+  Link,
+} from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
+import InputList from "@/app/Home/AddInfo/Comp/EmerncyAdject/InputList";
 
-export default function AddChemist() {
+export default function AddDcrChem({ ActiveProgram }) {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
 
-  const { AreasOption } = useGlobalContext();
+  const [lit, setLit] = useState("Yes");
+  const [det, setDet] = useState("Yes");
+  const [chemsel, setChemsel] = useState("");
+  const [inputList, setInputList] = React.useState([
+    { id: 1, Product: "", Qnt: "", value: "" }, // Initial input item
+  ]);
+
+  const [isSelected, setIsSelected] = React.useState(true);
+  const { AreasOption, allChem } = useGlobalContext();
+
+  const AreaTP = ActiveProgram?.area;
+
+  const AllAreaChem = allChem.chemData?.filter((i) => i.Area === `sangmaner`);
+
+  const chemistDet = AllAreaChem?.filter((i) => i.chemName === chemsel) || [
+    { chemName: "chemist" },
+  ];
+
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
+
+  console.log(chemistDet, "det");
+
   const user = JSON.parse(localStorage?.getItem("user")) || "admin";
   const [formData, setFormData] = React.useState({
     chemCode: "",
@@ -38,12 +69,27 @@ export default function AddChemist() {
     Area: "",
     DLNo: "",
     GSTNo: "",
-    createdBy: "",
+    DcrId: "",
+    Detail: "",
+    lit: "",
+    Pob: [],
+    createdBy: " ",
     createdAt: new Date().toISOString().slice(0, 10),
-    approved: false,
   });
 
+  formData.DcrId = ActiveProgram?.DcrId;
+  formData.chemCode = chemistDet[0]?.chemCode;
+  formData.chemName = chemistDet[0]?.chemName;
+  formData.mobile = chemistDet[0]?.mobile;
+  formData.address = chemistDet[0]?.address;
+  formData.Area = chemistDet[0]?.Area;
+  formData.DLNo = chemistDet[0]?.DLNo;
+  formData.GSTNo = chemistDet[0]?.GSTNo;
+  formData.lit = lit;
+  formData.Detail = det;
   formData.createdBy = user.userId;
+
+  console.log(formData);
 
   const [errors, setErrors] = React.useState({});
 
@@ -127,7 +173,7 @@ export default function AddChemist() {
   };
   return (
     <>
-      <ToastContainer
+      {/* <ToastContainer
         position="bottom-center"
         autoClose={1000}
         hideProgressBar={false}
@@ -138,8 +184,8 @@ export default function AddChemist() {
         draggable
         pauseOnHover
         theme="dark"
-      />
-      <div className="flex flex-wrap gap-3">
+      /> */}
+      <div className="flex flex-col justify-center items-center gap-3">
         {sizes.map((size) => (
           <div
             key={size}
@@ -179,70 +225,25 @@ export default function AddChemist() {
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
-                  <div className="grid lg:grid-cols-2 grid-cols-1  gap-4">
+                  <div className="grid lg:grid-cols-2 grid-cols-1  gap-2">
                     <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
-                        label="Chem Code"
-                        name="chemCode"
-                        value={formData.chemCode}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.chemCode && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.chemCode}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
-                        label="chemist Name"
-                        name="chemName"
-                        value={formData.chemName}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.chemName && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.chemName}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="tel"
-                        label="Mobile"
-                        name="mobile"
-                        value={formData.mobile}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.mobile && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.mobile}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex flex-col justify-center ">
-                      <p className="text-sm p-1 text-gray-600">Select Area</p>
+                      <p className="text-sm p-1 text-gray-600">
+                        Select Chemist
+                      </p>
                       <select
-                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
-                        id="Area"
-                        name="Area"
-                        value={formData.Area}
-                        onChange={handleInputChange}
+                        className="outline-none font-semibold text-gray-600 border-1 border-gray-300  bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
+                        id="Chem"
+                        name="Chem"
+                        value={chemsel}
+                        onChange={(e) => setChemsel(e.target.value)}
                         required
                       >
-                        <option value="">Select Area</option>
-                        {AreasOption?.map((i) => {
+                        <option value="">Select Chemist</option>
+                        {AllAreaChem?.map((i) => {
                           return (
                             <>
-                              <option key={i} value={i}>
-                                {i}
+                              <option key={i} value={i.chemName}>
+                                {i.chemName}
                               </option>
                             </>
                           );
@@ -254,51 +255,95 @@ export default function AddChemist() {
                         </p>
                       )}
                     </div>
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="number"
-                        label="GSTNO..."
-                        name="GSTNo"
-                        value={formData.GSTNo}
-                        onChange={handleInputChange}
-                      />
-                      {errors.GSTNo && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.GSTNo}
-                        </p>
-                      )}
-                    </div>
 
                     <div className="flex flex-col justify-center ">
-                      <Input
-                        type="number"
-                        label="DLNO..."
-                        name="DLNo"
-                        value={formData.DLNo}
-                        onChange={handleInputChange}
-                      />{" "}
-                      {errors.DLNo && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.DLNo}
-                        </p>
-                      )}
+                      {chemistDet?.map((i) => {
+                        return (
+                          <>
+                            <div className="flex flex-col bg-white rounded-lg p-2 shadow-md gap-2 justify-center m-2 items-center">
+                              <User
+                                name={i.chemName}
+                                className="text-xs"
+                                description={`+91${i.mobile}`}
+                              />
+                              <p className="text-[10px]">
+                                {i.Area},{" "}
+                                <span className="text-[10px]">
+                                  {" "}
+                                  {i.address}
+                                </span>
+                              </p>
+                            </div>
+                          </>
+                        );
+                      })}
                     </div>
 
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="textarea"
-                        label="Address"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.address && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.address}
-                        </p>
-                      )}
+                    <div className="flex flex-col gap-3 justify-center items-center ">
+                      <div className=" flex flex-row gap-3 p-2 justify-center items-center">
+                        <p>Detailing Given ? </p>
+                        <div className=" flex flex-row gap-3">
+                          <p
+                            onClick={() => setDet("Yes")}
+                            className={
+                              det === `Yes`
+                                ? `  p-2 text-white bg-black cursor-pointer rounded-lg`
+                                : `p-2 text-black bg-gray-100 cursor-pointer rounded-lg`
+                            }
+                          >
+                            Yes
+                          </p>
+                          <p
+                            onClick={() => setDet("No")}
+                            className={
+                              det === `No`
+                                ? ` p-2 text-white bg-black cursor-pointer rounded-lg`
+                                : `p-2 text-black bg-gray-100 cursor-pointer rounded-lg`
+                            }
+                          >
+                            No
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className=" flex flex-row gap-3 p-2 justify-center items-center">
+                        <p className=" text-black">literature Given ? </p>
+                        <div className=" flex flex-row gap-3">
+                          <p
+                            onClick={() => setLit("Yes")}
+                            className={
+                              lit === `Yes`
+                                ? ` p-2 text-white bg-black cursor-pointer rounded-lg`
+                                : `p-2 text-black bg-gray-100 cursor-pointer rounded-lg`
+                            }
+                          >
+                            Yes
+                          </p>
+                          <p
+                            onClick={() => setLit("No")}
+                            className={
+                              lit === `No`
+                                ? ` p-2 text-white bg-black cursor-pointer rounded-lg`
+                                : `p-2 text-black bg-gray-100 cursor-pointer rounded-lg`
+                            }
+                          >
+                            No
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-row gap-3 justify-center items-center">
+                        <p className="text-sm font-bold ">Have POB? </p>
+                        <Switch
+                          size="sm"
+                          isSelected={isSelected}
+                          onValueChange={setIsSelected}
+                        ></Switch>
+                      </div>
                     </div>
+                    <InputList
+                      inputList={inputList}
+                      setInputList={setInputList}
+                    />
                   </div>
                 </form>
               </ModalBody>

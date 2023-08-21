@@ -1,23 +1,28 @@
 import React, { useState } from "react";
 import { Input, Button } from "@nextui-org/react";
-
+import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 export default function InputList({ setInputList, inputList }) {
+  const { allProdRate } = useGlobalContext();
   const handleInputChange = (index, inputType, value) => {
     const newList = [...inputList];
     newList[index][inputType] = value;
     setInputList(newList);
   };
+  console.log(allProdRate.proRateData);
+
+
 
   const [errors, setErrors] = React.useState([]);
   const handleAddInput = () => {
     if (
       !inputList.some(
-        (input) => input.MainPro === "" || input.FreeProduct === ""
+        (input) =>
+          input.Product === "" || input.Qnt === "" || input.value === ""
       )
     ) {
       setInputList([
         ...inputList,
-        { id: Date.now(), MainPro: "", FreeProduct: "" },
+        { id: Date.now(), Product: "", Qnt: "", value: "" },
       ]);
       setErrors([]);
     } else {
@@ -42,22 +47,41 @@ export default function InputList({ setInputList, inputList }) {
         >
           <Input
             type="number"
-            value={input.MainPro}
+            value={input.Product}
             onChange={(e) =>
-              handleInputChange(index, "MainPro", e.target.value)
+              handleInputChange(index, "Product", e.target.value)
             }
             className="rounded p-2 flex-1"
-            placeholder="Main Product"
+            placeholder="Product"
           />
+          <select
+            className="outline-none font-semibold text-gray-600 border-1 border-gray-300  bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
+            id="Chem"
+            name="Chem"
+            value={chemsel}
+            onChange={(e) => setChemsel(e.target.value)}
+            required
+          >
+            <option value="">Select Chemist</option>
+            {AllAreaChem?.map((i) => {
+              return (
+                <>
+                  <option key={i} value={i.chemName}>
+                    {i.chemName}
+                  </option>
+                </>
+              );
+            })}
+          </select>
+
           <Input
             type="number"
-            value={input.FreeProduct}
-            onChange={(e) =>
-              handleInputChange(index, "FreeProduct", e.target.value)
-            }
+            value={input.Qnt}
+            onChange={(e) => handleInputChange(index, "Qnt", e.target.value)}
             className="rounded p-2 flex-1"
-            placeholder="Free Product"
+            placeholder="Quantity..."
           />
+
           <Button type="button" onClick={() => handleDeleteInput(index)}>
             Remove ❌
           </Button>

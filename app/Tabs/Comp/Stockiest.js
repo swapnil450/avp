@@ -1,13 +1,6 @@
 "use client";
 import React from "react";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-} from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 
 import EditStockiest from "@/app/Home/AddInfo/Comp/EditDeleteUpdate/EditComp/EditStock";
@@ -15,51 +8,40 @@ import EditStockiest from "@/app/Home/AddInfo/Comp/EditDeleteUpdate/EditComp/Edi
 export default function ListOfStock() {
   const { allStockiest } = useGlobalContext();
 
-  const user = allStockiest.stockData;
+  const stock = allStockiest.stockData;
 
-  if (!user || user.length === 0) {
+  if (!stock || stock.length === 0) {
     return <div>No data available.</div>;
   }
 
-  const columnsToShow = [
-    "Code",
-    "Name",
-    "Area",
-    "mobile",
-    "address",
-    "Actions",
-  ];
-
   return (
     <>
-      <Table aria-label="User data table">
-        <TableHeader>
-          {columnsToShow.map((columnKey) => (
-            <TableColumn key={columnKey}>{columnKey}</TableColumn>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {user?.map((item) => (
-            <TableRow
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              key={item._id}
+      {stock?.map((itm) => {
+        return (
+          <>
+            <div
+              key={itm}
+              className="flex justify-center items-center rounded-lg shadow-md p-3 max-w-full border-1 border-gray-400 gap-24"
             >
-              {columnsToShow.map((columnKey) => (
-                <TableCell
-                  className=" hove:text-black hover:font-semibold cursor-pointer"
-                  key={columnKey}
-                >
-                  {columnKey === "Actions" ? (
-                    <EditStockiest key={item?._id} item={item ? item : item} />
-                  ) : (
-                    item[columnKey]
-                  )}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+              <div className="flex flex-row justify-center items-center gap-3">
+                <p className="text-xl">👨‍⚕️</p>
+                <div className="flex flex-col">
+                  <p className="text-xs font-semibold">name</p>
+                  <p className="text-xs ">sangmaner</p>
+                  <p className="text-[10px]">7387427755</p>
+                </div>
+              </div>
+              <Button
+                color="success"
+                size="sm"
+                className="text-white font-semibold "
+              >
+                Approved
+              </Button>
+            </div>
+          </>
+        );
+      })}
     </>
   );
 }

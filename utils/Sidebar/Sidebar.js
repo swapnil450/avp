@@ -1,13 +1,21 @@
 "use client";
-import React, { useState } from "react"; // Import useState from "react"
+import React, { useState, useEffect } from "react"; // Import useState from "react"
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Button,
   Link,
 } from "@nextui-org/react"; // Remove Button import since it's not used
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+  Avatar,
+  User,
+} from "@nextui-org/react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { setSideBarTab } from "@/ReduxToolkit/Slices/UiCompSlice/SideBarTab";
@@ -25,11 +33,15 @@ const AcmeLogo = () => (
 const tabs = [
   { name: "Dashboard", link: "/" },
   { name: "Details", link: "/Tabs" },
+  { name: "Tour Program", link: "/TourProgram" },
 ];
 
 export default function App() {
   const [active, setActive] = useState("DashBoard");
+ 
 
+  // handle scroll behaviour when scroll to stick navbar top position and fixed
+ 
   const dispatch = useDispatch();
   const controll = (i) => {
     dispatch(setSideBarTab);
@@ -39,14 +51,22 @@ export default function App() {
     return state.SideBarTab;
   });
 
+  
   return (
     <>
-      <Navbar className="h-[60px]" isBordered isBlurred={false}>
+      <Navbar
+       className="h-[60px] "
+        isBordered
+        isBlurred={false}
+      >
         <NavbarBrand>
           <AcmeLogo />
           <p className="font-bold text-inherit">Avirosa</p>
         </NavbarBrand>
-        <NavbarContent className="sm:flex flex flex-row gap-8" justify="center">
+        <NavbarContent
+          className="sm:flex lg:block lg:flex lg:flex-row hidden  gap-8"
+          justify="center"
+        >
           {tabs.map((tab) => (
             <NavbarItem key={tab.name}>
               <Link
@@ -62,15 +82,40 @@ export default function App() {
             </NavbarItem>
           ))}
         </NavbarContent>
-        <NavbarContent justify="end">
-          {/* <NavbarItem className="hidden lg:flex">
-            <Link href="#">Login</Link>
-          </NavbarItem>
+        <NavbarContent
+          className="lg:hidden  flex justify-center items-center"
+          justify="end"
+        >
           <NavbarItem>
-            <Button as={Link} color="primary" href="#" variant="flat">
-              Sign Up
-            </Button>
-          </NavbarItem> */}
+            <div className="flex items-center gap-4">
+              <Dropdown placement="bottom-start">
+                <DropdownTrigger>
+                  <User
+                    as="button"
+                    avatarProps={{
+                      isBordered: true,
+                      src: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+                    }}
+                    className="transition-transform"
+                  />
+                </DropdownTrigger>
+                <DropdownMenu aria-label="User Actions" variant="flat">
+                  <DropdownItem key="profile" className="h-14 gap-2">
+                    <p className="font-bold">Signed in </p>
+                  </DropdownItem>
+                  <DropdownItem key="settings">My Settings</DropdownItem>
+                  <DropdownItem key="team_settings">Permissions</DropdownItem>
+
+                  <DropdownItem key="help_and_feedback">
+                    Help & Feedback
+                  </DropdownItem>
+                  <DropdownItem key="logout" color="danger">
+                    Log Out
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          </NavbarItem>
         </NavbarContent>
       </Navbar>
     </>

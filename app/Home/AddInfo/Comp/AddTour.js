@@ -2,6 +2,8 @@
 import React from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import shop from "../../../../public/tour.webp";
+import Image from "next/image";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Modal,
@@ -13,61 +15,42 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
-import { CheckboxGroup } from "@nextui-org/react";
-import { CustomCheckbox } from "./styleComp/CustomCheckbox";
-import InputList from "./EmerncyAdject/InputList";
 
-export default function AddProduct() {
+import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
+export default function AddTour() {
+  const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
-  const [typSel, setTypSel] = React.useState("");
-  const sizes = ["4xl"];
-
+  const sizes = ["5xl"];
+  const { AreasOption, headquaters } = useGlobalContext();
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
-  const [inputList, setInputList] = React.useState([
-    { id: 1, MainPro: "", FreeProduct: "" }, // Initial input item
-  ]);
+  const user = JSON.parse(localStorage?.getItem("user") || "user");
 
   const [formData, setFormData] = React.useState({
-    ProductName: "",
-    Packing: "",
-    MRP: "",
-    PTR: "",
-    PTS: "",
-    scheme: [],
-
-    Active: true,
+    startDate: "",
+    lastDate: "",
+    workWith: "",
+    headQ: "",
+    area: "",
+    createdBy: "",
+    createdAt: new Date().toISOString().slice(0, 10),
+    Act: true,
+    Apv: false,
   });
 
-  formData.scheme = inputList;
-  formData.Type = typSel;
+  formData.createdBy = user.userId;
   const [errors, setErrors] = React.useState({});
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (formData.ProductName.length <= 3) {
-      newErrors.ProductName = "ProductName is required";
-    }
-    if (!formData.Packing) {
-      newErrors.Packing = "Packing is required";
-    }
-
-    if (!formData.MRP) {
-      newErrors.MRP = " MRP is Required !";
-    }
-    if (!formData.PTR) {
-      newErrors.PTR = " PTR is Required !";
-    }
-    if (!formData.PTS) {
-      newErrors.PTS = " PTS is Required !";
-    }
+    // Add similar validation for other fields
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
@@ -83,10 +66,9 @@ export default function AddProduct() {
   const [hasError, setHasError] = React.useState(false);
   const [response, setResponse] = React.useState({});
 
-  const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
-  const handleSubmit = () => {
+  const handleSubmit = (formData) => {
     if (validateForm()) {
-      const apiUrl = `${Server}/add/proRate`;
+      const apiUrl = `${Server}/add/tour`;
       setIsLoading(true);
       setHasError(false);
 
@@ -96,35 +78,36 @@ export default function AddProduct() {
           const responseData = response.data;
           setResponse(responseData);
 
-          if (response.status === 200) {
-            // Perform any necessary actions on success
-            notify();
-          } else {
-            setHasError(true);
-          }
+          toast.success(`${response?.data?.message}`);
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.message || "Something Went Wrong !");
+          toast.error(error?.response?.data?.message);
         })
         .finally(() => {
           setIsLoading(false);
+          setFormData({
+            startDate: "",
+            lastDate: "",
+            workWith: "",
+            headQ: "",
+            area: "",
+          });
+          onClose();
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         });
     } else {
       toast.error("Please fill All Details");
     }
   };
 
-  const notify = () => {
-    toast.success(response?.message || " Product & Rate Added Successfuly !");
-  };
-
-  const Types = ["HQ", "EX", "OS"];
   return (
     <>
       <ToastContainer
         position="bottom-center"
-        autoClose={1000}
+        autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -136,19 +119,32 @@ export default function AddProduct() {
       />
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
-          <Button
+          <div
             key={size}
-            size="lg"
-            className="text-black font-bold "
-            onPress={() => handleOpen(size)}
+            onClick={() => handleOpen(size)}
+            className="flex flex-col gap-1 justify-center items-center"
           >
-            + Add Product & Rate 🧴
-          </Button>
+            <Image
+              width={20}
+              height={20}
+              src={shop}
+              className=" cursor-pointer "
+            />
+            <p
+              key={size}
+              size="xs"
+              className=" text-[12px] cursor-pointer  "
+              onClick={() => handleOpen(size)}
+            >
+              +TourProgram
+            </p>
+          </div>
         ))}
       </div>
       <Modal
         size={size}
         isOpen={isOpen}
+        placement={`center`}
         scrollBehavior={`inside`}
         onClose={onClose}
       >
@@ -156,92 +152,108 @@ export default function AddProduct() {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add Product & Rate 🧴 !
+                Add Stockiest
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
                   <div className="grid lg:grid-cols-2 grid-cols-1  gap-4">
-                    <div className="flex flex-col justify-center ">
+                    <div className="flex justify-center flex-col">
+                      <label className="text-sm p-1"> Start Date</label>
                       <Input
-                        type="text"
-                        label="ProductName"
-                        name="ProductName"
-                        value={formData.ProductName}
+                        type="date"
+                        label=""
+                        name="startDate"
+                        value={formData.startDate}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="flex justify-center flex-col">
+                      <label className="text-sm p-1"> Last Date</label>
+                      <Input
+                        type="date"
+                        label=""
+                        name="lastDate"
+                        value={formData.lastDate}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <p className="text-sm p-1 font-bold">
+                        Select Headquaters
+                      </p>
+                      <select
+                        className="outline-none font-semibold text-gray-600 bg-transparent text-small w-[300px] h-[50px] rounded-lg border-1 bg-gray-200 p-2"
+                        id="headQ"
+                        name="headQ"
+                        value={formData.headQ}
                         onChange={handleInputChange}
                         required
-                      />
-                      {errors.ProductName && (
+                      >
+                        <option value="">Select Headquaters</option>
+                        {headquaters?.map((a) => {
+                          return (
+                            <>
+                              <option key={a} value={a}>
+                                {a}
+                              </option>
+                            </>
+                          );
+                        })}
+                      </select>
+
+                      {errors.Area && (
                         <p className="text-red-500  text-xs p-1">
-                          {errors.ProductName}
+                          {errors.Area}
                         </p>
                       )}
                     </div>
+
                     <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
-                        label="Packing"
-                        name="Packing"
-                        value={formData.Packing}
+                      <p className="text-sm p-2 font-bold">Select Area</p>
+                      <select
+                        className="outline-none font-semibold text-gray-600  bg-transparent text-xs w-[300px] h-[50px] rounded-lg border-1 bg-gray-200 p-2"
+                        id="area"
+                        name="area"
+                        value={formData.area}
                         onChange={handleInputChange}
                         required
-                      />
-                      {errors.Packing && (
+                      >
+                        <option value="">Select Area</option>
+                        {AreasOption?.map((a) => {
+                          return (
+                            <>
+                              <option key={a} value={a}>
+                                {a}
+                              </option>
+                            </>
+                          );
+                        })}
+                      </select>
+
+                      {errors.Area && (
                         <p className="text-red-500  text-xs p-1">
-                          {errors.Packing}
+                          {errors.Area}
                         </p>
                       )}
                     </div>
+
                     <div className="flex flex-col justify-center ">
                       <Input
-                        type="number"
-                        label="MRP"
-                        name="MRP"
-                        value={formData.MRP}
+                        type="textarea"
+                        label="Address"
+                        name="address"
+                        value={formData.address}
                         onChange={handleInputChange}
                         required
                       />
-                      {errors.MRP && (
+                      {errors.address && (
                         <p className="text-red-500  text-xs p-1">
-                          {errors.MRP}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="number"
-                        label="PTR"
-                        name="PTR"
-                        value={formData.PTR}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.PTR && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.PTR}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="number"
-                        label="PTS"
-                        name="PTS"
-                        value={formData.PTS}
-                        onChange={handleInputChange}
-                        maxLength={4}
-                        required
-                      />
-                      {errors.PTS && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.PTS}
+                          {errors.address}
                         </p>
                       )}
                     </div>
                   </div>
-                  <InputList
-                    inputList={inputList}
-                    setInputList={setInputList}
-                  />
                 </form>
               </ModalBody>
               <ModalFooter>
@@ -281,9 +293,9 @@ export default function AddProduct() {
                   <Button
                     color="black"
                     className="bg-black text-white"
-                    onClick={handleSubmit}
+                    onClick={() => handleSubmit(formData)}
                   >
-                    Save
+                    Create
                   </Button>
                 )}
               </ModalFooter>

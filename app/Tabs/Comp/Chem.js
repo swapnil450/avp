@@ -7,59 +7,54 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Button,
 } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
-
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Divider,
+  Link,
+  Image,
+} from "@nextui-org/react";
 import ChemEdit from "@/app/Home/AddInfo/Comp/EditDeleteUpdate/EditComp/ChemEdit";
+import doc from "../../img/doc.webp";
 export default function ListOfChem() {
   const { allChem } = useGlobalContext();
 
-  const user = allChem.chemData;
+  const chem = allChem.chemData;
 
-  if (!user || user.length === 0) {
+  if (!chem || chem.length === 0) {
     return <div>No data available.</div>;
   }
 
-  const columnsToShow = [
-    "Area",
-    "DLNo",
-    "GSTNo",
-    "address",
-    "chemCode",
-    "chemName",
-    "Actions",
-  ];
-
   return (
     <>
-      <Table aria-label="User data table">
-        <TableHeader>
-          {columnsToShow.map((columnKey) => (
-            <TableColumn key={columnKey}>{columnKey}</TableColumn>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {user?.map((item) => (
-            <TableRow
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              key={item._id}
+      {chem?.map((itm) => {
+        return (
+          <>
+            <div
+              key={itm}
+              className="flex justify-center items-center rounded-lg shadow-md p-3 max-w-full border-1 border-gray-400 gap-5"
             >
-              {columnsToShow.map((columnKey) => (
-                <TableCell
-                  className=" hove:text-black hover:font-semibold cursor-pointer"
-                  key={columnKey}
-                >
-                  {columnKey === "Actions" ? (
-                    <ChemEdit key={item?._id} item={item ? item : item} />
-                  ) : (
-                    item[columnKey]
-                  )}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+              <div className="flex flex-row justify-center items-center gap-3">
+                <p className="text-xl">👨‍⚕️</p>
+                <div className="flex flex-col">
+                  <p className="text-xs inline-flex flex-wrap font-semibold">
+                    {itm.chemName}
+                  </p>
+                  <p className="text-xs ">{itm.Area}</p>
+                  <p className="text-[10px]">{itm.mobile}</p>
+                </div>
+              </div>
+
+              <ChemEdit key={itm?._id} item={itm ? itm : itm} />
+            </div>
+          </>
+        );
+      })}
     </>
   );
 }

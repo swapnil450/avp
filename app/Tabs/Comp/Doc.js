@@ -1,69 +1,44 @@
 "use client";
 import React from "react";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-} from "@nextui-org/react";
+import edit from "../../icons/edit.webp";
+import del from "../../icons/delete-outline.webp";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
-
+import Image from "next/image";
+import { Button } from "@nextui-org/react";
 import DocEdit from "@/app/Home/AddInfo/Comp/EditDeleteUpdate/EditComp/DocEdit";
 export default function ListOfDoc() {
   const { allDoc } = useGlobalContext();
 
-  const user = allDoc.docData;
- 
+  const doc = allDoc.docData;
+  console.log(doc);
 
-  if (!user || user.length === 0) {
+  if (!doc || doc.length === 0) {
     return <div>No data available.</div>;
   }
 
-  const columnsToShow = [
-    "DoctorCode",
-    "DoctorName",
-    "Speciality",
-    "Degree",
-    "mobile",
-    "address",
-    "Dob",
-    "Doa",
-    "Area",
-    "Actions",
-  ];
-
   return (
     <>
-      <Table aria-label="User data table">
-        <TableHeader>
-          {columnsToShow.map((columnKey) => (
-            <TableColumn key={columnKey}>{columnKey}</TableColumn>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {user?.map((item) => (
-            <TableRow
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              key={item._id}
+      {doc?.map((itm) => {
+        return (
+          <>
+            <div
+              key={itm}
+              className="flex justify-center items-center rounded-lg shadow-md p-3 max-w-full border-1 border-gray-400 gap-5"
             >
-              {columnsToShow.map((columnKey) => (
-                <TableCell
-                  className=" hove:text-black hover:font-semibold cursor-pointer"
-                  key={columnKey}
-                >
-                  {columnKey === "Actions" ? (
-                    <DocEdit key={item?._id} item={item ? item : item} />
-                  ) : (
-                    item[columnKey]
-                  )}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+              <div className="flex flex-row justify-center items-center gap-3">
+                <p className="text-xl">👨‍⚕️</p>
+                <div className="flex flex-col">
+                  <p className="text-xs font-semibold">{itm.DoctorName}</p>
+                  <p className="text-xs ">{itm.Area}</p>
+                  <p className="text-[10px]">{itm.mobile}</p>
+                </div>
+              </div>
+
+              <DocEdit key={itm?._id} item={itm ? itm : itm} />
+            </div>
+          </>
+        );
+      })}
     </>
   );
 }
