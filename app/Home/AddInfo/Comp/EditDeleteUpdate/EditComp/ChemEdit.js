@@ -2,8 +2,8 @@
 import React from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import edit from "../../../../../icons/edit.webp";
-import del from "../../../../../icons/delete-outline.webp";
+import edit from "../../../../../img/edit.webp";
+import del from "../../../../../img/delete.webp";
 import Image from "next/image";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -30,7 +30,7 @@ export default function ChemEdit({ item }) {
   const { AreasOption } = useGlobalContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
-  const sizes = ["full"];
+  const sizes = ["5xl"];
 
   const handleOpen = (size) => {
     setSize(size);
@@ -40,6 +40,7 @@ export default function ChemEdit({ item }) {
   const [formData, setFormData] = React.useState({
     chemCode: "",
     chemName: "",
+    contactPer: "",
     mobile: "",
     address: "",
     Area: "",
@@ -49,8 +50,16 @@ export default function ChemEdit({ item }) {
 
   React.useEffect(() => {
     // Destructure the properties from the 'item'
-    const { chemCode, chemName, mobile, address, Area, DLNo, GSTNo } =
-      item || {};
+    const {
+      chemCode,
+      chemName,
+      mobile,
+      address,
+      Area,
+      contactPer,
+      DLNo,
+      GSTNo,
+    } = item || {};
 
     // Update the 'formData' state with the values from 'item'
     setFormData({
@@ -60,6 +69,7 @@ export default function ChemEdit({ item }) {
       address,
       Area,
       DLNo,
+      contactPer,
       GSTNo,
     });
   }, [item]); // Dependency array with 'item'
@@ -74,6 +84,9 @@ export default function ChemEdit({ item }) {
     }
     if (!formData.chemName) {
       newErrors.chemName = "Chemist Name is required";
+    }
+    if (!formData.contactPer) {
+      newErrors.contactPer = "Contact Name is required";
     }
     if (!formData.mobile) {
       newErrors.mobile = "Mobile No. is required";
@@ -155,6 +168,9 @@ export default function ChemEdit({ item }) {
       })
       .finally(() => {
         setIsLoading(false);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       });
   };
 
@@ -174,20 +190,50 @@ export default function ChemEdit({ item }) {
       />
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
-          <Button
+          <div
             key={size}
-            size="sm"
-            className="text-black font-bold "
-            onPress={() => handleOpen(size)}
+            className="flex flex-row gap-3 justify-center items-center"
           >
-            + Edit
-          </Button>
+            <Image
+              onClick={() => handleOpen(size)}
+              className="cursor-pointer"
+              src={edit}
+              width={20}
+              height={20}
+              alt="icons"
+            />
+
+            <Dropdown>
+              <DropdownTrigger>
+                <Image
+                  className="cursor-pointer"
+                  src={del}
+                  width={20}
+                  height={20}
+                  alt="icons"
+                />
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Dropdown Variants"
+                color="default"
+                variant="solid"
+              >
+                <DropdownItem
+                  key="delete"
+                  className="text-danger"
+                  color="danger"
+                  onClick={() => handleDelete(item._id)}
+                >
+                  Confirm Delete
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
         ))}
       </div>
       <Modal
         size={size}
         isOpen={isOpen}
-        placement={`center`}
         scrollBehavior={`inside`}
         onClose={onClose}
       >
@@ -197,7 +243,7 @@ export default function ChemEdit({ item }) {
               <ModalHeader className="flex flex-col gap-1">
                 Edit Chemist 💊
               </ModalHeader>
-              <ModalBody   className="h-screen">
+              <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
                   <div className="grid lg:grid-cols-2 grid-cols-1  gap-4">
                     <div className="flex flex-col justify-center ">
@@ -231,7 +277,21 @@ export default function ChemEdit({ item }) {
                         </p>
                       )}
                     </div>
-
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="text"
+                        label="Contact Person "
+                        name="contactPer"
+                        value={formData.contactPer}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.contactPer && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.contactPer}
+                        </p>
+                      )}
+                    </div>
                     <div className="flex flex-col justify-center ">
                       <Input
                         type="tel"
@@ -250,7 +310,7 @@ export default function ChemEdit({ item }) {
                     <div className="flex flex-col justify-center ">
                       <p className="text-sm p-1 text-gray-600">Select Area</p>
                       <select
-                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
+                        className="outline-none font-semibold text-gray-600 border-1 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
                         id="Area"
                         name="Area"
                         value={formData.Area}

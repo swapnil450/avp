@@ -24,7 +24,7 @@ export default function AddStockiest() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
-  const { AreasOption } = useGlobalContext();
+  const { AreasOption, user } = useGlobalContext();
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
@@ -36,9 +36,11 @@ export default function AddStockiest() {
     mobile: "",
     address: "",
     Area: "",
+    createdBy: "",
     Active: true,
     approved: false,
   });
+  formData.createdBy = user.userId || "admin";
 
   const [errors, setErrors] = React.useState({});
 
@@ -101,6 +103,9 @@ export default function AddStockiest() {
         })
         .finally(() => {
           setIsLoading(false);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         });
     } else {
       toast.error("Please fill All Details");
@@ -135,11 +140,11 @@ export default function AddStockiest() {
             <Image
               width={20}
               height={20}
+              alt="icons"
               src={shop}
               className=" cursor-pointer "
             />
             <p
-              key={size}
               size="xs"
               className=" text-[12px] cursor-pointer  "
               onClick={() => handleOpen(size)}

@@ -20,92 +20,67 @@ import {
   Image,
 } from "@nextui-org/react";
 import ChemEdit from "@/app/Home/AddInfo/Comp/EditDeleteUpdate/EditComp/ChemEdit";
-import doc from "../../img/doc.webp";
+
 export default function ListOfChem() {
   const { allChem } = useGlobalContext();
 
-<<<<<<< HEAD
   const chem = allChem.chemData;
-=======
-  const user = allChem?.chemData;
->>>>>>> eb540361390eeef1ff5284aeda21e7f222c04fcf
 
   if (!chem || chem.length === 0) {
     return <div>No data available.</div>;
   }
+  const user = JSON.parse(localStorage?.getItem("user")) || "admin";
+  const CreatedbyUser = chem.filter(
+    (i) => i.createdBy === user.userId && i.approved === false
+  );
 
-<<<<<<< HEAD
-=======
-  const columnsToShow = [
-    "Area",
-    "DLNo",
-    "GSTNo",
-    "address",
-    "chemCode",
-    "contactPer",
-    "chemName",
-
-    "Actions",
-  ];
-
->>>>>>> eb540361390eeef1ff5284aeda21e7f222c04fcf
   return (
     <>
-      {chem?.map((itm) => {
-        return (
-          <>
-            <div
-              key={itm}
-              className="flex justify-center items-center rounded-lg shadow-md p-3 max-w-full border-1 border-gray-400 gap-5"
-            >
-<<<<<<< HEAD
-              <div className="flex flex-row justify-center items-center gap-3">
-                <p className="text-xl">👨‍⚕️</p>
-                <div className="flex flex-col">
-                  <p className="text-xs inline-flex flex-wrap font-semibold">
-                    {itm.chemName}
-                  </p>
-                  <p className="text-xs ">{itm.Area}</p>
-                  <p className="text-[10px]">{itm.mobile}</p>
+      {CreatedbyUser.length === 0 ? (
+        <p>No Data Available..</p>
+      ) : (
+        CreatedbyUser.sort((a, b) => b.createdAt - a.createdAt)?.map((item) => {
+          return (
+            <>
+              <div
+                key={item}
+                className="flex justify-center  items-center rounded-lg shadow-md p-2 max-w-full border-1 border-gray-400 gap-5"
+              >
+                <div className="flex flex-row justify-center items-center gap-3">
+                  <p className="text-xl">👨‍⚕️</p>
+                  <div className="flex flex-col">
+                    <p className="text-xs font-semibold">{item.chemName}</p>
+                    <p className="text-xs ">{item.Area}</p>
+                  </div>
                 </div>
-              </div>
+                {item.approved === true ? (
+                  <>
+                    <Button
+                      color="success"
+                      size="sm"
+                      className="text-white font-semibold "
+                    >
+                      Approved
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <ChemEdit key={item?._id} item={item ? item : item} />
 
-              <ChemEdit key={itm?._id} item={itm ? itm : itm} />
-            </div>
-          </>
-        );
-      })}
-=======
-              {columnsToShow.map((columnKey) => (
-                <TableCell
-                  className=" hove:text-black hover:font-semibold cursor-pointer"
-                  key={columnKey}
-                >
-                  {columnKey === "Actions" ? (
-                    <>
-                      <div className="flex flex-row justify-center items-center gap-3">
-                        <ChemEdit key={item?._id} item={item ? item : item} />
-                        {item?.approved === true ? (
-                          <Button color="success" className="text-white">
-                            Approved ✅
-                          </Button>
-                        ) : (
-                          <Button color="danger" className="text-white">
-                            NotApproved ❌
-                          </Button>
-                        )}
-                      </div>
-                    </>
-                  ) : (
-                    item[columnKey]
-                  )}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
->>>>>>> eb540361390eeef1ff5284aeda21e7f222c04fcf
+                    <Button
+                      color="danger"
+                      size="sm"
+                      className="text-white font-semibold "
+                    >
+                      UnApproved
+                    </Button>
+                  </>
+                )}
+              </div>
+            </>
+          );
+        })
+      )}
     </>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import doc from "../../../../../img/doc.webp";
+import { User } from "@nextui-org/react";
 import Image from "next/image";
+import { Switch } from "@nextui-org/react";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Modal,
@@ -14,41 +16,95 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Divider,
+  Link,
+} from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 
-export default function AddDcrDoc() {
+import InputListDoc from "@/app/Home/AddInfo/Comp/EmerncyAdject/InputListDoc";
+
+export default function AddDcrDoc({ ActiveProgram }) {
+  const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
 
-  const { AreasOption, allProdRate } = useGlobalContext();
+  const [lit, setLit] = useState("Yes");
+  const [det, setDet] = useState("Yes");
+  const [docsel, setDocsel] = useState("");
 
-  const Pro2 = allProdRate?.proRateData?.map((i) => i.ProductName);
+  const [inputList, setInputList] = React.useState([
+    { id: 1, Product: "", Qnt: "", value: "" }, // Initial input item
+  ]);
+
+  const [isSelected, setIsSelected] = React.useState(false);
+  const { allDoc } = useGlobalContext();
+
+  const AreaTP = ActiveProgram?.area;
+
+  const AllAreaDoc = allDoc.docData?.filter(
+    (i) => i.Area === AreaTP && i.approved === true
+  );
+
+  const DocDet = AllAreaDoc?.filter((i) => i.DoctorName === docsel) || [
+    { chemName: "chemist" },
+  ];
 
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
-  const user = JSON.parse(localStorage?.getItem("user"));
 
+  const user = JSON.parse(localStorage?.getItem("user")) || "admin";
+  const workWithD =
+    JSON.parse(localStorage?.getItem("workwith")) || "independent";
   const [formData, setFormData] = React.useState({
+    workWith: "",
     DoctorCode: "",
     DoctorName: "",
+    HosName: "",
     mobile: "",
     address: "",
     Area: "",
     Degree: "",
     Speciality: "",
-    Dob: "",
-    Doa: "",
+
     P1: "",
     P2: "",
+
+    DcrId: "",
+    Detail: "",
+    lit: "",
+    Pob: [],
+    Remark: "",
     createdBy: "",
-    createdAt: new Date().toISOString().slice(0, 10),
-    approved: false,
+    createdAt: "",
   });
 
+  formData.workWith = workWithD;
+  formData.createdAt = new Date().toISOString().slice(0, 10);
+  formData.Pob = inputList;
+  formData.HosName = DocDet[0]?.HosName;
+  formData.mobile = DocDet[0]?.mobile;
+  formData.address = DocDet[0]?.address;
+  formData.Area = DocDet[0]?.Area;
+  formData.P1 = DocDet[0]?.P1;
+  formData.P2 = DocDet[0]?.P2;
+  formData.Degree = DocDet[0]?.Degree;
+  formData.Speciality = DocDet[0]?.Speciality;
+  formData.DcrId = ActiveProgram?.DcrId;
+  formData.DoctorCode = DocDet[0]?.DoctorCode;
+  formData.DoctorName = DocDet[0]?.DoctorName;
+  formData.mobile = DocDet[0]?.mobile;
+  formData.lit = lit;
+  formData.Detail = det;
   formData.createdBy = user.userId;
 
   const [errors, setErrors] = React.useState({});
@@ -56,27 +112,11 @@ export default function AddDcrDoc() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.DoctorCode) {
-      newErrors.DoctorCode = "Doctor Code is required";
+    if (formData.DoctorName === undefined) {
+      newErrors.chemName = "Chemist name is required";
     }
-    if (!formData.DoctorName) {
-      newErrors.DoctorName = "Doctor Name is required";
-    }
-    if (!formData.mobile) {
-      newErrors.mobile = "Mobile No. is required";
-    }
-    if (!formData.address) {
-      newErrors.address = "Address is required";
-    }
-    if (!formData.Degree) {
-      newErrors.Degree = "Degree is required";
-    }
-    if (!formData.Speciality) {
-      newErrors.Speciality = "Speciality is required";
-    }
-
-    if (!formData.Area) {
-      newErrors.Area = "Area is required";
+    if (formData.Remark.length < 20) {
+      newErrors.Remark = "Remark Field not be Empty !";
     }
 
     // Add similar validation for other fields
@@ -92,14 +132,14 @@ export default function AddDcrDoc() {
       [name]: value,
     }));
   };
+
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
   const [response, setResponse] = React.useState({});
 
-  const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
   const handleSubmit = () => {
     if (validateForm()) {
-      const apiUrl = `${Server}/add/doc`;
+      const apiUrl = `${Server}/add/docDcr`;
       setIsLoading(true);
       setHasError(false);
 
@@ -109,58 +149,38 @@ export default function AddDcrDoc() {
           const responseData = response.data;
           setResponse(responseData);
 
-          if (response.status === 200) {
-            // Perform any necessary actions on success
-            notify();
-          } else {
-            setHasError(true);
-          }
+          toast.success(`${response?.data?.message}`);
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.message || "Something Went Wrong !");
+          toast.error(error?.response?.data?.message);
+          console.log(error);
         })
         .finally(() => {
           setIsLoading(false);
-          setFormData({
-            DoctorCode: "",
-            DoctorName: "",
-            mobile: "",
-            address: "",
-            Area: "",
-            Degree: "",
-            Speciality: "",
-            Dob: "",
-            Doa: "",
-            P1: "",
-            P2: "",
-          });
+          setDocsel("");
+          onClose();
         });
     } else {
       toast.error("Please fill All Details");
     }
   };
 
-  const notify = () => {
-    toast.success(response?.message || " Doctor Added Successfuly !");
-  };
-
   return (
     <>
-      {/* <ToastContainer
-        position="bottom-center"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      /> */}
-
       <div className="flex flex-col justify-center items-center gap-3">
+        <ToastContainer
+          position="bottom-center"
+          autoClose={1000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
         {sizes.map((size) => (
           <div
             key={size}
@@ -185,7 +205,6 @@ export default function AddDcrDoc() {
           </div>
         ))}
       </div>
-
       <Modal
         size={size}
         isOpen={isOpen}
@@ -197,127 +216,27 @@ export default function AddDcrDoc() {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add Doctor 👨‍⚕️
+                Add Doctor !
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
-                  <div className="grid lg:grid-cols-2 grid-cols-1  gap-4">
+                  <div className="grid lg:grid-cols-2 grid-cols-1  gap-2">
                     <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
-                        label="Doctor Code"
-                        name="DoctorCode"
-                        value={formData.DoctorCode}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.DoctorCode && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.DoctorCode}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
-                        label="Doctor Name"
-                        name="DoctorName"
-                        value={formData.DoctorName}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.DoctorName && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.DoctorName}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="tel"
-                        label="Mobile"
-                        name="mobile"
-                        value={formData.mobile}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.mobile && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.mobile}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
-                        label="Degree.."
-                        name="Degree"
-                        value={formData.Degree}
-                        onChange={handleInputChange}
-                      />
-                      {errors.Degree && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.Degree}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
-                        label="Speciality ... "
-                        name="Speciality"
-                        value={formData.Speciality}
-                        onChange={handleInputChange}
-                      />{" "}
-                      {errors.Speciality && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.Speciality}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex justify-center flex-col">
-                      <label className="text-sm p-1"> Date Of Birth</label>
-                      <Input
-                        type="date"
-                        label=""
-                        name="Dob"
-                        value={formData.Dob}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <div className="flex justify-center flex-col">
-                      <label className="text-sm p-1">Date Of Anivarsery</label>
-                      <Input
-                        type="date"
-                        label=""
-                        name="Doa"
-                        value={formData.Doa}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <p className="text-sm p-1 text-gray-600">Select Area</p>
+                      <p className="text-sm p-1 text-gray-600">Select Doctor</p>
                       <select
-                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
-                        id="Area"
-                        name="Area"
-                        value={formData.Area}
-                        onChange={handleInputChange}
+                        className="outline-none font-semibold text-gray-600 border-1 border-gray-300  bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
+                        id="Chem"
+                        name="Chem"
+                        value={docsel}
+                        onChange={(e) => setDocsel(e.target.value)}
                         required
                       >
-                        <option value="">Select Area</option>
-                        {AreasOption?.map((i) => {
+                        <option value="">Select Doctor</option>
+                        {AllAreaDoc?.map((i) => {
                           return (
                             <>
-                              <option key={i} value={i}>
-                                {i}
+                              <option key={i} value={i.DoctorName}>
+                                {i.DoctorName}
                               </option>
                             </>
                           );
@@ -325,70 +244,121 @@ export default function AddDcrDoc() {
                       </select>
                       {errors.Area && (
                         <p className="text-red-500  text-xs p-1">
-                          {errors.Area}
+                          {errors.DoctorName}
                         </p>
                       )}
                     </div>
+
                     <div className="flex flex-col justify-center ">
-                      <Input
-                        type="textarea"
-                        label="Address"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        required
+                      {DocDet?.map((i) => {
+                        return (
+                          <>
+                            <div
+                              key={i}
+                              className="flex flex-col bg-white rounded-lg p-2 shadow-md gap-2 justify-center m-2 items-center"
+                            >
+                              <User
+                                name={i.chemName}
+                                className="text-xs"
+                                description={`+91${i.mobile}`}
+                              />
+                              <p className="text-[10px]">
+                                {i.Area},{" "}
+                                <span className="text-[10px]">
+                                  {" "}
+                                  {i.address}
+                                </span>
+                              </p>
+                            </div>
+                          </>
+                        );
+                      })}
+                    </div>
+
+                    <div className="flex flex-col gap-3 justify-center items-center ">
+                      <div className=" flex flex-row gap-3 p-2 justify-center items-center">
+                        <p>Detailing Given ? </p>
+                        <div className=" flex flex-row gap-3">
+                          <p
+                            onClick={() => setDet("Yes")}
+                            className={
+                              det === `Yes`
+                                ? `  p-2 text-white bg-black cursor-pointer rounded-lg`
+                                : `p-2 text-black bg-gray-100 cursor-pointer rounded-lg`
+                            }
+                          >
+                            Yes
+                          </p>
+                          <p
+                            onClick={() => setDet("No")}
+                            className={
+                              det === `No`
+                                ? ` p-2 text-white bg-black cursor-pointer rounded-lg`
+                                : `p-2 text-black bg-gray-100 cursor-pointer rounded-lg`
+                            }
+                          >
+                            No
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className=" flex flex-row gap-3 p-2 justify-center items-center">
+                        <p className=" text-black">literature Given ? </p>
+                        <div className=" flex flex-row gap-3">
+                          <p
+                            onClick={() => setLit("Yes")}
+                            className={
+                              lit === `Yes`
+                                ? ` p-2 text-white bg-black cursor-pointer rounded-lg`
+                                : `p-2 text-black bg-gray-100 cursor-pointer rounded-lg`
+                            }
+                          >
+                            Yes
+                          </p>
+                          <p
+                            onClick={() => setLit("No")}
+                            className={
+                              lit === `No`
+                                ? ` p-2 text-white bg-black cursor-pointer rounded-lg`
+                                : `p-2 text-black bg-gray-100 cursor-pointer rounded-lg`
+                            }
+                          >
+                            No
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col justify-center ">
+                        <Input
+                          type="textarea"
+                          label="Remark...."
+                          name="Remark"
+                          value={formData.Remark}
+                          onChange={handleInputChange}
+                          required
+                        />
+                        {errors.Remark && (
+                          <p className="text-red-500  text-xs p-1">
+                            {errors.Remark}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="flex flex-row gap-3 justify-center items-center">
+                        <p className="text-sm font-bold ">Have POB? </p>
+                        <Switch
+                          size="sm"
+                          isSelected={isSelected}
+                          onValueChange={setIsSelected}
+                        ></Switch>
+                      </div>
+                    </div>
+                    <div>
+                      <InputListDoc
+                        inputList={inputList}
+                        setInputList={setInputList}
+                        AllAreaDoc={AllAreaDoc}
+                        isSelected={isSelected}
                       />
-                      {errors.address && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.address}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <p className="text-sm p-1">Product 1</p>
-                      <select
-                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
-                        id="Area"
-                        name="P1"
-                        value={formData.P1}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="">Select Product</option>
-                        {Pro2?.map((i) => {
-                          return (
-                            <>
-                              <option key={i} value={i}>
-                                {i}
-                              </option>
-                            </>
-                          );
-                        })}
-                      </select>
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <p className="text-sm p-1">Product 2</p>
-                      <select
-                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
-                        id="P2"
-                        name="P2"
-                        value={formData.P2}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="">Select Product</option>
-                        {Pro2?.map((i) => {
-                          return (
-                            <>
-                              <option key={i} value={i}>
-                                {i}
-                              </option>
-                            </>
-                          );
-                        })}
-                      </select>
                     </div>
                   </div>
                 </form>

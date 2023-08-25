@@ -2,6 +2,7 @@
 import React from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { useState, useEffect } from "react";
 import shop from "../../../../../img/shop.webp";
 import Image from "next/image";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,47 +15,77 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
-import { Input } from "@nextui-org/react";
+
+import { User } from "@nextui-org/react";
+
+import { Switch } from "@nextui-org/react";
 
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
-export default function AddDcrStock() {
+
+import { Input } from "@nextui-org/react";
+import InputListStock from "@/app/Home/AddInfo/Comp/EmerncyAdject/InputListStock";
+export default function AddDcrChem({ ActiveProgram }) {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
-  const { AreasOption } = useGlobalContext();
+
+  const [stocksel, setStocksel] = useState("");
+
+  const [inputList, setInputList] = React.useState([
+    { id: 1, Product: "", Qnt: "", value: "" }, // Initial input item
+  ]);
+
+  const [isSelected, setIsSelected] = React.useState(false);
+  const { allStockiest } = useGlobalContext();
+
+  const AreaTP = ActiveProgram?.area;
+
+  const AllAreaStock = allStockiest.stockData?.filter(
+    (i) => i.Area === AreaTP && i.approved === true
+  );
+
+  const StockiestDet = AllAreaStock?.filter((i) => i.Name === stocksel) || [
+    { Name: "Stockiest" },
+  ];
+
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
 
+  const user = JSON.parse(localStorage?.getItem("user")) || "admin";
   const [formData, setFormData] = React.useState({
     Code: "",
     Name: "",
     mobile: "",
     address: "",
     Area: "",
-    Active: true,
-    approved: false,
+    DcrId: "",
+    Collection: "",
+    Pob: [],
+    createdBy: " ",
+    createdAt: "",
   });
+  formData.createdAt = new Date().toISOString().slice(0, 10);
+  formData.Pob = inputList;
+  formData.DcrId = ActiveProgram?.DcrId;
+  formData.Code = StockiestDet[0]?.Code;
+  formData.Name = StockiestDet[0]?.Name;
+  formData.mobile = StockiestDet[0]?.mobile;
+  formData.address = StockiestDet[0]?.address;
+  formData.Area = StockiestDet[0]?.Area;
+
+  formData.createdBy = user?.userId;
 
   const [errors, setErrors] = React.useState({});
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.Code) {
-      newErrors.Code = "ist Code is required";
-    }
-    if (!formData.Name) {
-      newErrors.Name = "Chemist Name is required";
-    }
-    if (!formData.mobile) {
-      newErrors.mobile = "Mobile No. is required";
-    }
-    if (!formData.address) {
-      newErrors.address = "Address is required";
+    if (formData.Name === undefined) {
+      newErrors.Name = "Stockiest is required";
     }
 
     // Add similar validation for other fields
@@ -72,67 +103,47 @@ export default function AddDcrStock() {
   };
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const [hasError, setHasError] = React.useState(false);
-  const [response, setResponse] = React.useState({});
 
   const handleSubmit = () => {
     if (validateForm()) {
-      const apiUrl = `${Server}/add/stock`;
+      const apiUrl = `${Server}/add/stockDcr`;
       setIsLoading(true);
-      setHasError(false);
 
       axios
         .post(apiUrl, formData)
         .then((response) => {
           const responseData = response.data;
-          setResponse(responseData);
 
-          if (response.status === 200) {
-            // Perform any necessary actions on success
-            notify();
-          } else {
-            setHasError(true);
-          }
+          toast.success(`${response?.data?.message}`);
         })
         .catch((error) => {
-          setHasError(true);
-          toast.error(error?.message || "Something Went Wrong !");
+          toast.error(error?.response?.data?.message);
         })
         .finally(() => {
           setIsLoading(false);
-          setFormData({
-            ProductName: "",
-            Packing: "",
-            MRP: "",
-            PTR: "",
-            PTS: "",
-            scheme: [],
-          });
+          setStocksel("");
+          onClose();
         });
     } else {
       toast.error("Please fill All Details");
     }
   };
 
-  const notify = () => {
-    toast.success(response.message || " Stockiest Added Successfuly !");
-  };
-
   return (
     <>
-      {/* <ToastContainer
-        position="bottom-center"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      /> */}
       <div className="flex flex-col justify-center items-center gap-3">
+        <ToastContainer
+          position="bottom-center"
+          autoClose={1000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
         {sizes.map((size) => (
           <div
             key={size}
@@ -142,6 +153,7 @@ export default function AddDcrStock() {
             <Image
               width={20}
               height={20}
+              alt="icons"
               src={shop}
               className=" cursor-pointer "
             />
@@ -159,6 +171,7 @@ export default function AddDcrStock() {
       <Modal
         size={size}
         isOpen={isOpen}
+        placement={`center`}
         scrollBehavior={`inside`}
         onClose={onClose}
       >
@@ -166,99 +179,90 @@ export default function AddDcrStock() {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add Stockiest
+                Add Chemist 💊
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
-                  <div className="grid lg:grid-cols-2 grid-cols-1  gap-4">
+                  <div className="grid lg:grid-cols-2 grid-cols-1  gap-2">
                     <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
-                        label="Stokiest Code"
-                        name="Code"
-                        value={formData.Code}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.Code && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.Code}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
-                        label="stockist Name"
-                        name="Name"
-                        value={formData.Name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.Name && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.Name}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="tel"
-                        label="Mobile"
-                        name="mobile"
-                        value={formData.mobile}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.mobile && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.mobile}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex flex-col justify-center ">
+                      <p className="text-sm p-1 text-gray-600">
+                        Select Stockiest
+                      </p>
                       <select
-                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
-                        id="Area"
-                        name="Area"
-                        value={formData.Area}
-                        onChange={handleInputChange}
+                        className="outline-none font-semibold text-gray-600 border-1 border-gray-300  bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
+                        id="stocksel"
+                        name="stocksel"
+                        value={stocksel}
+                        onChange={(e) => setStocksel(e.target.value)}
                         required
                       >
-                        <option value="">Select Area</option>
-                        {AreasOption?.map((a) => {
+                        <option value="">Select Stockiest</option>
+                        {AllAreaStock?.map((i) => {
                           return (
                             <>
-                              <option key={a} value={a}>
-                                {a}
+                              <option key={i} value={i.Name}>
+                                {i.Name}
                               </option>
                             </>
                           );
                         })}
                       </select>
-                      {errors.Area && (
+                    </div>
+
+                    <div className="flex flex-col justify-start ">
+                      {StockiestDet?.map((i) => {
+                        return (
+                          <>
+                            <div
+                              key={i}
+                              className="flex flex-col gap-4 bg-white rounded-lg p-4 shadow-md  justify-center m-2 items-center"
+                            >
+                              <User name={i.Name} className="text-[11px]" />
+                              <p className="text-[10px] flex flex-col gap-1">
+                                {i.mobile}
+                                <span className="text-[10px]"> {i.Area}</span>
+                                <span className="text-[10px]">
+                                  {" "}
+                                  {i.address}
+                                </span>
+                              </p>
+                            </div>
+                          </>
+                        );
+                      })}
+                    </div>
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="number"
+                        label="Collection"
+                        name="Collection"
+                        value={formData.Collection}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.Collection && (
                         <p className="text-red-500  text-xs p-1">
-                          {errors.Area}
+                          {errors.Collection}
                         </p>
                       )}
                     </div>
 
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="textarea"
-                        label="Address"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        required
+                    <div className="flex flex-row gap-3 justify-center items-center">
+                      <p className="text-sm font-bold ">Have POB? </p>
+                      <Switch
+                        size="sm"
+                        isSelected={isSelected}
+                        onValueChange={setIsSelected}
+                      ></Switch>
+                    </div>
+
+                    <div>
+                      <InputListStock
+                        inputList={inputList}
+                        setInputList={setInputList}
+                        AllAreaStock={AllAreaStock}
+                        isSelected={isSelected}
                       />
-                      {errors.address && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.address}
-                        </p>
-                      )}
                     </div>
                   </div>
                 </form>

@@ -20,14 +20,10 @@ export default function Tour() {
     axios
       .get(`${Server}/add/tourUser/${user.userId}`)
       .then((res) => {
-        console.log(res.data);
         setTp(res.data);
       })
-      .catch((err) => {
-        console.log(err);
-      })
+      .catch((err) => {})
       .finally(() => {
-        console.log("done");
         setLoading(false);
       });
   }, []);
@@ -35,7 +31,9 @@ export default function Tour() {
   const ActiveProgram = tp?.filter(
     (itm) => itm.Act === true && itm.Apv === true
   );
-
+  const UnActiveProgram = tp?.filter(
+    (itm) => itm.Act === true && itm.Apv === false
+  );
   const Active = { ...ActiveProgram };
 
   const start_date = new Date(Active[0]?.startDate);
@@ -47,9 +45,6 @@ export default function Tour() {
     dates.push(moment(start_date).format("DD/MM/YYYY"));
     start_date.setDate(start_date.getDate() + 1);
   }
-
-  console.log(dates);
-
   const TodayDate = dates.filter(
     (i) => i === moment(new Date()).format("DD/MM/YYYY")
   );
@@ -64,30 +59,36 @@ export default function Tour() {
           />
         </div>
       ) : (
-        <div className="flex justify-center items-center first-letter:w-[100%]  mt-5 flex-col">
+        <div className="flex justify-center items-center first-letter:w-[100%] mb-24 p-2  mt-5 flex-col">
           <Tabs color="primary" className="text-xs" aria-label="Options">
             <Tab
               key="Active-Program"
-              className="text-xs flex flex-col justify-center items-center gap-10"
+              className="text-xs flex flex-col justify-center items-center gap-3"
               title="Active-Program"
             >
               <div className="flex flex-col gap-5 mt-5 justify-center items-center">
-                <ActiveTp tp={tp} />
+                <ActiveTp tp={ActiveProgram} />
               </div>
-              <div className="flex flex-col gap-5  justify-center items-center">
-                <DcrFIlDates ActiveProgram={ActiveProgram} dates={TodayDate} />
-              </div>
+              {TodayDate.length === 0 ? (
+                <p>No Program Found..</p>
+              ) : (
+                <div className="flex flex-col gap-5  justify-center items-center">
+                  <DcrFIlDates
+                    ActiveProgram={ActiveProgram}
+                    dates={TodayDate}
+                  />
+                </div>
+              )}
             </Tab>
-            <Tab key="Appoval" className="text-xs" title="Appoval">
+            <Tab
+              key="Approve Status"
+              className="text-xs"
+              title="Approve Status"
+            >
               <div className="flex flex-col gap-5 mt-5 justify-center items-center">
-                <Approve tp={tp} />
+                <Approve UnActiveProgram={UnActiveProgram} />
               </div>
-            </Tab>
-            <Tab key="All-Programs" className="text-xs" title="All-Programs">
-              <div className="flex flex-col gap-5 mt-5 justify-center items-center">
-                <AllProgram tp={tp} />
-              </div>
-            </Tab>
+            </Tab>{" "}
           </Tabs>
         </div>
       )}

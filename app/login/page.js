@@ -1,185 +1,3 @@
-// import React from "react";
-// import axios from "axios";
-
-// import { useState } from "react";
-// import "react-toastify/dist/ReactToastify.css";
-
-// export default function Login(props) {
-//   const [email, setEmail] = useState({
-//     email: "",
-//   });
-
-//   const [otpver, setOtpver] = useState({
-//     otp: "",
-//   });
-
-//   const handleChangeOtp = (event) => {
-//     const { name, value } = event.target;
-//     setOtpver((prevState) => ({
-//       ...prevState,
-//       [name]: value,
-//     }));
-//   };
-
-//   const handleChange = (event) => {
-//     const { name, value } = event.target;
-//     setEmail((prevState) => ({
-//       ...prevState,
-//       [name]: value,
-//     }));
-//   };
-
-//   const [show, setShow] = useState(true);
-//   const [flag, setFlag] = useState(false);
-
-//   console.log(show);
-//   const handleSubmit = (email) => {
-//     // Email validation regex pattern
-//     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-//     console.log(email);
-
-//     if (!emailRegex.test(email)) {
-//       // Show error message if email is not valid
-//       toast.error("Invalid email address");
-//       return;
-//     }
-
-//     axios
-//       .post("http://localhost:4000/user/Signin/verify", { email: email })
-//       .then((res) => {
-//         toast.success(res.data.message);
-
-//         setShow(false);
-//       })
-
-//       .catch((error) => {
-//         toast.error(error.response?.data?.message);
-//         console.log(error, "0");
-//       });
-//   };
-
-//   const handleSubmitOtp = (email, otp) => {
-//     console.log(typeof otp, typeof email, "otp");
-//     if (!email || !otp) {
-//       toast.error("Fill the Otp!");
-//     } else {
-//       axios
-//         .post("http://localhost:4000/User/Signin", {
-//           email,
-//           pass,
-//         })
-//         .then((res) => {
-//           axios
-//             .get("http://localhost:4000/User/auth", {
-//               headers: {
-//                 Authorization: `Bearer ${res.data}`, // Use the tobyn the token variable here instead of res.data
-//               },
-//             })
-//             .then((response) => {
-//               // Handle the response from the /User/auth endpoint
-//               const userData = JSON.stringify(response.data);
-//               localStorage.setItem("user", userData);
-//               toast.success("Sign in successful!");
-//               SigninSuccesful();
-//               setFlag(true);
-//               setShow(false);
-//             })
-//             .catch((error) => {
-//               // Handle any error that occurred during the request
-//               toast.error(error?.response?.data.message);
-//               console.log(error, "1st");
-//             });
-//         })
-//         .catch((error) => {
-//           // Handle any error that occurred during the request
-//           toast.error(error?.response?.data?.message);
-//           console.log(error);
-//         });
-//     }
-//   };
-//   function SigninSuccesful() {
-//     setTimeout(() => {
-//       window.location.replace("/");
-//     }, 2000);
-//   }
-
-//   return (
-//     <>
-//       <div className="flex justify-center flex-col gap-5 mb-5 items-center">
-//         <h3 className="text-lg font-bold">Log In!</h3>
-
-//         {show === true ? (
-//           <div className="flex justify-center items-center gap-5 flex-col ">
-//             <div className="flex flex-col gap-2">
-//               <label className="text-green-500 text-sm">Enter Email Id</label>
-//               <input
-//                 name="email"
-//                 type="email"
-//                 className="h-[50px] w-[300px] border border-1 border-black rounded-lg p-3"
-//                 maxLength={60}
-//                 onChange={handleChange}
-//                 value={email.email}
-//               />
-//             </div>
-//             <div className="flex items-center flex-col gap-5 justify-between">
-//               <button
-//                 onClick={() => handleSubmit(email.email)}
-//                 className="hover:bg-red-500  bg-green-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-//               >
-//                 Get Otp
-//               </button>
-//             </div>
-//           </div>
-//         ) : flag === false ? (
-//           <>
-//             <div className="flex justify-center items-center gap-5 flex-col ">
-//               <div className="flex flex-col gap-2">
-//                 <label className="text-green-500 text-sm">Enter Otp</label>
-//                 <input
-//                   name="otp"
-//                   type="number"
-//                   className="h-[50px]  border border-1 border-black rounded-lg p-3"
-//                   maxLength={6}
-//                   onChange={handleChangeOtp}
-//                   value={otpver.otp}
-//                 />
-//                 {/* <label className="text-red-500 text-xs font-bold ">
-//           {formError.email}
-//         </label> */}
-//               </div>
-//               <div className="flex items-center flex-col gap-5  justify-between">
-//                 <button
-//                   onClick={() =>
-//                     handleSubmitOtp(email.email, Number(otpver.otp))
-//                   }
-//                   className="hover:bg-red-500 shake bg-green-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-//                 >
-//                   Verify Otp
-//                 </button>
-//               </div>
-//             </div>
-//             <p className="text-black text-xs">
-//               Don't have an account?{" "}
-//               <span
-//                 onClick={() => props?.setHandleChange(true)}
-//                 className="text-blue-500 text-sm cursor-pointer"
-//               >
-//                 Sign Up
-//               </span>
-//             </p>
-//           </>
-//         ) : (
-//           <div className="loader">
-//             <div className="dot dot-1"></div>
-//             <div className="dot dot-2"></div>
-//             <div className="dot dot-3"></div>
-//             <div className="dot dot-4"></div>
-//           </div>
-//         )}
-//       </div>
-//     </>
-//   );
-// }
 "use client";
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -187,13 +5,14 @@ import axios from "axios";
 import { Input, Button } from "@nextui-org/react";
 import "react-toastify/dist/ReactToastify.css";
 export default function Login() {
+  const [error, setError] = useState();
   const [user, setUser] = useState({
     userId: "",
     pass: "",
   });
+  const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
   const [flag, setFlag] = useState(false);
 
-  console.log(user);
   function handleinput(e) {
     const { name, value } = e.target;
     setUser((prevData) => ({
@@ -216,11 +35,10 @@ export default function Login() {
     }
 
     axios
-      .post("http://localhost:4000/user/Signin", { userId, pass })
+      .post(`${Server}/user/Signin`, { userId, pass })
       .then((res) => {
-        console.log(res, "rs");
         axios
-          .get("http://localhost:4000/user/auth", {
+          .get(`${Server}/user/auth`, {
             headers: {
               Authorization: `Bearer ${res.data}`, // Use the tobyn the token variable here instead of res.data
             },
@@ -228,25 +46,25 @@ export default function Login() {
           .then((response) => {
             const userData = JSON.stringify(response.data);
             localStorage.setItem("user", userData);
-            console.log(userData);
+
             toast.success("Sign in successful!");
           })
           .catch((error) => {
-            // Handle any error that occurred during the request
-            toast.error(error?.response.data.message);
-            console.log(error, "1st");
+            setError(error);
           });
       })
 
       .catch((err) => {
-        console.log(err);
-        toast.error(err?.response.data.message);
+        toast.error(err?.response?.data?.message);
       })
       .finally(() => {
-        setTimeout(() => {
-          setFlag(false);
-          window.location.reload();
-        }, 2000);
+        if (error?.response?.data) {
+        } else {
+          setTimeout(() => {
+            setFlag(false);
+            window.location.reload();
+          }, 2000);
+        }
       });
   };
 

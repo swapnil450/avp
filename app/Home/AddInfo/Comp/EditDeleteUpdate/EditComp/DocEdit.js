@@ -1,10 +1,11 @@
+
 "use client";
 import React from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import edit from "../../../../../icons/edit.webp";
-import del from "../../../../../icons/delete-outline.webp";
+import edit from "../../../../../img/edit.webp";
+import del from "../../../../../img/delete.webp";
 import Image from "next/image";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 import {
@@ -43,6 +44,7 @@ export default function DocEdit({ item }) {
   const [formData, setFormData] = React.useState({
     DoctorCode: "",
     DoctorName: "",
+    HosName: "",
     Speciality: "",
     Degree: "",
     mobile: "",
@@ -59,6 +61,7 @@ export default function DocEdit({ item }) {
     const {
       DoctorCode,
       DoctorName,
+      HosName,
       Speciality,
       Degree,
       mobile,
@@ -75,6 +78,7 @@ export default function DocEdit({ item }) {
       DoctorCode,
       DoctorName,
       Speciality,
+      HosName,
       Degree,
       mobile,
       address,
@@ -95,6 +99,9 @@ export default function DocEdit({ item }) {
     }
     if (!formData.DoctorName) {
       newErrors.DoctorName = "Doctor Name is required";
+    }
+    if (!formData.HosName) {
+      newErrors.HosName = "Hospital Name is required";
     }
     if (!formData.mobile) {
       newErrors.mobile = "Mobile No. is required";
@@ -195,22 +202,7 @@ export default function DocEdit({ item }) {
 
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
-<<<<<<< HEAD
-          <div
-            key={size}
-            className="flex flex-row justify-center items-center gap-3"
-          >
-            <Button
-              color="danger"
-              size="sm"
-              className="text-white font-semibold "
-            >
-              UnApproved
-            </Button>
-
-=======
-          <div key={size} className="flex flex-row justify-center items-center">
->>>>>>> eb540361390eeef1ff5284aeda21e7f222c04fcf
+          <div key={size} className="flex flex-row gap-3 justify-center items-center">
             <Image
               onClick={() => handleOpen(size)}
               className="cursor-pointer"
@@ -219,22 +211,38 @@ export default function DocEdit({ item }) {
               height={20}
               alt="icons"
             />
-            <Image
-              className="cursor-pointer"
-              src={del}
-              width={20}
-              height={20}
-              alt="icons"
-              onClick={() => handleDelete(item._id)}
-            />
+
+            <Dropdown>
+              <DropdownTrigger>
+                <Image
+                  className="cursor-pointer"
+                  src={del}
+                  width={20}
+                  height={20}
+                  alt="icons"
+                />
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Dropdown Variants"
+                color="default"
+                variant="solid"
+              >
+                <DropdownItem
+                  key="delete"
+                  className="text-danger"
+                  color="danger"
+                  onClick={() => handleDelete(item._id)}
+                >
+                  Confirm Delete
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </div>
         ))}
       </div>
-
       <Modal
         size={size}
         isOpen={isOpen}
-        placement={`center`}
         scrollBehavior={`inside`}
         onClose={onClose}
       >
@@ -275,6 +283,21 @@ export default function DocEdit({ item }) {
                       {errors.DoctorName && (
                         <p className="text-red-500  text-xs p-1">
                           {errors.DoctorName}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="text"
+                        label="Hospital Name"
+                        name="HosName"
+                        value={formData.HosName}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.HosName && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.HosName}
                         </p>
                       )}
                     </div>
@@ -474,7 +497,7 @@ export default function DocEdit({ item }) {
                       className="bg-black text-white"
                       onClick={() => handleSubmit(item._id)}
                     >
-                      Update
+                      Save
                     </Button>
                   </>
                 )}

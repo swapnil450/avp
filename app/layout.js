@@ -1,6 +1,6 @@
 "use client";
 import Sidebar from "@/utils/Sidebar/Sidebar";
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { Provider } from "react-redux";
@@ -13,7 +13,13 @@ import Login from "./login/page";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [userData, setUserData] = useState({});
+  // const [load, setLoad] = useState(false);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUserData(user);
+  }, []);
 
   return (
     <html lang="en">
@@ -21,7 +27,7 @@ export default function RootLayout({ children }) {
         <NextUIProvider>
           <Provider store={store}>
             <AllDataContext>
-              {user ? (
+              {userData ? (
                 <>
                   <Sidebar />
                   <div className="flex justify-center items-center">

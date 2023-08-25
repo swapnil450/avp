@@ -9,9 +9,8 @@ import img2 from "../public/tour.webp";
 import img3 from "../public/report.webp";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-
 import { setSideBarTab } from "@/ReduxToolkit/Slices/UiCompSlice/SideBarTab";
-import "rsuite/dist/rsuite-no-reset.min.css";
+
 export default function TabBar() {
   const [isSticky, setSticky] = React.useState(false);
   const [active, setActive] = useState("DashBoard");
@@ -44,7 +43,7 @@ export default function TabBar() {
   const taba = useSelector((state) => {
     return state.SideBarTab;
   });
-  console.log(taba, "tab");
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -58,7 +57,7 @@ export default function TabBar() {
   return (
     <>
       <main
-        className={`flex lg:hidden  h-[60px]  justify-center items-center ${
+        className={`flex   h-[60px]  justify-center items-center ${
           isSticky
             ? "fixed bottom-0 w-full rounded-t-xl bg-gray-100  shadow-lg"
             : " fixed bottom-0 w-full rounded-t-xl bg-gray-100  shadow-lg"
@@ -67,33 +66,38 @@ export default function TabBar() {
         <div className="flex flex-row gap-10 justify-center items-center">
           {tabs.map((tab) => (
             <>
-              <Link
-                href={tab.link}
-                className="flex flex-col gap-1 justify-center items-center"
-              >
-                <Image
-                  onClick={() => controll(tab.name)}
+              <div key={tab.link}>
+                <Link
                   href={tab.link}
-                  width={20}
-                  height={20}
-                  src={tab.icon}
-                  className={
-                    active === tab.name ? " cursor-pointer " : " cursor-pointer"
-                  }
-                />
-                <p
-                  onClick={() => controll(tab.name)}
-                  color="foreground"
-                  href={tab.link}
-                  className={
-                    active === tab.name
-                      ? "border-b-2 text-[12px] border-black"
-                      : "text-[10px]"
-                  }
+                  className="flex flex-col gap-1 justify-center items-center"
                 >
-                  {tab.name}
-                </p>
-              </Link>
+                  <Image
+                    onClick={() => controll(tab.name)}
+                    href={tab.link}
+                    alt="icon"
+                    width={20}
+                    height={20}
+                    src={tab.icon}
+                    className={
+                      active === tab.name
+                        ? " cursor-pointer "
+                        : " cursor-pointer"
+                    }
+                  />
+                  <p
+                    onClick={() => controll(tab.name)}
+                    color="foreground"
+                    href={tab.link}
+                    className={
+                      active === tab.name
+                        ? "border-b-2 text-[12px] border-black"
+                        : "text-[10px]"
+                    }
+                  >
+                    {tab.name}
+                  </p>
+                </Link>
+              </div>
             </>
           ))}
         </div>

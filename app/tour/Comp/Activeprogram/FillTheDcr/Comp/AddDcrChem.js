@@ -6,6 +6,7 @@ import med from "../../../../../img/med.webp";
 import { User } from "@nextui-org/react";
 import Image from "next/image";
 import { Switch } from "@nextui-org/react";
+import WorkWith from "./WorkWith";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Modal,
@@ -26,6 +27,7 @@ import {
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
+
 import InputList from "@/app/Home/AddInfo/Comp/EmerncyAdject/InputList";
 
 export default function AddDcrChem({ ActiveProgram }) {
@@ -38,16 +40,19 @@ export default function AddDcrChem({ ActiveProgram }) {
   const [lit, setLit] = useState("Yes");
   const [det, setDet] = useState("Yes");
   const [chemsel, setChemsel] = useState("");
+
   const [inputList, setInputList] = React.useState([
     { id: 1, Product: "", Qnt: "", value: "" }, // Initial input item
   ]);
 
-  const [isSelected, setIsSelected] = React.useState(true);
+  const [isSelected, setIsSelected] = React.useState(false);
   const { AreasOption, allChem } = useGlobalContext();
 
   const AreaTP = ActiveProgram?.area;
 
-  const AllAreaChem = allChem.chemData?.filter((i) => i.Area === `sangmaner`);
+  const AllAreaChem = allChem.chemData?.filter(
+    (i) => i.Area === AreaTP && i.approved === true
+  );
 
   const chemistDet = AllAreaChem?.filter((i) => i.chemName === chemsel) || [
     { chemName: "chemist" },
@@ -57,8 +62,6 @@ export default function AddDcrChem({ ActiveProgram }) {
     setSize(size);
     onOpen();
   };
-
-  console.log(chemistDet, "det");
 
   const user = JSON.parse(localStorage?.getItem("user")) || "admin";
   const [formData, setFormData] = React.useState({
@@ -74,9 +77,10 @@ export default function AddDcrChem({ ActiveProgram }) {
     lit: "",
     Pob: [],
     createdBy: " ",
-    createdAt: new Date().toISOString().slice(0, 10),
+    createdAt: "",
   });
-
+  formData.createdAt = new Date().toISOString().slice(0, 10);
+  formData.Pob = inputList;
   formData.DcrId = ActiveProgram?.DcrId;
   formData.chemCode = chemistDet[0]?.chemCode;
   formData.chemName = chemistDet[0]?.chemName;
@@ -87,36 +91,15 @@ export default function AddDcrChem({ ActiveProgram }) {
   formData.GSTNo = chemistDet[0]?.GSTNo;
   formData.lit = lit;
   formData.Detail = det;
-  formData.createdBy = user.userId;
-
-  console.log(formData);
+  formData.createdBy = user?.userId;
 
   const [errors, setErrors] = React.useState({});
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.chemCode) {
-      newErrors.chemCode = "Chemist Code is required";
-    }
-    if (!formData.chemName) {
-      newErrors.chemName = "Chemist Name is required";
-    }
-    if (!formData.mobile) {
-      newErrors.mobile = "Mobile No. is required";
-    }
-    if (!formData.address) {
-      newErrors.address = "Address is required";
-    }
-    if (!formData.GSTNo) {
-      newErrors.GSTNo = "GST is required";
-    }
-    if (!formData.DLNo) {
-      newErrors.DLNo = "DL.No is required";
-    }
-
-    if (!formData.Area) {
-      newErrors.Area = "Area is required";
+    if (formData.chemName === undefined) {
+      newErrors.chemName = "Chemist name is required";
     }
 
     // Add similar validation for other fields
@@ -139,7 +122,7 @@ export default function AddDcrChem({ ActiveProgram }) {
 
   const handleSubmit = () => {
     if (validateForm()) {
-      const apiUrl = `${Server}/add/chem`;
+      const apiUrl = `${Server}/add/chemDcr`;
       setIsLoading(true);
       setHasError(false);
 
@@ -149,43 +132,37 @@ export default function AddDcrChem({ ActiveProgram }) {
           const responseData = response.data;
           setResponse(responseData);
 
-          if (response.status === 200) {
-            // Perform any necessary actions on success
-            notify();
-          } else {
-            setHasError(true);
-          }
+          toast.success(`${response?.data?.message}`);
         })
         .catch((error) => {
           setHasError(true);
-          toast.error(error?.message || "Something Went Wrong !");
+          toast.error(error?.response?.data?.message);
         })
         .finally(() => {
           setIsLoading(false);
+          setChemsel("");
+          onClose();
         });
     } else {
       toast.error("Please fill All Details");
     }
   };
 
-  const notify = () => {
-    toast.success(response?.message || " Chemist Added Successfuly !");
-  };
   return (
     <>
-      {/* <ToastContainer
-        position="bottom-center"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      /> */}
       <div className="flex flex-col justify-center items-center gap-3">
+        <ToastContainer
+          position="bottom-center"
+          autoClose={1000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
         {sizes.map((size) => (
           <div
             key={size}
@@ -260,7 +237,10 @@ export default function AddDcrChem({ ActiveProgram }) {
                       {chemistDet?.map((i) => {
                         return (
                           <>
-                            <div className="flex flex-col bg-white rounded-lg p-2 shadow-md gap-2 justify-center m-2 items-center">
+                            <div
+                              key={i}
+                              className="flex flex-col bg-white rounded-lg p-2 shadow-md gap-2 justify-center m-2 items-center"
+                            >
                               <User
                                 name={i.chemName}
                                 className="text-xs"
@@ -340,10 +320,14 @@ export default function AddDcrChem({ ActiveProgram }) {
                         ></Switch>
                       </div>
                     </div>
-                    <InputList
-                      inputList={inputList}
-                      setInputList={setInputList}
-                    />
+                    <div>
+                      <InputList
+                        inputList={inputList}
+                        setInputList={setInputList}
+                        AllAreaChem={AllAreaChem}
+                        isSelected={isSelected}
+                      />
+                    </div>
                   </div>
                 </form>
               </ModalBody>

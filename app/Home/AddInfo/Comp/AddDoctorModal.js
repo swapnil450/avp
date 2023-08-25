@@ -22,7 +22,7 @@ export default function AddDoctorModal() {
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
 
-  const { AreasOption, allProdRate } = useGlobalContext();
+  const { AreasOption, allProdRate,user } = useGlobalContext();
 
   const Pro2 = allProdRate?.proRateData?.map((i) => i.ProductName);
 
@@ -30,11 +30,12 @@ export default function AddDoctorModal() {
     setSize(size);
     onOpen();
   };
-  const user = JSON.parse(localStorage?.getItem("user"));
+
 
   const [formData, setFormData] = React.useState({
     DoctorCode: "",
     DoctorName: "",
+    HosName: "",
     mobile: "",
     address: "",
     Area: "",
@@ -49,7 +50,7 @@ export default function AddDoctorModal() {
     approved: false,
   });
 
-  formData.createdBy = user.userId;
+  formData.createdBy = user.userId || "admin";
 
   const [errors, setErrors] = React.useState({});
 
@@ -61,6 +62,9 @@ export default function AddDoctorModal() {
     }
     if (!formData.DoctorName) {
       newErrors.DoctorName = "Doctor Name is required";
+    }
+    if (!formData.HosName) {
+      newErrors.HosName = "Hospital Name is required";
     }
     if (!formData.mobile) {
       newErrors.mobile = "Mobile No. is required";
@@ -125,6 +129,7 @@ export default function AddDoctorModal() {
           setFormData({
             DoctorCode: "",
             DoctorName: "",
+            HosName: "",
             mobile: "",
             address: "",
             Area: "",
@@ -135,6 +140,9 @@ export default function AddDoctorModal() {
             P1: "",
             P2: "",
           });
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         });
     } else {
       toast.error("Please fill All Details");
@@ -163,7 +171,7 @@ export default function AddDoctorModal() {
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
           <div
-          key={size}
+            key={size}
             onClick={() => handleOpen(size)}
             className="flex flex-col gap-1 justify-center items-center"
           >
@@ -175,7 +183,6 @@ export default function AddDoctorModal() {
               className=" cursor-pointer "
             />
             <p
-              key={size}
               size="xs"
               className=" text-[12px] cursor-pointer  "
               onClick={() => handleOpen(size)}
@@ -229,6 +236,21 @@ export default function AddDoctorModal() {
                       {errors.DoctorName && (
                         <p className="text-red-500  text-xs p-1">
                           {errors.DoctorName}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="text"
+                        label="Hospital Name"
+                        name="HosName"
+                        value={formData.HosName}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.HosName && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.HosName}
                         </p>
                       )}
                     </div>

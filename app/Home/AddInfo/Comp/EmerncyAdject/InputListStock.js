@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { Input, Button } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
-export default function InputList({ setInputList, inputList, isSelected }) {
+export default function InputListStock({
+  setInputList,
+  inputList,
+  isSelected,
+}) {
+  const [selp, setSelp] = useState("");
   const { allProdRate } = useGlobalContext();
 
   const handleInputChange = (index, inputType, value) => {
@@ -15,12 +20,7 @@ export default function InputList({ setInputList, inputList, isSelected }) {
   const [errors, setErrors] = React.useState([]);
 
   const handleAddInput = () => {
-    if (
-      !inputList.some(
-        (input) =>
-          input.Product === "" || input.Qnt === "" || input.value === " "
-      )
-    ) {
+    if (!inputList.some((input) => input.Product === "" || input.Qnt === "")) {
       setInputList([
         ...inputList,
         { id: Date.now(), Product: "", Qnt: "", value: "" },
@@ -49,7 +49,7 @@ export default function InputList({ setInputList, inputList, isSelected }) {
               <select
                 className="outline-none font-semibold text-gray-600 border-1 border-gray-300  bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
                 id="Chem"
-                name="Chem"
+                name="Product"
                 value={input.Product}
                 onChange={(e) =>
                   handleInputChange(index, "Product", e.target.value)
@@ -90,15 +90,6 @@ export default function InputList({ setInputList, inputList, isSelected }) {
                   placeholder="Value in PTS ..."
                 />
               </div>
-              {/* <Input
-                type="number"
-                value={input.value}
-                onChange={(e) =>
-                  handleInputChange(index, "value", e.target.value * 2)
-                }
-                className="rounded p-2 flex-1"
-                placeholder="value.."
-              /> */}
 
               <Button
                 type="button"

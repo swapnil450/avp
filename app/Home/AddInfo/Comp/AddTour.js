@@ -23,12 +23,11 @@ export default function AddTour() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
-  const { AreasOption, headquaters } = useGlobalContext();
+  const { AreasOption, headquaters, user } = useGlobalContext();
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
-  const user = JSON.parse(localStorage?.getItem("user") || "user");
 
   const [formData, setFormData] = React.useState({
     startDate: "",
@@ -36,13 +35,15 @@ export default function AddTour() {
     workWith: "",
     headQ: "",
     area: "",
+    DcrId: "",
     createdBy: "",
     createdAt: new Date().toISOString().slice(0, 10),
     Act: true,
     Apv: false,
   });
 
-  formData.createdBy = user.userId;
+  formData.createdBy = user.userId || "admin";
+  formData.DcrId = Date.now();
   const [errors, setErrors] = React.useState({});
 
   const validateForm = () => {
@@ -92,6 +93,7 @@ export default function AddTour() {
             workWith: "",
             headQ: "",
             area: "",
+            DcrId: "",
           });
           onClose();
           setTimeout(() => {
@@ -127,6 +129,7 @@ export default function AddTour() {
             <Image
               width={20}
               height={20}
+              alt="icon"
               src={shop}
               className=" cursor-pointer "
             />
@@ -234,22 +237,6 @@ export default function AddTour() {
                       {errors.Area && (
                         <p className="text-red-500  text-xs p-1">
                           {errors.Area}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="textarea"
-                        label="Address"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.address && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.address}
                         </p>
                       )}
                     </div>

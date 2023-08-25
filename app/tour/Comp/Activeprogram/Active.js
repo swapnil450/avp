@@ -24,7 +24,7 @@ export const CheckIcon = ({ size, height, width, ...props }) => {
 
 export default function ActiveTp({ tp }) {
   const ActiveProgram = tp.filter(
-    (itm) => itm.Act === true && itm.Apv === true
+    (itm) => itm.Apv === true && itm.Act === true
   );
 
   return (
@@ -33,7 +33,7 @@ export default function ActiveTp({ tp }) {
         {ActiveProgram?.map((i) => {
           return (
             <>
-              <Card key-={i} className="py-4">
+              <Card key={i} className="py-4">
                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-center">
                   <h4 className="font-semibold bg-gray-100 bg-blend-saturation p-1 rounded-lg text-sm">
                     {moment(i.startDate).format("DD/MM/YYYY")}_to_
@@ -43,12 +43,6 @@ export default function ActiveTp({ tp }) {
                 <CardBody className="overflow-visible py-2">
                   <div className="flex flex-row justify-center items-center gap-10 p-2">
                     <div>
-                      <p className="text-sm font-semibold">
-                        Work-With :{" "}
-                        <span className="text-xs font-medium text-gray-600">
-                          {i.workWith} sale manager
-                        </span>{" "}
-                      </p>
                       <p className="text-sm font-semibold">
                         Area :{" "}
                         <span className="text-xs font-medium text-gray-600">

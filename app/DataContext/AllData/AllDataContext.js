@@ -5,8 +5,6 @@ import { createContext } from "react";
 const AllFieldDataContext = createContext();
 
 export default function AllDataContext({ children }) {
-  const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
-
   const [allEmpData, setAllEmpData] = useState([]);
   const [allDoc, setAllDoc] = useState([]);
   const [allChem, setAllChem] = useState([]);
@@ -15,10 +13,11 @@ export default function AllDataContext({ children }) {
   const [allStdFare, setAllStdFare] = useState([]);
   const [allProdRate, setAllProdRate] = useState([]);
   const [allStockiest, setAllStockiest] = useState([]);
-
+  const [user, setUser] = useState({});
   const [flag, setFlag] = useState(false);
 
   useEffect(() => {
+    const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
     const fetchData = async () => {
       try {
         const [
@@ -70,6 +69,9 @@ export default function AllDataContext({ children }) {
       } catch (error) {}
     };
 
+    const userinfo = JSON.parse(localStorage.getItem("user")) || {};
+    setUser(userinfo);
+
     // const interval = setInterval(() => {
     fetchData();
     // }, 10000);
@@ -93,7 +95,7 @@ export default function AllDataContext({ children }) {
       headquaters,
       AreasOption,
       allProdRate,
-
+      user,
       flag,
     };
   }, [allEmpData]);

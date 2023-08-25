@@ -22,14 +22,15 @@ export default function AddChemist() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
-  const sizes = ["5xl"];
+  const sizes = ["full"];
 
-  const { AreasOption } = useGlobalContext();
+  const { AreasOption, user } = useGlobalContext();
+
   const handleOpen = (size) => {
     setSize(size);
     onOpen();
   };
-  const user = JSON.parse(localStorage?.getItem("user")) || "admin";
+
   const [formData, setFormData] = React.useState({
     chemCode: "",
     chemName: "",
@@ -42,10 +43,9 @@ export default function AddChemist() {
     createdBy: "",
     createdAt: new Date().toISOString().slice(0, 10),
     approved: false,
-    approved: true,
   });
 
-  formData.createdBy = user.userId;
+  formData.createdBy = user.userId || "admin";
 
   const [errors, setErrors] = React.useState({});
 
@@ -112,7 +112,11 @@ export default function AddChemist() {
             Area: "",
             DLNo: "",
             GSTNo: "",
+            createdAt: "",
           });
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         });
     } else {
       toast.error("Please fill All Details");
@@ -148,7 +152,6 @@ export default function AddChemist() {
               className=" cursor-pointer "
             />
             <p
-              key={size}
               size="xs"
               className=" text-[12px] cursor-pointer  "
               onClick={() => handleOpen(size)}
@@ -238,9 +241,7 @@ export default function AddChemist() {
                       )}
                     </div>
                     <div className="flex flex-col justify-center ">
-
                       <p className="text-sm p-1 text-gray-600">Select Area</p>
-                    <p className="text-sm p-1 text-gray-600">Select Area</p>
                       <select
                         className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
                         id="Area"

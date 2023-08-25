@@ -36,12 +36,18 @@ const tabs = [
   { name: "Tour Program", link: "/TourProgram" },
 ];
 
+const logout = () => {
+  localStorage.removeItem("user");
+  setTimeout(() => {
+    window.location.reload();
+  }, 1000);
+};
+
 export default function App() {
   const [active, setActive] = useState("DashBoard");
- 
 
   // handle scroll behaviour when scroll to stick navbar top position and fixed
- 
+
   const dispatch = useDispatch();
   const controll = (i) => {
     dispatch(setSideBarTab);
@@ -51,20 +57,15 @@ export default function App() {
     return state.SideBarTab;
   });
 
-  
   return (
     <>
-      <Navbar
-       className="h-[60px] "
-        isBordered
-        isBlurred={false}
-      >
+      <Navbar className="h-[60px] " isBordered isBlurred={false}>
         <NavbarBrand>
           <AcmeLogo />
           <p className="font-bold text-inherit">Avirosa</p>
         </NavbarBrand>
-        <NavbarContent
-          className="sm:flex lg:block lg:flex lg:flex-row hidden  gap-8"
+        {/* <NavbarContent
+          className="sm:flex  lg:flex lg:flex-row hidden  gap-8"
           justify="center"
         >
           {tabs.map((tab) => (
@@ -81,9 +82,9 @@ export default function App() {
               </Link>
             </NavbarItem>
           ))}
-        </NavbarContent>
+        </NavbarContent> */}
         <NavbarContent
-          className="lg:hidden  flex justify-center items-center"
+          className="  flex justify-center items-center"
           justify="end"
         >
           <NavbarItem>
@@ -94,22 +95,14 @@ export default function App() {
                     as="button"
                     avatarProps={{
                       isBordered: true,
-                      src: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+                      src: "",
+                      alt: "A",
                     }}
                     className="transition-transform"
                   />
                 </DropdownTrigger>
                 <DropdownMenu aria-label="User Actions" variant="flat">
-                  <DropdownItem key="profile" className="h-14 gap-2">
-                    <p className="font-bold">Signed in </p>
-                  </DropdownItem>
-                  <DropdownItem key="settings">My Settings</DropdownItem>
-                  <DropdownItem key="team_settings">Permissions</DropdownItem>
-
-                  <DropdownItem key="help_and_feedback">
-                    Help & Feedback
-                  </DropdownItem>
-                  <DropdownItem key="logout" color="danger">
+                  <DropdownItem onClick={logout} key="logout" color="danger">
                     Log Out
                   </DropdownItem>
                 </DropdownMenu>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Input, Button } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
-export default function InputList({ setInputList, inputList, isSelected }) {
+export default function InputListDoc({ setInputList, inputList, isSelected }) {
   const { allProdRate } = useGlobalContext();
 
   const handleInputChange = (index, inputType, value) => {
@@ -18,7 +18,7 @@ export default function InputList({ setInputList, inputList, isSelected }) {
     if (
       !inputList.some(
         (input) =>
-          input.Product === "" || input.Qnt === "" || input.value === " "
+          input.Product === "" || input.Qnt === "" || input.value === ""
       )
     ) {
       setInputList([
@@ -30,6 +30,7 @@ export default function InputList({ setInputList, inputList, isSelected }) {
       setErrors(["Both fields are required"]);
     }
   };
+
 
   const handleDeleteInput = (index) => {
     const newList = inputList.filter((_, i) => i !== index);
@@ -49,7 +50,7 @@ export default function InputList({ setInputList, inputList, isSelected }) {
               <select
                 className="outline-none font-semibold text-gray-600 border-1 border-gray-300  bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
                 id="Chem"
-                name="Chem"
+                name="Product"
                 value={input.Product}
                 onChange={(e) =>
                   handleInputChange(index, "Product", e.target.value)
@@ -60,7 +61,11 @@ export default function InputList({ setInputList, inputList, isSelected }) {
                 {proData?.map((i) => {
                   return (
                     <>
-                      <option key={i} value={i.ProductName}>
+                      <option
+                        key={i}
+                        value={i.ProductName}
+                        onClick={() => setSelp(i.PTS)}
+                      >
                         {i.ProductName} | PTS : {i.PTS}
                       </option>
                     </>

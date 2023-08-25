@@ -1,6 +1,9 @@
 "use client";
 import React from "react";
 import axios from "axios";
+import edit from "../../../../../img/edit.webp";
+import del from "../../../../../img/delete.webp";
+import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -23,12 +26,12 @@ import {
 import { Input } from "@nextui-org/react";
 
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
-export default function EditStockiest({ item }) {
+export default function EditStock({ item }) {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [size, setSize] = React.useState("md");
-  const sizes = ["5xl"];
+  const [size, setSize] = React.useState("full");
+  const sizes = ["full"];
   const { AreasOption } = useGlobalContext();
   const handleOpen = (size) => {
     setSize(size);
@@ -180,14 +183,45 @@ export default function EditStockiest({ item }) {
       />
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
-          <Button
+          <div
             key={size}
-            size="sm"
-            className="text-black font-bold "
-            onPress={() => handleOpen(size)}
+            className="flex flex-row gap-3 justify-center items-center"
           >
-            + Edit
-          </Button>
+            <Image
+              onClick={() => handleOpen(size)}
+              className="cursor-pointer"
+              src={edit}
+              width={20}
+              height={20}
+              alt="icons"
+            />
+
+            <Dropdown>
+              <DropdownTrigger>
+                <Image
+                  className="cursor-pointer"
+                  src={del}
+                  width={20}
+                  height={20}
+                  alt="icons"
+                />
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Dropdown Variants"
+                color="default"
+                variant="solid"
+              >
+                <DropdownItem
+                  key="delete"
+                  className="text-danger"
+                  color="danger"
+                  onClick={() => handleDelete(item._id)}
+                >
+                  Confirm Delete
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
         ))}
       </div>
       <Modal
@@ -204,24 +238,6 @@ export default function EditStockiest({ item }) {
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
-                  {formData.approved === true ? (
-                    <Button
-                      className="text-white"
-                      onClick={() => setApproved(false)}
-                      color="danger"
-                    >
-                      Set-Not-Approved
-                    </Button>
-                  ) : (
-                    <Button
-                      className="text-white"
-                      onClick={() => setApproved(true)}
-                      color="success"
-                    >
-                      Set-Approved
-                    </Button>
-                  )}
-
                   <div className="grid lg:grid-cols-2 grid-cols-1  gap-4">
                     <div className="flex flex-col justify-center ">
                       <Input
@@ -397,32 +413,6 @@ export default function EditStockiest({ item }) {
                   </Button>
                 ) : (
                   <>
-                    <Dropdown>
-                      <DropdownTrigger>
-                        <Button
-                          color="danger"
-                          variant="solid"
-                          className="capitalize"
-                        >
-                          Delete Product & Rate
-                        </Button>
-                      </DropdownTrigger>
-                      <DropdownMenu
-                        aria-label="Dropdown Variants"
-                        color="default"
-                        variant="solid"
-                      >
-                        <DropdownItem
-                          key="delete"
-                          className="text-danger"
-                          color="danger"
-                          onClick={() => handleDelete(item._id)}
-                        >
-                          Confirm Delete
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-
                     <Button
                       color="black"
                       className="bg-black text-white"
