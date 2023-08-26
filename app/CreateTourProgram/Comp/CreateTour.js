@@ -379,6 +379,7 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
                         required
                       >
                         <option value="">Select Workwith</option>
+                        <option value="Independent">Independent</option>
                         <option value="Sale manager">Sale manager</option>
                         <option value="Buisness Devlopment Executive">
                           Buisness Devlopment Executive

@@ -7,9 +7,8 @@ export default function AllProgram({ tp }) {
       {tp.length === 0 ? (
         <>
           <p className="flex justify-center items-center  text-sm font-bold">
-            Wait for Response ..
+            No Data Available ..
           </p>
-          <Spinner />
         </>
       ) : (
         <div className="flex flex-col gap-3 justify-center items-center">
