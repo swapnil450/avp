@@ -33,11 +33,11 @@ export default function TabBar() {
     { name: "Dashboard", link: "/", icon: img },
     { name: "Approval", link: "/Tabs", icon: img1 },
     {
-      name: "Tour Program",
+      name: "Add DCR",
       link: "/tour",
       icon: img2,
     },
-    { name: "Reports", link: "/Reports", icon: img3 },
+    { name: "Reports", link: "/dcr", icon: img3 },
   ];
 
   const taba = useSelector((state) => {

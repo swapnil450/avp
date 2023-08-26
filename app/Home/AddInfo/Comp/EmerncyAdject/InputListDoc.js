@@ -92,7 +92,7 @@ export default function InputListDoc({ setInputList, inputList, isSelected }) {
                     handleInputChange(index, "value", e.target.value)
                   }
                   className="rounded p-2 flex-1"
-                  placeholder="Value in PTS ..."
+                  placeholder="PTS.."
                 />
               </div>
               {/* <Input

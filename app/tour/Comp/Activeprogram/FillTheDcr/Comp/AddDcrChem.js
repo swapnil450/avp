@@ -48,10 +48,11 @@ export default function AddDcrChem({ ActiveProgram }) {
   const [isSelected, setIsSelected] = React.useState(false);
   const { AreasOption, allChem } = useGlobalContext();
 
-  const AreaTP = ActiveProgram?.area;
+  const AreaTP = ActiveProgram?.area.split(",");
+  const ActiveAreaTp = AreaTP[0];
 
   const AllAreaChem = allChem.chemData?.filter(
-    (i) => i.Area === AreaTP && i.approved === true
+    (i) => i.Area === ActiveAreaTp && i.approved === true
   );
 
   const chemistDet = AllAreaChem?.filter((i) => i.chemName === chemsel) || [
@@ -79,6 +80,7 @@ export default function AddDcrChem({ ActiveProgram }) {
     createdBy: " ",
     createdAt: "",
   });
+
   formData.createdAt = new Date().toISOString().slice(0, 10);
   formData.Pob = inputList;
   formData.DcrId = ActiveProgram?.DcrId;

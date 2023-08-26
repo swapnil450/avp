@@ -179,7 +179,7 @@ export default function AddDcrChem({ ActiveProgram }) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add Chemist 💊
+                Add Stockiest
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">

@@ -14,11 +14,12 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import { Input } from "@nextui-org/react";
 
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 export default function AddTour() {
-  const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
+  const router = useRouter();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
@@ -32,25 +33,40 @@ export default function AddTour() {
   const [formData, setFormData] = React.useState({
     startDate: "",
     lastDate: "",
-    workWith: "",
-    headQ: "",
-    area: "",
+    post: "",
+    area: [],
+    month: "",
     DcrId: "",
     createdBy: "",
+    createdByName: "",
+    SendToApproved: false,
     createdAt: new Date().toISOString().slice(0, 10),
     Act: true,
     Apv: false,
   });
 
-  formData.createdBy = user.userId || "admin";
+  formData.createdBy = user?.userId || "admin";
+  formData.area = user?.selectedAreas;
+  formData.createdByName = user?.empName;
+  formData.post = user?.post;
   formData.DcrId = Date.now();
   const [errors, setErrors] = React.useState({});
+
+ 
 
   const validateForm = () => {
     const newErrors = {};
 
     // Add similar validation for other fields
-
+    if (!formData.startDate) {
+      newErrors.startDate = "startDate is required";
+    }
+    if (!formData.lastDate) {
+      newErrors.lastDate = "lastDate is required";
+    }
+    if (!formData.month) {
+      newErrors.month = "Month is required";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -68,6 +84,8 @@ export default function AddTour() {
   const [response, setResponse] = React.useState({});
 
   const handleSubmit = (formData) => {
+    const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
+
     if (validateForm()) {
       const apiUrl = `${Server}/add/tour`;
       setIsLoading(true);
@@ -84,21 +102,18 @@ export default function AddTour() {
         .catch((error) => {
           setHasError(true);
           toast.error(error?.response?.data?.message);
+         
         })
         .finally(() => {
           setIsLoading(false);
           setFormData({
             startDate: "",
             lastDate: "",
-            workWith: "",
-            headQ: "",
             area: "",
             DcrId: "",
           });
+          router.push(`/CreateTourProgram`);
           onClose();
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
         });
     } else {
       toast.error("Please fill All Details");
@@ -124,7 +139,7 @@ export default function AddTour() {
           <div
             key={size}
             onClick={() => handleOpen(size)}
-            className="flex flex-col gap-1 justify-center items-center"
+            className="flex flex-row gap-1 bg-gray-100 p-2 rounded-lg justify-center items-center"
           >
             <Image
               width={20}
@@ -139,7 +154,7 @@ export default function AddTour() {
               className=" text-[12px] cursor-pointer  "
               onClick={() => handleOpen(size)}
             >
-              +TourProgram
+              + Create_Tour_Program
             </p>
           </div>
         ))}
@@ -155,7 +170,7 @@ export default function AddTour() {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add Stockiest
+                Add Monthly Tour Program
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
@@ -181,62 +196,34 @@ export default function AddTour() {
                       />
                     </div>
 
-                    <div className="flex flex-col justify-center ">
-                      <p className="text-sm p-1 font-bold">
-                        Select Headquaters
-                      </p>
+                    <div className="flex flex-col justify-center">
+                      <p className="text-sm p-1 font-bold">Select Months</p>
                       <select
                         className="outline-none font-semibold text-gray-600 bg-transparent text-small w-[300px] h-[50px] rounded-lg border-1 bg-gray-200 p-2"
-                        id="headQ"
-                        name="headQ"
-                        value={formData.headQ}
+                        id="month"
+                        name="month"
+                        value={formData.month}
                         onChange={handleInputChange}
                         required
                       >
-                        <option value="">Select Headquaters</option>
-                        {headquaters?.map((a) => {
-                          return (
-                            <>
-                              <option key={a} value={a}>
-                                {a}
-                              </option>
-                            </>
-                          );
-                        })}
+                        <option value="">Select Months</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
                       </select>
 
-                      {errors.Area && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.Area}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <p className="text-sm p-2 font-bold">Select Area</p>
-                      <select
-                        className="outline-none font-semibold text-gray-600  bg-transparent text-xs w-[300px] h-[50px] rounded-lg border-1 bg-gray-200 p-2"
-                        id="area"
-                        name="area"
-                        value={formData.area}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="">Select Area</option>
-                        {AreasOption?.map((a) => {
-                          return (
-                            <>
-                              <option key={a} value={a}>
-                                {a}
-                              </option>
-                            </>
-                          );
-                        })}
-                      </select>
-
-                      {errors.Area && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.Area}
+                      {errors.month && (
+                        <p className="text-red-500 text-xs p-1">
+                          {errors.month}
                         </p>
                       )}
                     </div>

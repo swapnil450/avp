@@ -13,7 +13,7 @@ import AddStockiest from "./AddInfo/Comp/AddStockiest";
 import AddTour from "./AddInfo/Comp/AddTour";
 export default function DashInfo() {
   const Option = [
-    { name: "Tour", icon: tour, link: "/tour" },
+    { name: "Tour", icon: tour, link: "/CreateTourProgram" },
     { name: "DCR", icon: dcr, link: "/dcr" },
     { name: "+Doctor", icon: doc, link: "/" },
     { name: "+Chemist", icon: med, link: "/" },
@@ -24,11 +24,23 @@ export default function DashInfo() {
   return (
     <>
       <div className="grid lg:grid-cols-4 grid-cols-2 gap-10">
-        <div className="flex items-center justify-center p-4 bg-white shadow rounded-lg">
+        <Link
+          href="/CreateTourProgram"
+          className="flex items-center justify-center p-4 bg-white shadow rounded-lg"
+        >
           <div className="flex flex-col gap-1 justify-center items-center">
-            <AddTour />
+            <Image
+              width={20}
+              height={20}
+              src={tour}
+              alt="icon"
+              className=" cursor-pointer "
+            />
+            <p color="foreground" className=" text-[10px]">
+              Create_TourProgram
+            </p>
           </div>
-        </div>
+        </Link>
         <div className="flex items-center justify-center p-4 bg-white shadow rounded-lg">
           <div className="flex flex-col gap-1 justify-center items-center">
             <AddDoctorModal />
@@ -58,7 +70,7 @@ export default function DashInfo() {
               className=" cursor-pointer "
             />
             <p color="foreground" className=" text-[12px]">
-              dcr
+              DCR Reports
             </p>
           </div>
         </Link>

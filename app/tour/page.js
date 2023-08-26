@@ -67,7 +67,7 @@ export default function Tour() {
               title="Active-Program"
             >
               <div className="flex flex-col gap-5 mt-5 justify-center items-center">
-                <ActiveTp tp={ActiveProgram} />
+                {/* <ActiveTp tp={ActiveProgram} /> */}
               </div>
               {TodayDate.length === 0 ? (
                 <p>No Program Found..</p>

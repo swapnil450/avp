@@ -1,7 +1,7 @@
 "use client";
 import AllProgram from "../tour/Comp/AllProgram/AllProgram";
 import React, { useEffect, useState } from "react";
-
+import { Spinner } from "@nextui-org/react";
 import axios from "axios";
 
 import moment from "moment";
@@ -18,9 +18,10 @@ export default function MainDcr() {
       .then((res) => {
         setTp(res.data);
       })
-      .catch((err) => {})
+      .catch((err) => {
+        toast.error(err?.response?.data?.message) || "Network Error";
+      })
       .finally(() => {
-        console.log("done");
         setLoading(false);
       });
   }, []);
@@ -47,11 +48,18 @@ export default function MainDcr() {
 
   return (
     <>
-      <div>
-        <div className="flex flex-col gap-5 mt-5 justify-center items-center">
-          <AllProgram tp={ActiveProgram} />
+      {loading ? (
+        <div className="flex justify-center items-center h-screen relative bottom-[60px]">
+          {" "}
+          <Spinner />
         </div>
-      </div>
+      ) : (
+        <div>
+          <div className="flex flex-col gap-5 mt-5 justify-center items-center">
+            <AllProgram tp={ActiveProgram} />
+          </div>
+        </div>
+      )}
     </>
   );
 }

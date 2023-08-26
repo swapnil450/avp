@@ -154,7 +154,7 @@ export default function AddDcrDoc({ ActiveProgram }) {
         .catch((error) => {
           setHasError(true);
           toast.error(error?.response?.data?.message);
-          console.log(error);
+         
         })
         .finally(() => {
           setIsLoading(false);
