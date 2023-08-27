@@ -31,7 +31,7 @@ export default function ListOfChem() {
   }
   const user = JSON.parse(localStorage?.getItem("user")) || "admin";
   const CreatedbyUser = chem.filter(
-    (i) => i.createdBy === user.userId && i.approved === false
+    (i) => i.createdBy === user.userId 
   );
 
   return (
