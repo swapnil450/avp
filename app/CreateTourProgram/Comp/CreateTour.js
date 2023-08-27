@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import doc from "../../img/doc.webp";
@@ -28,14 +28,20 @@ import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 import TourDateList from "./TourDateList";
 import Link from "next/link";
 
-export default function CreateTour({ dates, dcr, ActiveDcr }) {
+export default function CreateTour({
+  dateOfTp,
+  dcr,
+  ActiveDcr,
+  DataByDate,
+  getDataTour,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
 
   const { AreasOption, allProdRate, user, allArea } = useGlobalContext();
 
-  const Pro2 = allProdRate?.proRateData?.map((i) => i.ProductName);
+  // const Pro2 = allProdRate?.proRateData?.map((i) => i.ProductName);
 
   const handleOpen = (size) => {
     setSize(size);
@@ -50,12 +56,101 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
     ExpectedBuisness: "",
     createdAt: new Date().toISOString().slice(0, 10),
     DcrId: "",
+    Id: "",
     Act: true,
     Apv: true,
     submited: true,
   });
 
+  React.useEffect(() => {
+    const DataOfprogramByDate = DataByDate[0] || {};
+
+    // Destructure the properties from the 'item'
+    const {
+      Date,
+      workWith,
+      area,
+      Activity,
+      ExpectedBuisness,
+      createdAt,
+      Id,
+      DcrId,
+      Act,
+      Apv,
+      submited,
+    } = DataOfprogramByDate;
+
+    // Update the 'formData' state with the values from 'item'
+    setFormData({
+      Date,
+      workWith,
+      area,
+      Activity,
+      ExpectedBuisness,
+      createdAt,
+      DcrId,
+      Id,
+      Act,
+      Apv,
+      submited,
+    });
+  }, [DataByDate]);
+
+  console.log(DataByDate);
+  console.log(formData);
   formData.DcrId = dcr;
+  formData.Date = dateOfTp;
+  formData.Id = Date.now();
+
+  var displaySelect = false;
+
+  if (formData.Activity === "Holiday") {
+    formData.ExpectedBuisness = formData.Activity;
+    formData.area = formData.Activity;
+    formData.workWith = formData.Activity;
+    formData.createdAt = new Date().toISOString().slice(0, 10);
+    formData.Act = true;
+    formData.Apv = true;
+    formData.submited = true;
+    displaySelect = true;
+  }
+  if (formData.Activity === "Sunday") {
+    formData.ExpectedBuisness = formData.Activity;
+    formData.area = formData.Activity;
+    formData.workWith = formData.Activity;
+    formData.createdAt = new Date().toISOString().slice(0, 10);
+    formData.Act = true;
+    formData.Apv = true;
+    formData.submited = true;
+    displaySelect = true;
+  }
+  if (formData.Activity === "Administration") {
+    formData.ExpectedBuisness = formData.Activity;
+    formData.area = formData.Activity;
+    formData.workWith = formData.Activity;
+    formData.createdAt = new Date().toISOString().slice(0, 10);
+    formData.Act = true;
+    formData.Apv = true;
+    formData.submited = true;
+    displaySelect = true;
+  }
+  if (formData.Activity === "Meeting") {
+    formData.ExpectedBuisness = formData.Activity;
+    formData.area = formData.Activity;
+    formData.workWith = formData.Activity;
+    formData.createdAt = new Date().toISOString().slice(0, 10);
+    formData.Act = true;
+    formData.Apv = true;
+    formData.submited = true;
+    displaySelect = true;
+  }
+  if (formData.Activity === "Working") {
+    formData.createdAt = new Date().toISOString().slice(0, 10);
+    formData.Act = true;
+    formData.Apv = true;
+    formData.submited = true;
+    displaySelect = false;
+  }
 
   const [errors, setErrors] = React.useState({});
 
@@ -68,7 +163,7 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
     if (!formData.workWith) {
       newErrors.workWith = "workWith is required";
     }
-    if (formData.area.length === 0) {
+    if (!formData.area) {
       newErrors.area = "area Name is required";
     }
     if (!formData.Activity) {
@@ -98,27 +193,7 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
   const [hasError, setHasError] = React.useState(false);
   const [response, setResponse] = React.useState({});
 
-  const [dataTour, setDataTour] = React.useState([]);
-
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
-
-  useEffect(() => {
-    getDataTour();
-  }, []);
-
-  const getDataTour = () => {
-    axios
-      .get(`${Server}/add/tourDateUser/${dcr}`)
-      .then((res) => {
-        setDataTour(res.data);
-      })
-      .catch((error) => {
-        toast.error(error?.response?.data?.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
 
   const handleSubmit = () => {
     if (validateForm()) {
@@ -131,8 +206,12 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
         .then((response) => {
           const responseData = response.data;
           setResponse(responseData);
-          toast.success(`${response?.data?.message}`);
-          setLoading(true);
+          toast.success(
+            response?.data?.message === undefined
+              ? "Tour program Updated"
+              : `${response?.data?.message}`
+          );
+          setIsLoading(true);
         })
         .catch((error) => {
           setHasError(true);
@@ -155,13 +234,6 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
       toast.error("Please fill All Details");
     }
   };
-
-  const DatesCompleted = dataTour?.map((i) => i.Date);
-
-  const newArrayDates = [
-    ...dates.filter((element) => !DatesCompleted.includes(element)),
-    ...DatesCompleted.filter((element) => !dates.includes(element)),
-  ];
 
   const handleSendApproval = (id, status) => {
     const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
@@ -218,15 +290,14 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
         {sizes.map((size) => (
           <>
             <div className="flex flex-row gap-4" key={size}>
-              {dcr ? (
-                <>
-                  <Button
-                    onClick={() => handleOpen(size)}
-                    className="text-xs font-semibold bg-gray-100 p-2 rounded-lg"
-                  >
-                    + Add Program
-                  </Button>
-                  <Dropdown>
+              <Button
+                size="sm"
+                onClick={() => handleOpen(size)}
+                className="text-xs font-semibold bg-black text-white p-2 rounded-lg"
+              >
+                Update
+              </Button>
+              {/* <Dropdown>
                     <DropdownTrigger>
                       <Button className="text-white bg-black font-semibold ">
                         Sent To Approve
@@ -263,10 +334,7 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
                       </DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
-                </>
-              ) : (
-                <p className="text-sm font-bold ">No Program Created..</p>
-              )}
+             */}
             </div>
           </>
         ))}
@@ -282,45 +350,18 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add Doctor 👨‍⚕️
+                Add TourProgram
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">
                   <div className="grid lg:grid-cols-2 grid-cols-1  gap-4">
-                    <div className="flex flex-col justify-center ">
-                      <p className="text-sm p-1">Select Date</p>
-                      <select
-                        className="outline-none font-semibold text-gray-600 border-1 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
-                        id="Date"
-                        name="Date"
-                        value={formData.Date}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="">Select Date</option>
-                        {newArrayDates?.map((i) => {
-                          return (
-                            <>
-                              <option key={i} value={i}>
-                                {i}
-                              </option>
-                            </>
-                          );
-                        })}
-                      </select>
-                      {errors.Date && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.Date}
-                        </p>
-                      )}
-                    </div>
-
                     <div className="flex flex-col justify-center ">
                       <p className="text-sm p-1 text-gray-600">Select Area</p>
                       <select
                         className="outline-none font-semibold text-gray-600 border-1 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
                         id="area"
                         name="area"
+                        disabled={displaySelect}
                         value={formData.area}
                         onChange={handleInputChange}
                         required
@@ -355,7 +396,7 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
                       >
                         <option value="">Select Activity</option>
 
-                        <option value="working">Working</option>
+                        <option value="Working">Working</option>
                         <option value="Holiday">Holiday</option>
 
                         <option value="Administration">Administration</option>
@@ -374,6 +415,7 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
                         className="outline-none font-semibold text-gray-600 border-1 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
                         id="workWith"
                         name="workWith"
+                        disabled={displaySelect}
                         value={formData.workWith}
                         onChange={handleInputChange}
                         required
@@ -391,7 +433,10 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
                           Area Buisness Manager
                         </option>
                         <option value="Reginol Sales Manager">
-                          Reginol Sales Manager
+                          Regional Sales Manager
+                        </option>
+                        <option value="Teretory Executive">
+                          Teretory Executive
                         </option>
                       </select>
                       {errors.Activity && (
@@ -406,6 +451,7 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
                         type="text"
                         label="ExpectedBuisness"
                         name="ExpectedBuisness"
+                        disabled={displaySelect}
                         value={formData.ExpectedBuisness}
                         onChange={handleInputChange}
                         required
@@ -458,7 +504,7 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
                     className="bg-black text-white"
                     onClick={handleSubmit}
                   >
-                    Save
+                    Update
                   </Button>
                 )}
               </ModalFooter>
@@ -467,7 +513,7 @@ export default function CreateTour({ dates, dcr, ActiveDcr }) {
         </ModalContent>
       </Modal>
       <div className="flex justify-center items-center mb-16">
-        <TourDateList dataTour={dataTour} getDataTour={getDataTour} />
+        {/* <TourDateList dataTour={dataTour} getDataTour={getDataTour} /> */}
       </div>
     </>
   );

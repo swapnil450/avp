@@ -6,6 +6,7 @@ import axios from "axios";
 import { Spinner } from "@nextui-org/react";
 import moment from "moment";
 import CreateTour from "./CreateTour";
+import TourDateList from "./TourDateList";
 
 moment().format();
 
@@ -137,7 +138,8 @@ export default function ListByDate() {
             })}
           </div>
         </div>
-        <CreateTour
+        {/* <CreateTour dates={dates} /> */}
+        <TourDateList
           dates={dates}
           dcr={Active[0]?.DcrId}
           ActiveDcr={Active[0]}

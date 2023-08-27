@@ -76,6 +76,10 @@ export default function AccordionTp({ tp }) {
     (i) => moment(i.createdAt).format("DD/MM/YYYY") === seldate
   );
 
+  const Dlen = AllDocByDate?.length || "0";
+  const clen = AllChemByDate?.length || "0";
+  const slen = AllStockByDate?.length || "0";
+
   return (
     <>
       {tp?.map((key) => {
@@ -116,6 +120,9 @@ export default function AccordionTp({ tp }) {
                     AllChemByDate={AllChemByDate}
                     AllDocByDate={AllDocByDate}
                     AllStockByDate={AllStockByDate}
+                    cTotal={clen}
+                    dtotal={Dlen}
+                    sTotal={slen}
                   />
                 </div>
               </AccordionItem>

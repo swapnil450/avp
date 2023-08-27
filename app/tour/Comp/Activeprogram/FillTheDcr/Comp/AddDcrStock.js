@@ -40,7 +40,7 @@ export default function AddDcrChem({ ActiveProgram }) {
   const [isSelected, setIsSelected] = React.useState(false);
   const { allStockiest } = useGlobalContext();
 
-  const AreaTP = ActiveProgram?.area;
+  const AreaTP = ActiveProgram?.area.split(",")[0];
 
   const AllAreaStock = allStockiest.stockData?.filter(
     (i) => i.Area === AreaTP && i.approved === true
@@ -65,7 +65,7 @@ export default function AddDcrChem({ ActiveProgram }) {
     DcrId: "",
     Collection: "",
     Pob: [],
-    createdBy: " ",
+    createdBy: "",
     createdAt: "",
   });
   formData.createdAt = new Date().toISOString().slice(0, 10);
@@ -215,17 +215,23 @@ export default function AddDcrChem({ ActiveProgram }) {
                           <>
                             <div
                               key={i}
-                              className="flex flex-col gap-4 bg-white rounded-lg p-4 shadow-md  justify-center m-2 items-center"
+                              class="relative flex w flex-col rounded-xl  bg-clip-border text-gray-700 shadow-md"
                             >
-                              <User name={i.Name} className="text-[11px]" />
-                              <p className="text-[10px] flex flex-col gap-1">
-                                {i.mobile}
-                                <span className="text-[10px]"> {i.Area}</span>
-                                <span className="text-[10px]">
-                                  {" "}
-                                  {i.address}
-                                </span>
-                              </p>
+                              <div class="p-6">
+                                <h5 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
+                                  {i.Name}
+                                </h5>
+                                <p class="font-sans inline-flex text-xs flex-col gap- text-black font-semibold  leading-relaxed ">
+                                  Address : {i.address}
+                                  <span className="text-black font-semibold">
+                                    Code : {i.Code}
+                                  </span>
+                                  <span className="text-black font-semibold">
+                                    {" "}
+                                    Mobile : {i.mobile}
+                                  </span>
+                                </p>
+                              </div>
                             </div>
                           </>
                         );

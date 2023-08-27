@@ -18,7 +18,7 @@ export default function Tour() {
     const user = JSON.parse(localStorage.getItem("user"));
     setLoading(true);
     axios
-      .get(`${Server}/add/tourUser/${user.userId}`)
+      .get(`${Server}/add/tourUser/${user?.userId}`)
       .then((res) => {
         setTp(res.data);
       })

@@ -9,6 +9,9 @@ export default function ComponentToPrint({
   AllDocByDate,
   AllChemByDate,
   AllStockByDate,
+  cTotal,
+  dtotal,
+  sTotal,
 }) {
   return (
     <>
@@ -27,7 +30,7 @@ export default function ComponentToPrint({
             Stockiest Details
           </div>
           <StockiestDetails AllStockByDate={AllStockByDate} />
-          <BootomDtails />
+          <BootomDtails cTotal={cTotal} dtotal={dtotal} sTotal={sTotal} />
         </div>
       </div>
     </>

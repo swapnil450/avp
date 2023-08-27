@@ -47,14 +47,15 @@ export default function AddDcrDoc({ ActiveProgram }) {
   const [isSelected, setIsSelected] = React.useState(false);
   const { allDoc } = useGlobalContext();
 
-  const AreaTP = ActiveProgram?.area;
+  const AreaTP = ActiveProgram?.area.split(",")[0];
 
+ 
   const AllAreaDoc = allDoc.docData?.filter(
     (i) => i.Area === AreaTP && i.approved === true
   );
 
   const DocDet = AllAreaDoc?.filter((i) => i.DoctorName === docsel) || [
-    { chemName: "chemist" },
+    { docName: "doctor" },
   ];
 
   const handleOpen = (size) => {
@@ -154,7 +155,6 @@ export default function AddDcrDoc({ ActiveProgram }) {
         .catch((error) => {
           setHasError(true);
           toast.error(error?.response?.data?.message);
-         
         })
         .finally(() => {
           setIsLoading(false);
@@ -255,20 +255,26 @@ export default function AddDcrDoc({ ActiveProgram }) {
                           <>
                             <div
                               key={i}
-                              className="flex flex-col bg-white rounded-lg p-2 shadow-md gap-2 justify-center m-2 items-center"
+                              class="relative flex w flex-col rounded-xl  bg-clip-border text-gray-700 shadow-md"
                             >
-                              <User
-                                name={i.chemName}
-                                className="text-xs"
-                                description={`+91${i.mobile}`}
-                              />
-                              <p className="text-[10px]">
-                                {i.Area},{" "}
-                                <span className="text-[10px]">
-                                  {" "}
-                                  {i.address}
-                                </span>
-                              </p>
+                              <div class="p-6">
+                                <h5 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
+                                  {i.DoctorName}
+                                </h5>
+                                <p class="font-sans inline-flex text-xs flex-col gap- text-black font-semibold  leading-relaxed ">
+                                  Address :{i.address}
+                                  <span className="text-black font-semibold">
+                                    Area : {i.Area}
+                                  </span>
+                                  <span className="text-black font-semibold">
+                                    Code : {i.DoctorCode}
+                                  </span>
+                                  <span className="text-black font-semibold">
+                                    {" "}
+                                    Mobile : {i.mobile}
+                                  </span>
+                                </p>
+                              </div>
                             </div>
                           </>
                         );

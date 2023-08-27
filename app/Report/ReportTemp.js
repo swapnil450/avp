@@ -20,6 +20,9 @@ export default function ReportTemp({
   AllDocByDate,
   AllChemByDate,
   AllStockByDate,
+  cTotal,
+  dtotal,
+  sTotal,
 }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [size, setSize] = React.useState("full");
@@ -96,6 +99,9 @@ export default function ReportTemp({
                   AllDocByDate={AllDocByDate}
                   AllChemByDate={AllChemByDate}
                   AllStockByDate={AllStockByDate}
+                  cTotal={cTotal}
+                  dtotal={dtotal}
+                  sTotal={sTotal}
                 />
               </ModalBody>
               <ModalFooter>
