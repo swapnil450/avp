@@ -10,7 +10,7 @@ import ListOfStock from "./Comp/Stockiest";
 
 export default function MainTab() {
   return (
-    <div className="flex justify-center items-center first-letter:w-[100%]  mt-5 flex-col">
+    <div className="flex justify-center items-center   mt-5 mb-16 flex-col">
       <Tabs color="primary" className="text-xs" aria-label="Options">
         <Tab key="Chemist Details" className="text-xs" title="Chemist Details">
           <div className="flex flex-col gap-5 mt-5 justify-center items-center">

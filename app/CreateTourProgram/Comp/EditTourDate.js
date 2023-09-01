@@ -215,7 +215,7 @@ export default function EditTourDate({ item, getDataTour }) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add Doctor 👨‍⚕️
+                Add Tour Program
               </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-4 justify-center items-center">

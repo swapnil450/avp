@@ -6,7 +6,7 @@ moment().format();
 export default function ExecutiveInfo({ AllDocByDate }) {
   const { user } = useGlobalContext();
 
-  const { area, DcrId, createdAt, workWith } = AllDocByDate[0] || {};
+  const { Area, DcrId, createdAt, workWith } = AllDocByDate[0] || {};
 
   const { empName, headquarters, mobile1, post, selectedAreas } = user;
 
@@ -36,9 +36,7 @@ export default function ExecutiveInfo({ AllDocByDate }) {
             <th className="border border-black text-center text-[10px] font-bold text-gray-800 p-0.5">
               DCR_ID
             </th>
-            <th className="border border-black text-center text-[10px] font-bold text-gray-800 p-0.5">
-              Work_at
-            </th>
+
             <th className="border border-black text-center text-[10px] font-bold text-gray-800 p-0.5">
               Departmental Remark Only
             </th>
@@ -60,7 +58,7 @@ export default function ExecutiveInfo({ AllDocByDate }) {
               {headquarters}
             </td>
             <td className="border border-black font-title text-gray-800 text-[10px] p-0.5">
-              {area}
+              {Area}
             </td>
             <td className="border border-black font-title text-gray-800 text-[10px] p-0.5">
               {workWith}
@@ -68,9 +66,7 @@ export default function ExecutiveInfo({ AllDocByDate }) {
             <td className="border border-black font-title text-gray-800 text-[10px] p-0.5">
               {DcrId}
             </td>
-            <td className="border border-black font-title text-gray-800 text-[10px] p-0.5">
-              {"-"}
-            </td>
+
             <td className="border border-black font-title text-gray-800 text-[10px] p-0.5"></td>
           </tr>
         </tbody>

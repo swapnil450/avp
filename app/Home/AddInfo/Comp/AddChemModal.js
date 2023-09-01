@@ -180,22 +180,6 @@ export default function AddChemist() {
                     <div className="flex flex-col justify-center ">
                       <Input
                         type="text"
-                        label="Chem Code"
-                        name="chemCode"
-                        value={formData.chemCode}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.chemCode && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.chemCode}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center ">
-                      <Input
-                        type="text"
                         label="chemist Name"
                         name="chemName"
                         value={formData.chemName}
@@ -205,6 +189,22 @@ export default function AddChemist() {
                       {errors.chemName && (
                         <p className="text-red-500  text-xs p-1">
                           {errors.chemName}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col justify-center ">
+                      <Input
+                        type="text"
+                        label="Chem Code"
+                        name="chemCode"
+                        value={formData.chemCode}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      {errors.chemCode && (
+                        <p className="text-red-500  text-xs p-1">
+                          {errors.chemCode}
                         </p>
                       )}
                     </div>
@@ -251,7 +251,7 @@ export default function AddChemist() {
                         required
                       >
                         <option value="">Select Area</option>
-                        {AreasOption?.map((i) => {
+                        {user?.selectedAreas?.map((i) => {
                           return (
                             <>
                               <option key={i} value={i}>

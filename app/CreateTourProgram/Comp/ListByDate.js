@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardBody, Image, Button } from "@nextui-org/react";
 import { Chip } from "@nextui-org/react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 import { Spinner } from "@nextui-org/react";
 import moment from "moment";
 import CreateTour from "./CreateTour";
@@ -36,7 +37,7 @@ export default function ListByDate() {
     const user = JSON.parse(localStorage.getItem("user"));
     setLoading(true);
     axios
-      .get(`${Server}/add/tourUser/${user.userId}`)
+      .get(`${Server}/add/tourUser/${user?.userId}`)
       .then((res) => {
         setTp(res.data);
       })
@@ -48,6 +49,7 @@ export default function ListByDate() {
       });
   }, []);
 
+  /*****/ /////////////////////////////////////////////////////////////////////////////////////////////////////
   const ActiveProgram = tp?.filter(
     (itm) => itm.Act === true && itm.Apv === false
   );
@@ -66,6 +68,30 @@ export default function ListByDate() {
   const TodayDate = dates.filter(
     (i) => i === moment(new Date()).format("DD/MM/YYYY")
   );
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [hasError, setHasError] = React.useState(false);
+  const [response, setResponse] = React.useState({});
+
+  const setAproval = (id, status) => {
+    const apiUrl = `${Server}/add/tour/${id}`;
+    setIsLoading(true);
+    setHasError(false);
+
+    axios
+      .put(apiUrl, { SentToApv: status })
+      .then((response) => {
+        const responseData = response.data;
+        setResponse(responseData);
+        toast.success(`${response?.data?.message}`);
+      })
+      .catch((error) => {
+        setHasError(true);
+        toast.error(error?.response?.data?.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   if (loading) {
     return (
@@ -83,7 +109,10 @@ export default function ListByDate() {
             {ActiveProgram?.map((i) => {
               return (
                 <>
-                  <Card key={i.startDate} className="py-3">
+                  <Card
+                    key={i.startDate}
+                    className="py-3 flex justify-center items-center"
+                  >
                     <CardHeader className="pb-0 pt-2 px-4 flex-col gap-2 items-center">
                       <h4 className="font-semibold bg-gray-100 bg-blend-saturation p-1 rounded-lg text-sm">
                         {moment(i.startDate).format("DD/MM/YYYY")}_to_
@@ -132,6 +161,13 @@ export default function ListByDate() {
                         </div>
                       </div>
                     </CardBody>
+                    <Button
+                      onClick={() => setAproval(i?._id, true)}
+                      color="primary"
+                      size="xl"
+                    >
+                      Send To Approve
+                    </Button>
                   </Card>
                 </>
               );

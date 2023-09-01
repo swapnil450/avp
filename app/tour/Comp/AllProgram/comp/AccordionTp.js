@@ -123,6 +123,7 @@ export default function AccordionTp({ tp }) {
                     cTotal={clen}
                     dtotal={Dlen}
                     sTotal={slen}
+                    dcrID={key}
                   />
                 </div>
               </AccordionItem>

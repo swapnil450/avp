@@ -38,8 +38,8 @@ export default function AddTour() {
     month: "",
     DcrId: "",
     createdBy: "",
+    SentToApv: false,
     createdByName: "",
-    SendToApproved: false,
     createdAt: new Date().toISOString().slice(0, 10),
     Act: true,
     Apv: false,
@@ -51,8 +51,6 @@ export default function AddTour() {
   formData.post = user?.post;
   formData.DcrId = Date.now();
   const [errors, setErrors] = React.useState({});
-
- 
 
   const validateForm = () => {
     const newErrors = {};
@@ -102,7 +100,6 @@ export default function AddTour() {
         .catch((error) => {
           setHasError(true);
           toast.error(error?.response?.data?.message);
-         
         })
         .finally(() => {
           setIsLoading(false);

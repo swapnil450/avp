@@ -286,56 +286,15 @@ export default function CreateTour({
         theme="dark"
       />
 
-      <div className="flex flex-wrap gap-3">
+      <div className="p-1">
         {sizes.map((size) => (
           <>
-            <div className="flex flex-row gap-4" key={size}>
-              <Button
-                size="sm"
-                onClick={() => handleOpen(size)}
-                className="text-xs font-semibold bg-black text-white p-2 rounded-lg"
-              >
-                Update
-              </Button>
-              {/* <Dropdown>
-                    <DropdownTrigger>
-                      <Button className="text-white bg-black font-semibold ">
-                        Sent To Approve
-                      </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                      aria-label="Dropdown Variants"
-                      color="default"
-                      variant="solid"
-                    >
-                      <DropdownItem
-                        key="delete"
-                        className="text-danger"
-                        color="default"
-                      >
-                        <div className="flex flex-row gap-3 ">
-                          <p
-                            onClick={() =>
-                              handleSendApproval(ActiveDcr._id, true)
-                            }
-                            className="bg-black text-[10px] rounded-lg text-white p-1.5"
-                          >
-                            Send Approval
-                          </p>
-                          <p
-                            onClick={() =>
-                              handleSendApproval(ActiveDcr._id, false)
-                            }
-                            className="bg-black text-[10px] rounded-lg text-white p-1.5 "
-                          >
-                            UnSend Approval
-                          </p>
-                        </div>
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-             */}
-            </div>
+            <p
+              onClick={() => handleOpen(size)}
+              className="text-xs font-semibold bg-black text-white hover:bg-gray-400 hover:text-black cursor-pointer p-1 rounded-lg"
+            >
+              Update
+            </p>
           </>
         ))}
       </div>
@@ -512,9 +471,6 @@ export default function CreateTour({
           )}
         </ModalContent>
       </Modal>
-      <div className="flex justify-center items-center mb-16">
-        {/* <TourDateList dataTour={dataTour} getDataTour={getDataTour} /> */}
-      </div>
     </>
   );
 }

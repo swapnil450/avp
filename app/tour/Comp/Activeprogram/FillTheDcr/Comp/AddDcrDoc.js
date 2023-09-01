@@ -29,15 +29,15 @@ import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 
 import InputListDoc from "@/app/Home/AddInfo/Comp/EmerncyAdject/InputListDoc";
 
-export default function AddDcrDoc({ ActiveProgram }) {
+export default function AddDcrDoc({ ActiveProgram, loc }) {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("md");
   const sizes = ["5xl"];
 
-  const [lit, setLit] = useState("Yes");
-  const [det, setDet] = useState("Yes");
+  const [lit, setLit] = useState("");
+  const [det, setDet] = useState("");
   const [docsel, setDocsel] = useState("");
 
   const [inputList, setInputList] = React.useState([
@@ -49,7 +49,6 @@ export default function AddDcrDoc({ ActiveProgram }) {
 
   const AreaTP = ActiveProgram?.area.split(",")[0];
 
- 
   const AllAreaDoc = allDoc.docData?.filter(
     (i) => i.Area === AreaTP && i.approved === true
   );
@@ -106,8 +105,11 @@ export default function AddDcrDoc({ ActiveProgram }) {
   formData.mobile = DocDet[0]?.mobile;
   formData.lit = lit;
   formData.Detail = det;
+  formData.log = loc?.log;
+  formData.lat = loc?.lat;
   formData.createdBy = user.userId;
 
+  console.log(formData);
   const [errors, setErrors] = React.useState({});
 
   const validateForm = () => {
@@ -272,6 +274,10 @@ export default function AddDcrDoc({ ActiveProgram }) {
                                   <span className="text-black font-semibold">
                                     {" "}
                                     Mobile : {i.mobile}
+                                  </span>
+                                  <span className="text-black font-semibold">
+                                    {" "}
+                                    Product : {i.P1},{i.P2}
                                   </span>
                                 </p>
                               </div>

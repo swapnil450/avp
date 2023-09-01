@@ -2,13 +2,18 @@ import React from "react";
 import { Button } from "@nextui-org/react";
 import { Card, CardBody, CardFooter } from "@nextui-org/react";
 import { Spinner } from "@nextui-org/react";
+import { ToastContainer, toast } from "react-toastify";
 import EditTourDate from "./EditTourDate";
 import { useEffect } from "react";
 import CreateTour from "./CreateTour";
 import axios from "axios";
 export default function TourDateList({ dates, dcr, ActiveDcr }) {
   const [dataTour, setDataTour] = React.useState([]);
+
   const [isLoading, setIsLoading] = React.useState(false);
+  const [hasError, setHasError] = React.useState(false);
+  const [response, setResponse] = React.useState({});
+
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
 
   useEffect(() => {
@@ -36,35 +41,48 @@ export default function TourDateList({ dates, dcr, ActiveDcr }) {
 
   return (
     <>
-      {dates ? (
-        <div className="grid grid-cols-1 gap-3">
-          {dates?.map((item) => {
-            return (
-              <>
-                <Card className="m-1" isPressable>
-                  <CardFooter className="text-small flex flex-row justify-center items-center gap-5 p-3">
-                    <p>📅</p>
-                    <div className="text-small flex flex-row justify-center items-center gap-4">
-                      <b>{item}</b>
+      <div className="flex flex-col gap-4 w-full mb-10  items-center ">
+        {dates?.length === 0 ? (
+          <p className="text-sm text-black">No Program Created...</p>
+        ) : (
+          <table className="border w-full text-center border-black ">
+            <thead>
+              <tr>
+                <th className="border border-black  text-[10px] font-bold text-gray-800 ">
+                  Date
+                </th>
 
-                      {/* <EditTourDate /> */}
-                      <CreateTour
-                        dateOfTp={item}
-                        dcr={dcr}
-                        ActiveDcr={ActiveDcr}
-                        DataByDate={getDataByDate(item)}
-                        getDataTour={getDataTour}
-                      />
-                    </div>
-                  </CardFooter>
-                </Card>
-              </>
-            );
-          })}
-        </div>
-      ) : (
-        <Spinner />
-      )}
+                <th className="border border-black  text-[10px] font-bold text-gray-800 ">
+                  Action
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {dates?.map((item) => {
+                return (
+                  <>
+                    <tr>
+                      <td className="border border-black  text-[10px]">
+                        {item}
+                      </td>
+                      <td className="border border-black  text-[10px]">
+                        <CreateTour
+                          dateOfTp={item}
+                          dcr={dcr}
+                          ActiveDcr={ActiveDcr}
+                          DataByDate={getDataByDate(item)}
+                          getDataTour={getDataTour}
+                        />
+                      </td>
+                    </tr>
+                  </>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
     </>
   );
 }

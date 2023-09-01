@@ -14,6 +14,7 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
+import { Select, SelectItem } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 
 import { CustomCheckbox } from "./styleComp/CustomCheckbox";
@@ -30,20 +31,23 @@ export default function AddStockiest() {
     onOpen();
   };
 
+  const [values, setValues] = React.useState([]);
   const [formData, setFormData] = React.useState({
     Code: "",
     Name: "",
     mobile: "",
     address: "",
-    Area: "",
+    Area: [],
     createdBy: "",
     Active: true,
     approved: false,
   });
   formData.createdBy = user.userId || "admin";
+  formData.Area = [Array.from(values).join(", ")];
 
   const [errors, setErrors] = React.useState({});
 
+  console.log(formData, "form");
   const validateForm = () => {
     const newErrors = {};
 
@@ -216,31 +220,21 @@ export default function AddStockiest() {
                         </p>
                       )}
                     </div>
-                    <div className="flex flex-col justify-center ">
-                      <select
-                        className="outline-none font-semibold text-gray-600 border-0 bg-transparent text-small w-[300px] h-[50px] rounded-lg bg-gray-200 p-2"
-                        id="Area"
-                        name="Area"
-                        value={formData.Area}
-                        onChange={handleInputChange}
-                        required
+                    <div className="flex w-full max-w-xs flex-col gap-2">
+                      <Select
+                        label="Areas"
+                        selectionMode="multiple"
+                        placeholder="Select an Area"
+                        selectedKeys={values}
+                        className="max-w-xs"
+                        onSelectionChange={setValues}
                       >
-                        <option value="">Select Area</option>
-                        {AreasOption?.map((a) => {
-                          return (
-                            <>
-                              <option key={a} value={a}>
-                                {a}
-                              </option>
-                            </>
-                          );
-                        })}
-                      </select>
-                      {errors.Area && (
-                        <p className="text-red-500  text-xs p-1">
-                          {errors.Area}
-                        </p>
-                      )}
+                        {user?.selectedAreas?.map((animal) => (
+                          <SelectItem key={animal} value={animal}>
+                            {animal}
+                          </SelectItem>
+                        ))}
+                      </Select>
                     </div>
 
                     <div className="flex flex-col justify-center ">

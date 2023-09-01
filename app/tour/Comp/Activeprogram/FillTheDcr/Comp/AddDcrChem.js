@@ -30,7 +30,7 @@ import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 
 import InputList from "@/app/Home/AddInfo/Comp/EmerncyAdject/InputList";
 
-export default function AddDcrChem({ ActiveProgram }) {
+export default function AddDcrChem({ ActiveProgram, loc }) {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -46,14 +46,15 @@ export default function AddDcrChem({ ActiveProgram }) {
   ]);
 
   const [isSelected, setIsSelected] = React.useState(false);
-  const { AreasOption, allChem } = useGlobalContext();
+  const { AreasOption, allChem, user } = useGlobalContext();
 
   const AreaTP = ActiveProgram?.area.split(",");
   const ActiveAreaTp = AreaTP[0];
 
+  const userSelectedArea = user?.selectedAreas || [];
 
   const AllAreaChem = allChem.chemData?.filter(
-    (i) => i.Area === ActiveAreaTp && i.approved === true
+    (i) => userSelectedArea.includes(i.Area) && i.approved === true
   );
 
   const chemistDet = AllAreaChem?.filter((i) => i.chemName === chemsel) || [
@@ -65,7 +66,6 @@ export default function AddDcrChem({ ActiveProgram }) {
     onOpen();
   };
 
-  const user = JSON.parse(localStorage?.getItem("user")) || "admin";
   const [formData, setFormData] = React.useState({
     chemCode: "",
     chemName: "",
@@ -75,8 +75,9 @@ export default function AddDcrChem({ ActiveProgram }) {
     DLNo: "",
     GSTNo: "",
     DcrId: "",
-    Detail: "",
-    lit: "",
+    lat: "",
+    log: "",
+
     Pob: [],
     createdBy: " ",
     createdAt: "",
@@ -92,10 +93,12 @@ export default function AddDcrChem({ ActiveProgram }) {
   formData.Area = chemistDet[0]?.Area;
   formData.DLNo = chemistDet[0]?.DLNo;
   formData.GSTNo = chemistDet[0]?.GSTNo;
-  formData.lit = lit;
+  formData.log = loc?.log;
+  formData.lat = loc?.lat;
   formData.Detail = det;
   formData.createdBy = user?.userId;
 
+  console.log(user, "form");
   const [errors, setErrors] = React.useState({});
 
   const validateForm = () => {
@@ -269,57 +272,6 @@ export default function AddDcrChem({ ActiveProgram }) {
                     </div>
 
                     <div className="flex flex-col gap-3 justify-center items-center ">
-                      <div className=" flex flex-row gap-3 p-2 justify-center items-center">
-                        <p>Detailing Given ? </p>
-                        <div className=" flex flex-row gap-3">
-                          <p
-                            onClick={() => setDet("Yes")}
-                            className={
-                              det === `Yes`
-                                ? `  p-2 text-white bg-black cursor-pointer rounded-lg`
-                                : `p-2 text-black bg-gray-100 cursor-pointer rounded-lg`
-                            }
-                          >
-                            Yes
-                          </p>
-                          <p
-                            onClick={() => setDet("No")}
-                            className={
-                              det === `No`
-                                ? ` p-2 text-white bg-black cursor-pointer rounded-lg`
-                                : `p-2 text-black bg-gray-100 cursor-pointer rounded-lg`
-                            }
-                          >
-                            No
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className=" flex flex-row gap-3 p-2 justify-center items-center">
-                        <p className=" text-black">literature Given ? </p>
-                        <div className=" flex flex-row gap-3">
-                          <p
-                            onClick={() => setLit("Yes")}
-                            className={
-                              lit === `Yes`
-                                ? ` p-2 text-white bg-black cursor-pointer rounded-lg`
-                                : `p-2 text-black bg-gray-100 cursor-pointer rounded-lg`
-                            }
-                          >
-                            Yes
-                          </p>
-                          <p
-                            onClick={() => setLit("No")}
-                            className={
-                              lit === `No`
-                                ? ` p-2 text-white bg-black cursor-pointer rounded-lg`
-                                : `p-2 text-black bg-gray-100 cursor-pointer rounded-lg`
-                            }
-                          >
-                            No
-                          </p>
-                        </div>
-                      </div>
                       <div className="flex flex-row gap-3 justify-center items-center">
                         <p className="text-sm font-bold ">Have POB? </p>
                         <Switch

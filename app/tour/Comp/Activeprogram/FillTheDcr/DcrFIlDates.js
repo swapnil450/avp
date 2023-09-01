@@ -63,7 +63,6 @@ export default function DcrFIlDates({ ActiveProgram, dates }) {
       })
       .catch((error) => {
         setHasError(true);
-     
       })
       .finally(() => {
         setIsLoading(false);
@@ -72,8 +71,6 @@ export default function DcrFIlDates({ ActiveProgram, dates }) {
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
-
-
 
   const Alldate = tp.map((i) => i.Date);
 
@@ -85,6 +82,7 @@ export default function DcrFIlDates({ ActiveProgram, dates }) {
 
   const ActivatedDateTp = tp.filter((i) => i.Date === ActiveDate);
 
+  console.log(ActivatedDateTp, "tps");
 
   if (!isGeolocationAvailable) {
     <div>Your browser does not support Geolocation</div>;
@@ -97,24 +95,40 @@ export default function DcrFIlDates({ ActiveProgram, dates }) {
           ActivatedDateTp?.map((key) => {
             return (
               <>
-                <Card className="flex flex-col gap-3  p-2 justify-center items-center ">
-                  <h4 className="font-semibold mt-3 text-center p-1 rounded-lg text-sm">
+                <Card className="flex flex-col gap-  p-2 justify-center items-center ">
+                  <h4 className="font-semibold  text-center p-1 rounded-lg text-sm">
+                    Activity:
+                    <span className="text-sm underline text-black">
+                      {" "}
+                      {key.Activity}
+                    </span>
+                  </h4>
+                  <h4 className="font-semibold  text-center p-1 rounded-lg text-sm">
+                    Area:
+                    <span className="text-sm underline text-black">
+                      {" "}
+                      {key.area}
+                    </span>
+                  </h4>
+                  <h4 className="font-semibold  text-center p-1 rounded-lg text-sm">
                     Today program :
                     <span className="text-sm underline text-black">
                       {" "}
                       {ActiveDate}
                     </span>
                   </h4>
-                  <h4 className="font-semibold  text-center p-1 rounded-lg text-xs">
+                  <h4 className="font-semibold  text-center p-1 rounded-lg text-sm">
                     Working With :{" "}
-                    <span className="text-xs underline text-">😊!</span>
+                    <span className="text-xs underline text-">
+                      {key.workWith}😊!
+                    </span>
                   </h4>
 
                   <div className="flex flex-row   p-3 rounded-lg gap-10">
                     {/* <WorkWith /> */}
-                    <AddDcrChem ActiveProgram={key} />
-                    <AddDcrDoc ActiveProgram={key} />
-                    <AddDcrStock ActiveProgram={key} />
+                    <AddDcrChem loc={loc} ActiveProgram={key} />
+                    <AddDcrDoc loc={loc} ActiveProgram={key} />
+                    <AddDcrStock loc={loc} ActiveProgram={key} />
                   </div>
 
                   {/* </Card> */}
@@ -133,8 +147,6 @@ export default function DcrFIlDates({ ActiveProgram, dates }) {
           //   </div>
           // )}
         }
-
-      
       </>
     );
   }

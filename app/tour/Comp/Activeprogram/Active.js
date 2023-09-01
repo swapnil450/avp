@@ -26,7 +26,7 @@ export default function ActiveTp({ tp }) {
   const ActiveProgram = tp.filter(
     (itm) => itm.Apv === true && itm.Act === true
   );
-  
+
   return (
     <>
       <div>
