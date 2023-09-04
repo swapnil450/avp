@@ -135,9 +135,9 @@ export default function CreateTour({
     displaySelect = true;
   }
   if (formData.Activity === "Meeting") {
-    formData.ExpectedBuisness = formData.Activity;
-    formData.area = formData.Activity;
-    formData.workWith = formData.Activity;
+    formData.ExpectedBuisness = "Meeting";
+    formData.area = "Meeting";
+    formData.workWith = "Meeting";
     formData.createdAt = new Date().toISOString().slice(0, 10);
     formData.Act = true;
     formData.Apv = true;
@@ -150,6 +150,16 @@ export default function CreateTour({
     formData.Apv = true;
     formData.submited = true;
     displaySelect = false;
+  }
+  if (formData.Activity === "Leave") {
+    formData.ExpectedBuisness = "Leave";
+    formData.area = "Leave";
+    formData.workWith = "Leave";
+    formData.createdAt = new Date().toISOString().slice(0, 10);
+    formData.Act = true;
+    formData.Apv = true;
+    formData.submited = true;
+    displaySelect = true;
   }
 
   const [errors, setErrors] = React.useState({});
@@ -359,7 +369,8 @@ export default function CreateTour({
                         <option value="Holiday">Holiday</option>
 
                         <option value="Administration">Administration</option>
-                        <option value="Metting">Meeting</option>
+                        <option value="Meeting">Meeting</option>
+                        <option value="Leave">Leave</option>
                       </select>
                       {errors.Activity && (
                         <p className="text-red-500  text-xs p-1">

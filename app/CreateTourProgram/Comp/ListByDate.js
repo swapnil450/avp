@@ -104,14 +104,14 @@ export default function ListByDate() {
   } else {
     return (
       <>
-        <div className="flex flex-col gap-5 mt-5 justify-center items-center">
-          <div className="flex justify-center items-center">
+        <div className="flex flex-col gap-5 mt-5  justify-center items-center">
+          <div className="flex justify-center  items-center ">
             {ActiveProgram?.map((i) => {
               return (
                 <>
                   <Card
                     key={i.startDate}
-                    className="py-3 flex justify-center items-center"
+                    className="p-2 m-2 flex justify-center items-center"
                   >
                     <CardHeader className="pb-0 pt-2 px-4 flex-col gap-2 items-center">
                       <h4 className="font-semibold bg-gray-100 bg-blend-saturation p-1 rounded-lg text-sm">
@@ -123,9 +123,17 @@ export default function ListByDate() {
                         <span className="text-xs  font-semibold text-gray-700">
                           {i.post}
                         </span>
-                        <span className="text-xs  font-semibold text-gray-700">
-                          {i.area}
-                        </span>
+                        <div className="flex flex-wrap gap-2 justify-center items-center">
+                          {i.area.map((i) => {
+                            return (
+                              <>
+                                <p className="text-[9px]  p-1 bg-blue-100 rounded-lg font-semibold text-gray-700">
+                                  {i}
+                                </p>
+                              </>
+                            );
+                          })}
+                        </div>
                       </p>
                     </CardHeader>
                     <CardBody className="overflow-visible py-2">

@@ -41,7 +41,7 @@ export default function TourDateList({ dates, dcr, ActiveDcr }) {
 
   return (
     <>
-      <div className="flex flex-col gap-4 w-full mb-10  items-center ">
+      <div className="flex flex-col gap-4 w-3/4 mb-10  items-center ">
         {dates?.length === 0 ? (
           <p className="text-sm text-black">No Program Created...</p>
         ) : (
