@@ -82,8 +82,6 @@ export default function DcrFIlDates({ ActiveProgram, dates }) {
 
   const ActivatedDateTp = tp.filter((i) => i.Date === ActiveDate);
 
-  console.log(ActivatedDateTp, "tps");
-
   if (!isGeolocationAvailable) {
     <div>Your browser does not support Geolocation</div>;
   } else if (!isGeolocationEnabled) {

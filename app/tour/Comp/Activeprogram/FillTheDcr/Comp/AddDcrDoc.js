@@ -50,7 +50,7 @@ export default function AddDcrDoc({ ActiveProgram, loc }) {
   const AreaTP = ActiveProgram?.area.split(",")[0];
 
   const AllAreaDoc = allDoc.docData?.filter(
-    (i) => i.Area === AreaTP && i.approved === true
+    (i) => i.Area.includes(AreaTP) && i.approved === true
   );
 
   const DocDet = AllAreaDoc?.filter((i) => i.DoctorName === docsel) || [
@@ -109,7 +109,7 @@ export default function AddDcrDoc({ ActiveProgram, loc }) {
   formData.lat = loc?.lat;
   formData.createdBy = user.userId;
 
-  console.log(formData);
+
   const [errors, setErrors] = React.useState({});
 
   const validateForm = () => {

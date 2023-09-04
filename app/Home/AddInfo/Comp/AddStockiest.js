@@ -47,7 +47,6 @@ export default function AddStockiest() {
 
   const [errors, setErrors] = React.useState({});
 
-  console.log(formData, "form");
   const validateForm = () => {
     const newErrors = {};
 
@@ -107,9 +106,6 @@ export default function AddStockiest() {
         })
         .finally(() => {
           setIsLoading(false);
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
         });
     } else {
       toast.error("Please fill All Details");

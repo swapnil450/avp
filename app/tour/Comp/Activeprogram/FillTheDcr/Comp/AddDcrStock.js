@@ -42,8 +42,8 @@ export default function AddDcrChem({ ActiveProgram }) {
 
   const AreaTP = ActiveProgram?.area.split(",")[0];
 
-  const AllAreaStock = allStockiest.stockData?.filter(
-    (i) => i.Area === AreaTP && i.approved === true
+  const AllAreaStock = allStockiest?.stockData?.filter(
+    (i) => i.Area.includes(AreaTP) && i.approved === true
   );
 
   const StockiestDet = AllAreaStock?.filter((i) => i.Name === stocksel) || [
