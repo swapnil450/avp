@@ -69,7 +69,7 @@ export default function AllDataContext({ children }) {
       } catch (error) {}
     };
 
-    const userinfo = JSON.parse(localStorage.getItem("user")) || {};
+    const userinfo = JSON.parse(localStorage?.getItem("user")) || {};
     setUser(userinfo);
 
     // const interval = setInterval(() => {

@@ -21,6 +21,8 @@ export default function ListOfStock({
   search,
   Active,
 }) {
+  const { user } = useGlobalContext();
+
   const [page, setPage] = React.useState(1);
   const [last, setLast] = React.useState(20);
   const [first, setFirst] = React.useState(0);

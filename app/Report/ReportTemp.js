@@ -1,12 +1,5 @@
 "use client";
-import BootomDtails from "./Comp/BootomDtails";
-import ExecutiveInfo from "./Comp/ExecutiveInfo";
-import DoctorDetails from "./Comp/DoctorDetails";
-import ChemStockDetails from "./Comp/ChemStockDetails";
-import StockiestDetails from "./Comp/StockiestDetails";
-import { ToastContainer, toast } from "react-toastify";
 
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 moment().format();
@@ -33,7 +26,6 @@ export default function ReportTemp({
     start_date.setDate(start_date.getDate() + 1);
   }
 
-  const userId = JSON.parse(localStorage?.getItem("user")) || "admin";
   const name = dcrID?.createdByName ? dcrID?.createdByName : "-";
   const date = moment(dcrID?.createdAt).format("DD/MM/YYYY");
   const designation = dcrID?.post;

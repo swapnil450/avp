@@ -37,13 +37,16 @@ const tabs = [
 ];
 
 const logout = () => {
-  localStorage.removeItem("user");
+  localStorage?.removeItem("user");
   setTimeout(() => {
     window.location.reload();
   }, 1000);
 };
 
-const user = JSON.parse(localStorage.getItem("user"));
+const user =
+  typeof localStorage !== "undefined"
+    ? JSON.parse(localStorage?.getItem("user"))
+    : null;
 
 export default function App() {
   const [active, setActive] = useState("DashBoard");

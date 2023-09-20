@@ -22,14 +22,13 @@ import {
 import ChemEdit from "@/app/Home/AddInfo/Comp/EditDeleteUpdate/EditComp/ChemEdit";
 
 export default function TourAp() {
-  const { allChem } = useGlobalContext();
+  const { allChem, user } = useGlobalContext();
 
   const chem = allChem.chemData;
 
   if (!chem || chem.length === 0) {
     return <div>No data available.</div>;
   }
-  const user = JSON.parse(localStorage?.getItem("user")) || "admin";
   const CreatedbyUser = chem.filter(
     (i) => i.createdBy === user.userId && i.approved === false
   );

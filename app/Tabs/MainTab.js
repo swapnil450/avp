@@ -45,7 +45,8 @@ export default function Tab() {
   const [selTab, setSelTab] = React.useState("Employee");
 
   const Tabs = ["Doctor", "Chemist", "Stockiest"];
-  const TabAct = localStorage.getItem("tab");
+  const TabAct =
+    typeof localStorage !== "undefined" ? localStorage?.getItem("tab") : null;
   const Active = JSON.parse(TabAct);
 
   const [dataLimit, setDataLimit] = React.useState({
@@ -74,7 +75,7 @@ export default function Tab() {
 
   const [search, setSearch] = React.useState("");
   const setTabActive = (i) => {
-    localStorage.setItem("tab", JSON.stringify(i));
+    localStorage?.setItem("tab", JSON.stringify(i));
     setSelTab(i);
     ClearAllFilter();
   };

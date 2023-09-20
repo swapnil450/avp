@@ -28,7 +28,10 @@ export default function RootLayout({ children }) {
   // const [load, setLoad] = useState(false);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user =
+      typeof localStorage !== "undefined"
+        ? JSON.parse(localStorage?.getItem("user"))
+        : null;
     setUserData(user);
   }, []);
 

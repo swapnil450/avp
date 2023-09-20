@@ -21,6 +21,8 @@ export default function Chem({
   search,
   Active,
 }) {
+  const { user } = useGlobalContext();
+
   const [page, setPage] = React.useState(1);
   const [last, setLast] = React.useState(20);
   const [first, setFirst] = React.useState(0);
@@ -53,7 +55,7 @@ export default function Chem({
       }
     }
   `;
-  const user = JSON.parse(localStorage.getItem("user"));
+
   const { loading, error, data, refetch } = useQuery(GET_CHEMIST_DATA, {
     variables: {
       first: first,
