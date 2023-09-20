@@ -27,7 +27,7 @@ export default function AllDataContext({ children }) {
           areaResponse,
           headqResponse,
           stdfareResponse,
-          proRateResponse,
+          // proRateResponse,
           stockResponse,
         ] = await axios.all([
           axios.get(`${Server}/user/UserDetail`),
@@ -36,7 +36,7 @@ export default function AllDataContext({ children }) {
           axios.get(`${Server}/add/area`),
           axios.get(`${Server}/add/headq`),
           axios.get(`${Server}/add/stdfare`),
-          axios.get(`${Server}/add/proRate`),
+          // axios.get(`${Server}/add/proRate`),
           axios.get(`${Server}/add/stock`),
         ]);
 
@@ -58,9 +58,9 @@ export default function AllDataContext({ children }) {
         setAllStdFare({
           stdfareData: stdfareResponse.data,
         });
-        setAllProdRate({
-          proRateData: proRateResponse.data,
-        });
+        // setAllProdRate({
+        //   proRateData: proRateResponse.data,
+        // });
         setAllStockiest({
           stockData: stockResponse.data,
         });
@@ -94,7 +94,7 @@ export default function AllDataContext({ children }) {
       allStockiest,
       headquaters,
       AreasOption,
-      allProdRate,
+      // allProdRate,
       user,
       flag,
     };

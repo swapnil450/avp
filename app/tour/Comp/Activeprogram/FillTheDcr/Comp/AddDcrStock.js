@@ -42,8 +42,12 @@ export default function AddDcrChem({ ActiveProgram }) {
 
   const AreaTP = ActiveProgram?.area.split(",")[0];
 
-  const AllAreaStock = allStockiest?.stockData?.filter(
-    (i) => i.Area.includes(AreaTP) && i.approved === true
+  // const AllAreaStock = allStockiest?.stockData?.filter(
+  //   (i) => i.Area.includes(AreaTP) && i.approved === true
+  // );
+  const user = JSON.parse(localStorage?.getItem("user"));
+  const AllAreaStock = allStockiest?.stockData?.filter((obj) =>
+    user?.selectedAreas?.some((filterValue) => obj.Area.includes(filterValue))
   );
 
   const StockiestDet = AllAreaStock?.filter((i) => i.Name === stocksel) || [
@@ -55,7 +59,6 @@ export default function AddDcrChem({ ActiveProgram }) {
     onOpen();
   };
 
-  const user = JSON.parse(localStorage?.getItem("user")) || "admin";
   const [formData, setFormData] = React.useState({
     Code: "",
     Name: "",
@@ -76,7 +79,6 @@ export default function AddDcrChem({ ActiveProgram }) {
   formData.mobile = StockiestDet[0]?.mobile;
   formData.address = StockiestDet[0]?.address;
   formData.Area = StockiestDet[0]?.Area;
-
   formData.createdBy = user?.userId;
 
   const [errors, setErrors] = React.useState({});
@@ -134,7 +136,7 @@ export default function AddDcrChem({ ActiveProgram }) {
       <div className="flex flex-col justify-center items-center gap-3">
         <ToastContainer
           position="bottom-center"
-          autoClose={1000}
+          autoClose={500}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick

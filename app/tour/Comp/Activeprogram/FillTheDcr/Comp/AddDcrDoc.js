@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import doc from "../../../../../img/doc.webp";
-import { User } from "@nextui-org/react";
+
 import Image from "next/image";
 import { Switch } from "@nextui-org/react";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,14 +16,7 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Divider,
-  Link,
-} from "@nextui-org/react";
+
 import { Input } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 
@@ -47,10 +40,10 @@ export default function AddDcrDoc({ ActiveProgram, loc }) {
   const [isSelected, setIsSelected] = React.useState(false);
   const { allDoc } = useGlobalContext();
 
-  const AreaTP = ActiveProgram?.area.split(",")[0];
+  const user = JSON.parse(localStorage?.getItem("user"));
 
-  const AllAreaDoc = allDoc.docData?.filter(
-    (i) => i.Area.includes(AreaTP) && i.approved === true
+  const AllAreaDoc = allDoc?.docData?.filter((i) =>
+    user.selectedAreas.includes(i.Area)
   );
 
   const DocDet = AllAreaDoc?.filter((i) => i.DoctorName === docsel) || [
@@ -62,9 +55,6 @@ export default function AddDcrDoc({ ActiveProgram, loc }) {
     onOpen();
   };
 
-  const user = JSON.parse(localStorage?.getItem("user")) || "admin";
-  const workWithD =
-    JSON.parse(localStorage?.getItem("workwith")) || "independent";
   const [formData, setFormData] = React.useState({
     workWith: "",
     DoctorCode: "",
@@ -75,10 +65,8 @@ export default function AddDcrDoc({ ActiveProgram, loc }) {
     Area: "",
     Degree: "",
     Speciality: "",
-
     P1: "",
     P2: "",
-
     DcrId: "",
     Detail: "",
     lit: "",
@@ -88,7 +76,7 @@ export default function AddDcrDoc({ ActiveProgram, loc }) {
     createdAt: "",
   });
 
-  formData.workWith = workWithD;
+  formData.workWith = ActiveProgram?.workWith;
   formData.createdAt = new Date().toISOString().slice(0, 10);
   formData.Pob = inputList;
   formData.HosName = DocDet[0]?.HosName;
@@ -107,8 +95,7 @@ export default function AddDcrDoc({ ActiveProgram, loc }) {
   formData.Detail = det;
   formData.log = loc?.log;
   formData.lat = loc?.lat;
-  formData.createdBy = user.userId;
-
+  formData.createdBy = user.userId || "Unkown";
 
   const [errors, setErrors] = React.useState({});
 
@@ -173,7 +160,7 @@ export default function AddDcrDoc({ ActiveProgram, loc }) {
       <div className="flex flex-col justify-center items-center gap-3">
         <ToastContainer
           position="bottom-center"
-          autoClose={1000}
+          autoClose={500}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
@@ -250,7 +237,7 @@ export default function AddDcrDoc({ ActiveProgram, loc }) {
                         </p>
                       )}
                     </div>
-
+                    {/* <p>{datal}</p> */}
                     <div className="flex flex-col justify-center ">
                       {DocDet?.map((i) => {
                         return (

@@ -37,7 +37,7 @@ export default function ReportTemp({
   const name = dcrID?.createdByName ? dcrID?.createdByName : "-";
   const date = moment(dcrID?.createdAt).format("DD/MM/YYYY");
   const designation = dcrID?.post;
-  const actualTP = dcrID?.area?.join(", ");
+  const month = dcrID?.month;
   const workWith = AllDocByDate === undefined ? "-" : AllDocByDate[0]?.workWith;
   const dcrId = dcrID?.DcrId;
 
@@ -61,12 +61,12 @@ export default function ReportTemp({
             "Name",
             "Date",
             "Designation",
-            "Actual_TP",
+            "Month",
             "Work_With",
             "DCR_ID",
             "Departmental Remark Only",
           ],
-          [name, date, designation, actualTP, workWith, dcrId, ""],
+          [name, date, designation, month, workWith, dcrId, ""],
         ],
         columnStyles: {
           0: { cellWidth: "auto" },
@@ -92,7 +92,6 @@ export default function ReportTemp({
             "Detail - Y/N",
             "Doctor Specify Commitment in Word",
             "POB",
-            "Location",
           ],
           ...AllDocByDate.map((i, index) => [
             index + 1,
@@ -110,7 +109,7 @@ export default function ReportTemp({
                   Number(k.Qnt) * Number(k.value)
                 }`
             ).join("\n"),
-            `lat: ${i.lat}, log: ${i.log}`,
+            // `lat: ${i.lat}, log: ${i.log}`,
           ]),
         ],
         columnStyles: {
@@ -131,7 +130,7 @@ export default function ReportTemp({
       {
         title: "Chemist Details",
         data: [
-          ["SR.NO", "Code no", "Chemist Name", "POB", "Location"],
+          ["SR.NO", "Code no", "Chemist Name", "POB"],
           ...AllChemByDate.map((i, index) => [
             index + 1,
             i?.chemCode,
@@ -142,7 +141,7 @@ export default function ReportTemp({
                   Number(key.Qnt) * Number(key.value)
                 }`
             ).join("\n"),
-            `lat: ${i.lat}, log: ${i.log}`,
+            // `lat: ${i.lat}, log: ${i.log}`,
           ]),
         ],
         columnStyles: {
@@ -150,20 +149,12 @@ export default function ReportTemp({
           1: { cellWidth: "auto" },
           2: { cellWidth: "auto" },
           3: { cellWidth: "auto" },
-          4: { cellWidth: "auto" },
         },
       },
       {
         title: "Sctockiest Details",
         data: [
-          [
-            "SR.NO",
-            "Code no",
-            "Stockiest Name",
-            "Collections",
-            "POB",
-            "Location",
-          ],
+          ["SR.NO", "Code no", "Stockiest Name", "Collections", "POB"],
           ...AllStockByDate.map((i, index) => [
             index + 1,
             i?.Code,
@@ -175,7 +166,7 @@ export default function ReportTemp({
                   Number(key.Qnt) * Number(key.value)
                 }`
             ).join("\n"),
-            `lat: ${i.lat}, log: ${i.log}`,
+            // `lat: ${i.lat}, log: ${i.log}`,
           ]),
         ],
         columnStyles: {
@@ -184,7 +175,6 @@ export default function ReportTemp({
           2: { cellWidth: "auto" },
           3: { cellWidth: "auto" },
           4: { cellWidth: "auto" },
-          5: { cellWidth: "auto" },
         },
       },
       {
@@ -236,7 +226,7 @@ export default function ReportTemp({
     });
 
     // Save the PDF
-    doc.save("DCR-Report");
+    doc.save(`DCR- ${name}-${date}`);
 
     // Show success notification
     toast.success("🦄 Pdf Downloaded!");

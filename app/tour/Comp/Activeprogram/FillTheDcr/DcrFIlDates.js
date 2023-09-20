@@ -89,62 +89,50 @@ export default function DcrFIlDates({ ActiveProgram, dates }) {
   } else {
     return (
       <>
-        {
-          ActivatedDateTp?.map((key) => {
-            return (
-              <>
-                <Card className="flex flex-col gap-  p-2 justify-center items-center ">
-                  <h4 className="font-semibold  text-center p-1 rounded-lg text-sm">
-                    Activity:
-                    <span className="text-sm underline text-black">
-                      {" "}
-                      {key.Activity}
-                    </span>
-                  </h4>
-                  <h4 className="font-semibold  text-center p-1 rounded-lg text-sm">
-                    Area:
-                    <span className="text-sm underline text-black">
-                      {" "}
-                      {key.area}
-                    </span>
-                  </h4>
-                  <h4 className="font-semibold  text-center p-1 rounded-lg text-sm">
-                    Today program :
-                    <span className="text-sm underline text-black">
-                      {" "}
-                      {ActiveDate}
-                    </span>
-                  </h4>
-                  <h4 className="font-semibold  text-center p-1 rounded-lg text-sm">
-                    Working With :{" "}
-                    <span className="text-xs underline text-">
-                      {key.workWith}😊!
-                    </span>
-                  </h4>
+        {ActivatedDateTp?.map((key) => {
+          return (
+            <>
+              <Card className="flex flex-col gap-  p-2 justify-center items-center ">
+                <h4 className="font-semibold  text-center p-1 rounded-lg text-sm">
+                  Activity:
+                  <span className="text-sm underline text-black">
+                    {" "}
+                    {key.Activity}
+                  </span>
+                </h4>
+                <h4 className="font-semibold  text-center p-1 rounded-lg text-sm">
+                  Area:
+                  <span className="text-sm underline text-black">
+                    {" "}
+                    {key.area}
+                  </span>
+                </h4>
+                <h4 className="font-semibold  text-center p-1 rounded-lg text-sm">
+                  Today program :
+                  <span className="text-sm underline text-black">
+                    {" "}
+                    {ActiveDate}
+                  </span>
+                </h4>
+                <h4 className="font-semibold  text-center p-1 rounded-lg text-sm">
+                  Working With :{" "}
+                  <span className="text-xs underline text-">
+                    {key.workWith}😊!
+                  </span>
+                </h4>
 
-                  <div className="flex flex-row   p-3 rounded-lg gap-10">
-                    {/* <WorkWith /> */}
-                    <AddDcrChem loc={loc} ActiveProgram={key} />
-                    <AddDcrDoc loc={loc} ActiveProgram={key} />
-                    <AddDcrStock loc={loc} ActiveProgram={key} />
-                  </div>
+                <div className="flex flex-row   p-3 rounded-lg gap-10">
+                  {/* <WorkWith /> */}
+                  <AddDcrChem loc={loc} ActiveProgram={key} />
+                  <AddDcrDoc loc={loc} ActiveProgram={key} />
+                  <AddDcrStock loc={loc} ActiveProgram={key} />
+                </div>
 
-                  {/* </Card> */}
-                </Card>
-              </>
-            );
-          })
-          //     );
-          //   })
-          // ) : (
-          //   <div className="flex flex-col juatify-center items-center gap-4">
-          //     <Image alt="no data" src={no} height={200} width={200} className="" />
-          //     <p className="text-xs font-bold text-black">
-          //       No Program Found Today..
-          //     </p>
-          //   </div>
-          // )}
-        }
+                {/* </Card> */}
+              </Card>
+            </>
+          );
+        })}
       </>
     );
   }

@@ -11,6 +11,17 @@ import AllDataContext from "./DataContext/AllData/AllDataContext";
 import TabBar from "@/utils/TabBar";
 import Login from "./login/page";
 const inter = Inter({ subsets: ["latin"] });
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  gql,
+} from "@apollo/client";
+
+const client = new ApolloClient({
+  uri: "https://gqlavirosa.vercel.app/graph",
+  cache: new InMemoryCache(),
+});
 
 export default function RootLayout({ children }) {
   const [userData, setUserData] = useState({});
@@ -26,20 +37,22 @@ export default function RootLayout({ children }) {
       <body className={`${inter.className} `}>
         <NextUIProvider>
           <Provider store={store}>
-            <AllDataContext>
-              {userData ? (
-                <>
-                  <Sidebar />
-                  <div className="flex justify-center items-center">
-                    {children}
-                  </div>
+            <ApolloProvider client={client}>
+              <AllDataContext>
+                {userData ? (
+                  <>
+                    <Sidebar />
+                    <div className="flex justify-center items-center">
+                      {children}
+                    </div>
 
-                  <TabBar />
-                </>
-              ) : (
-                <Login />
-              )}
-            </AllDataContext>
+                    <TabBar />
+                  </>
+                ) : (
+                  <Login />
+                )}
+              </AllDataContext>
+            </ApolloProvider>
           </Provider>
         </NextUIProvider>
       </body>

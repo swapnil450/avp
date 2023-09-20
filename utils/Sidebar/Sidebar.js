@@ -43,6 +43,8 @@ const logout = () => {
   }, 1000);
 };
 
+const user = JSON.parse(localStorage.getItem("user"));
+
 export default function App() {
   const [active, setActive] = useState("DashBoard");
 
@@ -102,6 +104,11 @@ export default function App() {
                   />
                 </DropdownTrigger>
                 <DropdownMenu aria-label="User Actions" variant="flat">
+                  <DropdownItem key="logout" color="danger">
+                    <p className="text-xs font-bold">{user?.empName}</p>
+                    <p className="text-xs ">{user?.post}</p>
+                    <p className="text-[11px] ">{user?.email}</p>
+                  </DropdownItem>
                   <DropdownItem onClick={logout} key="logout" color="danger">
                     Log Out
                   </DropdownItem>

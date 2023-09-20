@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+
 import edit from "../../../../../img/edit.webp";
 import del from "../../../../../img/delete.webp";
 import Image from "next/image";
@@ -25,7 +25,7 @@ import {
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
-export default function ChemEdit({ item }) {
+export default function ChemEdit({ item, RefetchData, DataFetch }) {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
   const { AreasOption } = useGlobalContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -143,6 +143,7 @@ export default function ChemEdit({ item }) {
         })
         .finally(() => {
           setIsLoading(false);
+          RefetchData(DataFetch);
         });
     } else {
       toast.error("Please fill All Details");
@@ -168,26 +169,12 @@ export default function ChemEdit({ item }) {
       })
       .finally(() => {
         setIsLoading(false);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        RefetchData(DataFetch);
       });
   };
 
   return (
     <>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
       <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
           <div
@@ -318,7 +305,7 @@ export default function ChemEdit({ item }) {
                         required
                       >
                         <option value="">Select Area</option>
-                        {AreasOption.map((i) => {
+                        {AreasOption?.map((i) => {
                           return (
                             <>
                               <option value={i}>{i}</option>

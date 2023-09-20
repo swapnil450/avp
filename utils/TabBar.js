@@ -31,7 +31,8 @@ export default function TabBar() {
 
   const tabs = [
     { name: "Dashboard", link: "/", icon: img },
-    { name: "Approval", link: "/Tabs", icon: img1 },
+
+    { name: "Mange DCS", link: "/Tabs", icon: img1 },
     {
       name: "Add DCR",
       link: "/tour",
@@ -59,8 +60,8 @@ export default function TabBar() {
       <main
         className={`flex   h-[60px]  justify-center items-center ${
           isSticky
-            ? "fixed bottom-0 w-full rounded-t-xl bg-gray-100  shadow-lg"
-            : " fixed bottom-0 w-full rounded-t-xl bg-gray-100  shadow-lg"
+            ? "fixed block bottom-0 w-full rounded-t-xl bg-gray-100  shadow-lg"
+            : " fixed block bottom-0 w-full rounded-t-xl bg-gray-100  shadow-lg"
         }`}
       >
         <div className="flex flex-row gap-10 justify-center items-center">

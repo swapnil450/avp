@@ -3,10 +3,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import med from "../../../../../img/med.webp";
-import { User } from "@nextui-org/react";
 import Image from "next/image";
 import { Switch } from "@nextui-org/react";
-import WorkWith from "./WorkWith";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Modal,
@@ -17,15 +15,6 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Divider,
-  Link,
-} from "@nextui-org/react";
-import { Input } from "@nextui-org/react";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 
 import InputList from "@/app/Home/AddInfo/Comp/EmerncyAdject/InputList";
@@ -49,7 +38,6 @@ export default function AddDcrChem({ ActiveProgram, loc }) {
   const { AreasOption, allChem, user } = useGlobalContext();
 
   const AreaTP = ActiveProgram?.area.split(",");
-  const ActiveAreaTp = AreaTP[0];
 
   const userSelectedArea = user?.selectedAreas || [];
 
@@ -98,7 +86,6 @@ export default function AddDcrChem({ ActiveProgram, loc }) {
   formData.Detail = det;
   formData.createdBy = user?.userId;
 
-  console.log(user, "form");
   const [errors, setErrors] = React.useState({});
 
   const validateForm = () => {

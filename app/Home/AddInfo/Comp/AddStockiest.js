@@ -14,10 +14,11 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
+import { CheckboxGroup } from "@nextui-org/react";
+import { CustomCheckbox } from "./styleComp/CustomCheckbox";
 import { Select, SelectItem } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 
-import { CustomCheckbox } from "./styleComp/CustomCheckbox";
 import { useGlobalContext } from "@/app/DataContext/AllData/AllDataContext";
 export default function AddStockiest() {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
@@ -30,8 +31,8 @@ export default function AddStockiest() {
     setSize(size);
     onOpen();
   };
+  const [groupSelected, setGroupSelected] = React.useState([]);
 
-  const [values, setValues] = React.useState([]);
   const [formData, setFormData] = React.useState({
     Code: "",
     Name: "",
@@ -42,8 +43,8 @@ export default function AddStockiest() {
     Active: true,
     approved: false,
   });
+  formData.Area = groupSelected;
   formData.createdBy = user.userId || "admin";
-  formData.Area = [Array.from(values).join(", ")];
 
   const [errors, setErrors] = React.useState({});
 
@@ -216,21 +217,31 @@ export default function AddStockiest() {
                         </p>
                       )}
                     </div>
-                    <div className="flex w-full max-w-xs flex-col gap-2">
-                      <Select
-                        label="Areas"
-                        selectionMode="multiple"
-                        placeholder="Select an Area"
-                        selectedKeys={values}
-                        className="max-w-xs"
-                        onSelectionChange={setValues}
-                      >
-                        {user?.selectedAreas?.map((animal) => (
-                          <SelectItem key={animal} value={animal}>
-                            {animal}
-                          </SelectItem>
-                        ))}
-                      </Select>
+                    <div className="flex flex-col gap-4 mt-4">
+                      <div className="flex flex-col  gap-4 w-full">
+                        <CheckboxGroup
+                          className="gap-1 flex text-black font-bold  flex-wrap"
+                          label="Select Areas"
+                          orientation="horizontal"
+                          value={groupSelected}
+                          onChange={setGroupSelected}
+                        >
+                          {AreasOption?.map((i) => {
+                            return (
+                              <>
+                                <CustomCheckbox className="text-sm" value={i}>
+                                  {i}
+                                </CustomCheckbox>
+                              </>
+                            );
+                          })}
+                        </CheckboxGroup>
+                        {errors.selectedAreas && (
+                          <p className="text-red-500 text-xs font-semibold p-1">
+                            {errors.selectedAreas}
+                          </p>
+                        )}
+                      </div>
                     </div>
 
                     <div className="flex flex-col justify-center ">

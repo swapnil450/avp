@@ -1,4 +1,3 @@
-
 "use client";
 import React from "react";
 import axios from "axios";
@@ -27,7 +26,7 @@ import {
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 
-export default function DocEdit({ item }) {
+export default function DocEdit({ item, RefetchData, DataFetch }) {
   const Server = process.env.NEXT_PUBLIC_SERVER_NAME;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -158,6 +157,7 @@ export default function DocEdit({ item }) {
         })
         .finally(() => {
           setIsLoading(false);
+          RefetchData(DataFetch);
         });
     } else {
       toast.error("Please fill All Details");
@@ -182,6 +182,7 @@ export default function DocEdit({ item }) {
       })
       .finally(() => {
         setIsLoading(false);
+        RefetchData(DataFetch);
       });
   };
 
@@ -200,46 +201,45 @@ export default function DocEdit({ item }) {
         theme="dark"
       />
 
-      <div className="flex flex-wrap gap-3">
-        {sizes.map((size) => (
-          <div key={size} className="flex flex-row gap-3 justify-center items-center">
-            <Image
-              onClick={() => handleOpen(size)}
-              className="cursor-pointer"
-              src={edit}
-              width={20}
-              height={20}
-              alt="icons"
-            />
+      {sizes.map((size) => (
+        <div key={size} className="flex flex-row gap-3 ">
+          <Image
+            onClick={() => handleOpen(size)}
+            className="cursor-pointer"
+            src={edit}
+            width={20}
+            height={20}
+            alt="icons"
+          />
 
-            <Dropdown>
-              <DropdownTrigger>
-                <Image
-                  className="cursor-pointer"
-                  src={del}
-                  width={20}
-                  height={20}
-                  alt="icons"
-                />
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label="Dropdown Variants"
-                color="default"
-                variant="solid"
+          <Dropdown>
+            <DropdownTrigger>
+              <Image
+                className="cursor-pointer block"
+                src={del}
+                width={20}
+                height={20}
+                alt="icons"
+              />
+            </DropdownTrigger>
+            <DropdownMenu
+              aria-label="Dropdown Variants"
+              color="default"
+              variant="solid"
+            >
+              <DropdownItem
+                key="delete"
+                className="text-danger"
+                color="danger"
+                onClick={() => handleDelete(item._id)}
               >
-                <DropdownItem
-                  key="delete"
-                  className="text-danger"
-                  color="danger"
-                  onClick={() => handleDelete(item._id)}
-                >
-                  Confirm Delete
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        ))}
-      </div>
+                Confirm Delete
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      ))}
+
       <Modal
         size={size}
         isOpen={isOpen}
