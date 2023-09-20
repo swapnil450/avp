@@ -42,7 +42,7 @@ import { ToastContainer, toast } from "react-toastify";
 import FilterByArea from "../FilterComp/FilterByArea";
 
 export default function Tab() {
-  const [selTab, setSelTab] = React.useState("Employee");
+  const [selTab, setSelTab] = React.useState("Doctor");
 
   const Tabs = ["Doctor", "Chemist", "Stockiest"];
   const TabAct =
