@@ -39,12 +39,11 @@ export default function AddDcrDoc({ ActiveProgram, loc }) {
 
   const [isSelected, setIsSelected] = React.useState(false);
   const { allDoc } = useGlobalContext();
-
+  const AreaTP = ActiveProgram?.area.split(",");
+  AreaTP.pop();
   const user = JSON.parse(localStorage?.getItem("user"));
 
-  const AllAreaDoc = allDoc?.docData?.filter((i) =>
-    user.selectedAreas.includes(i.Area)
-  );
+  const AllAreaDoc = allDoc?.docData?.filter((i) => AreaTP.includes(i.Area));
 
   const DocDet = AllAreaDoc?.filter((i) => i.DoctorName === docsel) || [
     { docName: "doctor" },

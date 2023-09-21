@@ -40,14 +40,13 @@ export default function AddDcrChem({ ActiveProgram }) {
   const [isSelected, setIsSelected] = React.useState(false);
   const { allStockiest } = useGlobalContext();
 
-  const AreaTP = ActiveProgram?.area.split(",")[0];
+  // !!! get Area from Active program
+  const AreaTP = ActiveProgram?.area.split(",");
+  AreaTP.pop();
 
-  // const AllAreaStock = allStockiest?.stockData?.filter(
-  //   (i) => i.Area.includes(AreaTP) && i.approved === true
-  // );
   const user = JSON.parse(localStorage?.getItem("user"));
   const AllAreaStock = allStockiest?.stockData?.filter((obj) =>
-    user?.selectedAreas?.some((filterValue) => obj.Area.includes(filterValue))
+    AreaTP.some((filterValue) => obj.Area.includes(filterValue))
   );
 
   const StockiestDet = AllAreaStock?.filter((i) => i.Name === stocksel) || [

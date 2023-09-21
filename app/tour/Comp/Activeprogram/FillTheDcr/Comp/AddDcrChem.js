@@ -38,11 +38,13 @@ export default function AddDcrChem({ ActiveProgram, loc }) {
   const { AreasOption, allChem, user } = useGlobalContext();
 
   const AreaTP = ActiveProgram?.area.split(",");
+  AreaTP.pop();
+  console.log(AreaTP, "tp");
 
   const userSelectedArea = user?.selectedAreas || [];
 
   const AllAreaChem = allChem.chemData?.filter(
-    (i) => userSelectedArea.includes(i.Area) && i.approved === true
+    (i) => AreaTP.includes(i.Area) && i.approved === true
   );
 
   const chemistDet = AllAreaChem?.filter((i) => i.chemName === chemsel) || [
