@@ -190,7 +190,7 @@ export default function ChemEdit({ item, RefetchData, DataFetch }) {
               alt="icons"
             />
 
-            <Dropdown>
+            {/* <Dropdown>
               <DropdownTrigger>
                 <Image
                   className="cursor-pointer"
@@ -214,7 +214,7 @@ export default function ChemEdit({ item, RefetchData, DataFetch }) {
                   Confirm Delete
                 </DropdownItem>
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> */}
           </div>
         ))}
       </div>

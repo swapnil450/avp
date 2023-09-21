@@ -252,7 +252,7 @@ export default function EditStock({ item, RefetchData, DataFetch }) {
                 alt="icons"
               />
 
-              <Dropdown>
+              {/* <Dropdown>
                 <DropdownTrigger>
                   <Image
                     className="cursor-pointer"
@@ -276,7 +276,7 @@ export default function EditStock({ item, RefetchData, DataFetch }) {
                     Confirm Delete
                   </DropdownItem>
                 </DropdownMenu>
-              </Dropdown>
+              </Dropdown> */}
             </div>
 
             {item?.approved === true ? (

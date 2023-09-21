@@ -212,7 +212,7 @@ export default function DocEdit({ item, RefetchData, DataFetch }) {
             alt="icons"
           />
 
-          <Dropdown>
+          {/* <Dropdown>
             <DropdownTrigger>
               <Image
                 className="cursor-pointer block"
@@ -236,7 +236,7 @@ export default function DocEdit({ item, RefetchData, DataFetch }) {
                 Confirm Delete
               </DropdownItem>
             </DropdownMenu>
-          </Dropdown>
+          </Dropdown> */}
         </div>
       ))}
 
