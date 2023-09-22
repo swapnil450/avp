@@ -1,18 +1,19 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+
 import moment from "moment";
 moment().format();
 import "react-toastify/dist/ReactToastify.css";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Button } from "@nextui-org/react";
-
 export default function ReportTemp({
   AllDocByDate,
   AllChemByDate,
   AllStockByDate,
   dcrID,
+  seldate,
 }) {
   const sizes = ["full"];
 
@@ -25,12 +26,15 @@ export default function ReportTemp({
     dates.push(moment(start_date).format("DD/MM/YYYY"));
     start_date.setDate(start_date.getDate() + 1);
   }
-
   const name = dcrID?.createdByName ? dcrID?.createdByName : "-";
-  const date = moment(dcrID?.createdAt).format("DD/MM/YYYY");
+
   const designation = dcrID?.post;
   const month = dcrID?.month;
-  const workWith = AllDocByDate === undefined ? "-" : AllDocByDate[0]?.workWith;
+
+  const workWith =
+    AllDocByDate === undefined
+      ? "-"
+      : AllDocByDate[0]?.workWith || "independent";
   const dcrId = dcrID?.DcrId;
 
   const Dlen = AllDocByDate?.length || "0";
@@ -58,7 +62,7 @@ export default function ReportTemp({
             "DCR_ID",
             "Departmental Remark Only",
           ],
-          [name, date, designation, month, workWith, dcrId, ""],
+          [name, seldate, designation, month, workWith, dcrId, ""],
         ],
         columnStyles: {
           0: { cellWidth: "auto" },
@@ -218,7 +222,7 @@ export default function ReportTemp({
     });
 
     // Save the PDF
-    doc.save(`DCR- ${name}-${date}`);
+    doc.save(`DCR- ${name}-${seldate}`);
 
     // Show success notification
     toast.success("🦄 Pdf Downloaded!");

@@ -124,6 +124,8 @@ export default function AccordionTp({ tp }) {
                     dtotal={Dlen}
                     sTotal={slen}
                     dcrID={key}
+                    seldate={seldate}
+                    Active={Active}
                   />
                 </div>
               </AccordionItem>

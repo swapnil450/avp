@@ -39,7 +39,6 @@ export default function AddDcrChem({ ActiveProgram, loc }) {
 
   const AreaTP = ActiveProgram?.area.split(",");
   AreaTP.pop();
-  console.log(AreaTP, "tp");
 
   const userSelectedArea = user?.selectedAreas || [];
 
@@ -67,7 +66,6 @@ export default function AddDcrChem({ ActiveProgram, loc }) {
     DcrId: "",
     lat: "",
     log: "",
-
     Pob: [],
     createdBy: " ",
     createdAt: "",
