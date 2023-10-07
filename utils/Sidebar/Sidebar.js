@@ -1,126 +1,114 @@
 "use client";
-import React, { useState, useEffect } from "react"; // Import useState from "react"
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  Link,
-} from "@nextui-org/react"; // Remove Button import since it's not used
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Button,
-  Avatar,
-  User,
-} from "@nextui-org/react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { setSideBarTab } from "@/ReduxToolkit/Slices/UiCompSlice/SideBarTab";
-const AcmeLogo = () => (
-  <svg fill="none" height="36" viewBox="0 0 32 32" width="36">
-    <path
-      clipRule="evenodd"
-      d="M17.6482 10.1305L15.8785 7.02583L7.02979 22.5499H10.5278L17.6482 10.1305ZM19.8798 14.0457L18.11 17.1983L19.394 19.4511H16.8453L15.1056 22.5499H24.7272L19.8798 14.0457Z"
-      fill="currentColor"
-      fillRule="evenodd"
-    />
-  </svg>
-);
+import React from "react";
+import { useState } from "react";
+import logo from "../../public/sbt.png"
+import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
+export default function Sidebar() {
+  const Router = useRouter();
+  const path = usePathname();
+  const TabNames = [
+    {
+      name: "DashBoard",
+      icon: "https://img.icons8.com/windows/32/home.png",
+      url: "/",
+    },
+    {
+      name: "Manage_Product",
+      icon: "https://img.icons8.com/ios/50/product--v1.png",
+      url: "/Product",
+    },
+    {
+      name: "Manage_Order",
+      icon: "https://img.icons8.com/ios/50/purchase-order.png",
+      url: "/Order",
+    },
+    {
+      name: "Mangement_User",
+      icon: "https://img.icons8.com/ios/50/user--v1.png",
+      url: "/Users",
+    },
+    // {
+    //   name: "Setting",
+    //   icon: "https://img.icons8.com/ios/50/settings--v1.png",
+    //   url: "/",
+    // },
+  ];
+  const [tab, setTab] = useState("Home");
 
-const tabs = [
-  { name: "Dashboard", link: "/" },
-  { name: "Details", link: "/Tabs" },
-  { name: "Tour Program", link: "/TourProgram" },
-];
 
-const logout = () => {
-  localStorage?.removeItem("user");
-  setTimeout(() => {
+  function deleteFromLocalStorage(key) {
+    localStorage.removeItem("user");
     window.location.reload();
-  }, 1000);
-};
-
-const user =
-  typeof localStorage !== "undefined"
-    ? JSON.parse(localStorage?.getItem("user"))
-    : null;
-
-export default function App() {
-  const [active, setActive] = useState("DashBoard");
-
-  // handle scroll behaviour when scroll to stick navbar top position and fixed
-
-  const dispatch = useDispatch();
-  const controll = (i) => {
-    dispatch(setSideBarTab);
-    setActive(i);
-  };
-  const taba = useSelector((state) => {
-    return state.SideBarTab;
-  });
-
+  }
   return (
     <>
-      <Navbar className="h-[60px] " isBordered isBlurred={false}>
-        <NavbarBrand>
-          <AcmeLogo />
-          <p className="font-bold text-inherit">Avirosa</p>
-        </NavbarBrand>
-        {/* <NavbarContent
-          className="sm:flex  lg:flex lg:flex-row hidden  gap-8"
-          justify="center"
-        >
-          {tabs.map((tab) => (
-            <NavbarItem key={tab.name}>
-              <Link
-                onClick={() => controll(tab.name)}
-                color="foreground"
-                href={tab.link}
-                className={
-                  active === tab.name ? "border-b-4 border-primary" : ""
-                }
-              >
-                {tab.name}
-              </Link>
-            </NavbarItem>
-          ))}
-        </NavbarContent> */}
-        <NavbarContent
-          className="  flex justify-center items-center"
-          justify="end"
-        >
-          <NavbarItem>
-            <div className="flex items-center gap-4">
-              <Dropdown placement="bottom-start">
-                <DropdownTrigger>
-                  <User
-                    as="button"
-                    avatarProps={{
-                      isBordered: true,
-                      src: "",
-                      alt: "A",
-                    }}
-                    className="transition-transform"
-                  />
-                </DropdownTrigger>
-                <DropdownMenu aria-label="User Actions" variant="flat">
-                  <DropdownItem key="logout" color="danger">
-                    <p className="text-xs font-bold">{user?.empName}</p>
-                    <p className="text-xs ">{user?.post}</p>
-                    <p className="text-[11px] ">{user?.email}</p>
-                  </DropdownItem>
-                  <DropdownItem onClick={logout} key="logout" color="danger">
-                    Log Out
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+      <div className="  left-0 h-screen flex flex-col justify-start gap-10 bg-white shadow-lg p-5 rounded-lg w-1/6 items-center">
+        <div className="flex flex-row gap-2 justify-center p-3 rounded-lg  text-black  font-body items-center m-1  ">
+          <Image
+            className="scale-[1.6]"
+            src={logo}
+            alt="Picture of the author"
+            unoptimized
+            width={24}
+            height={24}
+          />
+
+        </div>
+
+        <div className="flex flex-col  gap-5  bottom-8 justify-center text-center ">
+          {TabNames?.map((key) => {
+            return (
+              <>
+                <div
+                  key={key?.name}
+                  onClick={() => Router.push(`${key?.url}`)}
+                  className={
+                    path === key.url
+                      ? `flex flex-row  text-center  rounded-[15px] bg-teal-500 text-white gap-2 hover:bg-teal-600 p-2 hover:text-white cursor-cell hover:animate-pulse`
+                      : `flex flex-row  text-center  rounded-[15px] bg-gray-50 text-black gap-2 hover:bg-teal-600 p-2 hover:text-white cursor-cell hover:animate-pulse `
+                  }
+                >
+                  {/* <Image src={`${key.icon}`} width={25} height={0} /> */}
+                  <p className="text-sm font-bold p-1">{key.name}</p>
+                </div>
+              </>
+            );
+          })}
+        </div>
+        {/* 
+        <div className="flex justify-center items-start w-full relative bottom-7 bg-red-500 h-[110px] rounded-[20px] ">
+          <div className="flex flex-col gap-1 ">
+            <div className="flex flex-row mt-2 gap-2">
+              <p className="text-[22px] font-bold font-mono mt-2  text-white">
+                30%
+              </p>
+
+              <p className="text-[16px] font-bold font-mono mt-3  text-black">
+                Discount!
+              </p>
             </div>
-          </NavbarItem>
-        </NavbarContent>
-      </Navbar>
+            <div className="flex flex-col ">
+              <p className="text-[16px] font-bold  mt-1  text-black">
+                Book Your Ticket Fast
+              </p>
+            </div>
+          </div>
+        </div> */}
+
+        <div
+          onClick={deleteFromLocalStorage}
+          className="flex flex-row  rounded-[15px] gap-2 mr-12 cursor-pointer hover:animate-pulse "
+        >
+          <img
+            src="https://img.icons8.com/ios-glyphs/30/null/logout-rounded-left.png"
+            className="w-6   h-6 m-0.5"
+          />
+          <p className="text-sm font-bold text-gray-500 hover:text-black mt-1">
+            Logout
+          </p>
+        </div>
+      </div>
     </>
   );
 }

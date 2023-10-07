@@ -2,14 +2,13 @@
 import Sidebar from "@/utils/Sidebar/Sidebar";
 import React, { useEffect, useState } from "react";
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 import { Inter } from "next/font/google";
 import { Provider } from "react-redux";
-
+import PrivateRoute from "./PrivateRoute";
 import store from "@/ReduxToolkit/Store";
 import { NextUIProvider } from "@nextui-org/react";
-import AllDataContext from "./DataContext/AllData/AllDataContext";
-import TabBar from "@/utils/TabBar";
-import Login from "./login/page";
+
 const inter = Inter({ subsets: ["latin"] });
 import {
   ApolloClient,
@@ -19,7 +18,7 @@ import {
 } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: "https://gqlavirosa.vercel.app/graph",
+  uri: `${process.env.GRAPHQL_SERVER}`,
   cache: new InMemoryCache(),
 });
 
@@ -41,20 +40,15 @@ export default function RootLayout({ children }) {
         <NextUIProvider>
           <Provider store={store}>
             <ApolloProvider client={client}>
-              <AllDataContext>
-                {userData ? (
-                  <>
-                    <Sidebar />
-                    <div className="flex justify-center items-center">
-                      {children}
-                    </div>
+              <PrivateRoute>
+                <div className="flex  flex-row gap-1 justify-center items-start">
+                  <Sidebar />
 
-                    <TabBar />
-                  </>
-                ) : (
-                  <Login />
-                )}
-              </AllDataContext>
+                  <div className="bg-gray-0 rounded-lg flex justify-center mt-2 items-center flex-1 m-2 ">
+                    {children}
+                  </div>
+                </div>
+              </PrivateRoute>
             </ApolloProvider>
           </Provider>
         </NextUIProvider>

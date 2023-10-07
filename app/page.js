@@ -1,10 +1,9 @@
-import Image from "next/image";
-import MainHome from "./Home/MainHome";
-
+import React from "react";
 export default function Home() {
   return (
     <>
-      <MainHome />
+      <h1>hi</h1>
+      {/* <MainHome /> */}
     </>
   );
 }

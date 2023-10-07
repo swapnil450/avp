@@ -11,7 +11,9 @@ module.exports = {
   },
   darkMode: "class",
   plugins: [nextui()],
-  publicRuntimeConfig: {
-    SERVER: process.env.NEXT_PUBLIC_SERVER_NAME,
-  },
+  env: {
+    GRAPHQL_SERVER: "http://localhost:8000/graph",
+    SHIPPING: "100",
+    Discount: "10"
+  }
 };
