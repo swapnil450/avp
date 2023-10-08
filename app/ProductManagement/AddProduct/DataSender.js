@@ -6,7 +6,8 @@ export default async function DataSender(
   event,
   productData,
   validateInputs,
-  refechData
+  refetch,
+  setProductData, onClose
 ) {
   event.preventDefault();
   const ADDPRODUCT = `
@@ -26,30 +27,53 @@ export default async function DataSender(
         },
       })
       .then((res) => {
-        toast.success(
-          `${res.data?.data?.CreateProduct?.product_name} Added Sucessfully`,
-          {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: false,
-            theme: "light",
-            style: {
-              borderRadius: 10,
-              font: "bold",
-              fontSize: 15,
-            },
-          }
-        );
+        if (res.data?.data?.CreateProduct?.product_name) {
+          toast.success(
+            `${res.data?.data?.CreateProduct?.product_name} Added Sucessfully`,
+            {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: false,
+              theme: "light",
+              style: {
+                borderRadius: 10,
+                font: "bold",
+                fontSize: 15,
+              },
+            }
+          );
+
+
+          setProductData({
+            product_name: "",
+            price: "",
+            form: "",
+            stock: "",
+            shipping: "",
+            off: "",
+            type: "",
+            description: "",
+            praman: "",
+            main_ingredient: [""],
+            Quantity: [""],
+            pricelist: [""],
+            Advantages: [""],
+            review: [""],
+            image: [""],
+          })
+
+        }
       })
       .catch((err) => {
         console.log(err, "gql");
       })
       .finally(() => {
-        refechData();
+        refetch()
+        onClose()
         console.log("done done done");
       });
   }

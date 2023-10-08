@@ -61,7 +61,7 @@ export default function ProductManagement() {
         theme="light"
       />
       <div className="flex flex-col mt-2 gap-10 justify-center items-center">
-        <AddProduct refechData={refechData} />
+        <AddProduct refetch={refetch} />
         <ProductList
           data={data?.products}
           loading={loading}

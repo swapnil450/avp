@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import DataSender from "./DataSender";
 
-export default function AddProduct({ refechData }) {
+export default function AddProduct({ refetch }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = React.useState("5xl");
 
@@ -650,7 +650,7 @@ export default function AddProduct({ refechData }) {
                 </Button>
                 <Button
                   onClick={() =>
-                    DataSender(event, productData, validateInputs, refechData)
+                    DataSender(event, productData, validateInputs, refetch,setProductData,onClose)
                   }
                   className=" bg-teal-500 hover:bg-teal-400 text-white font-semibold "
                 >
