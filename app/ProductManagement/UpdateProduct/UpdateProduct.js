@@ -375,6 +375,10 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                         <option value="insectiside">insectiside</option>
                         <option value="pesticide">pesticide</option>
                         <option value="fertilizer">fertilizer</option>
+                        <option value="fungicide">fungicide</option>
+
+                        <option value="herbicide">herbicide</option>
+                        <option value="organic">organic</option>
                         <option value="cow">cow</option>
                       </select>
                       {/* {validationErrors.type && (

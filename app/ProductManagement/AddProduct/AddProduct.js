@@ -376,7 +376,7 @@ export default function AddProduct({ refetch }) {
                         <option value="insectiside">insectiside</option>
                         <option value="pesticide">pesticide</option>
                         <option value="fungicide">fungicide</option>
-                        <option value="pesticide">pesticide</option>
+
                         <option value="herbicide">herbicide</option>
                         <option value="organic">organic</option>
                         <option value="cow">cow</option>
