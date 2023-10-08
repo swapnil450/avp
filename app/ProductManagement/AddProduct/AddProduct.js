@@ -375,7 +375,10 @@ export default function AddProduct({ refetch }) {
                         <option value="plant">plant</option>
                         <option value="insectiside">insectiside</option>
                         <option value="pesticide">pesticide</option>
-                        <option value="fertilizer">fertilizer</option>
+                        <option value="fungicide">fungicide</option>
+                        <option value="pesticide">pesticide</option>
+                        <option value="herbicide">herbicide</option>
+                        <option value="organic">organic</option>
                         <option value="cow">cow</option>
                       </select>
 
@@ -650,7 +653,7 @@ export default function AddProduct({ refetch }) {
                 </Button>
                 <Button
                   onClick={() =>
-                    DataSender(event, productData, validateInputs, refetch,setProductData,onClose)
+                    DataSender(event, productData, validateInputs, refetch, setProductData, onClose)
                   }
                   className=" bg-teal-500 hover:bg-teal-400 text-white font-semibold "
                 >
