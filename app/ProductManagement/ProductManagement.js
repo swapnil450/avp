@@ -13,24 +13,27 @@ export default function ProductManagement() {
   const [refechData, setRefechData] = useState(null);
 
   const PRODUCT = gql`
-    query Query {
-      products {
-        _id
-        product_name
-        price
-        form
-        stock
-        type
-        off
-        shipping
-        description
-        praman
-        main_ingredient
-        Quantity
-        pricelist
-        Advantages
-        review
-        image
+    query Query($first: Int, $last: Int,$type:String) {
+      products(first: $first, last: $last, type: $type) {
+        Data {
+          _id
+          product_name
+          price
+          form
+          stock
+          type
+          off
+          shipping
+          description
+          praman
+          main_ingredient
+          Quantity
+          pricelist
+          Advantages
+          review
+          image
+        }
+        length
       }
     }
   `;
@@ -63,7 +66,7 @@ export default function ProductManagement() {
       <div className="flex flex-col mt-2 gap-10 justify-center items-center">
         <AddProduct refetch={refetch} />
         <ProductList
-          data={data?.products}
+          data={data?.products?.Data}
           loading={loading}
           refechData={refetch}
         />
