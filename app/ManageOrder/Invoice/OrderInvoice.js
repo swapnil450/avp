@@ -146,8 +146,8 @@ export default function OrderInvoice({ order }) {
                 >
                   Shipping Charges
                 </th>
-                <td class="pl-3 pr-6 pt-4 text-right text-sm text-gray-500 sm:pr-0">
-                  ₹{process.env.SHIPPING}
+                <td class="pl-3 pr-6 pt-4 text-right text-xs text-gray-500 sm:pr-0">
+                  {process.env.SHIPPING}
                 </td>
               </tr>
               {/*   <tr>

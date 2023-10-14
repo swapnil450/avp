@@ -13,7 +13,7 @@ module.exports = {
   plugins: [nextui()],
   env: {
     GRAPHQL_SERVER: "https://sbtserver.vercel.app/graph",
-    SHIPPING: "100",
+    SHIPPING: "Pays To Our Delivery Partner",
     Discount: "10"
   }
 };

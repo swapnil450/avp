@@ -53,7 +53,7 @@ export default function Sidebar() {
             width={24}
             height={24}
           />
-
+          <p className="font-semi-bold text-xl ">SBT</p>
         </div>
 
         <div className="flex flex-col  gap-5  bottom-8 justify-center text-center ">
