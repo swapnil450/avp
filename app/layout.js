@@ -1,6 +1,6 @@
 "use client";
 import Sidebar from "@/utils/Sidebar/Sidebar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { Inter } from "next/font/google";
@@ -16,6 +16,7 @@ import {
   ApolloProvider,
   gql,
 } from "@apollo/client";
+import LoaderSuspense from "@/utils/Loader/LoaderSuspense";
 
 const client = new ApolloClient({
   uri: `${process.env.GRAPHQL_SERVER}`,
@@ -37,21 +38,23 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.className} `}>
-        <NextUIProvider>
-          <Provider store={store}>
-            <ApolloProvider client={client}>
-              <PrivateRoute>
-                <div className="flex  flex-row gap-1 justify-center items-start">
-                  <Sidebar />
+        <Suspense fallback={<LoaderSuspense />}>
+          <NextUIProvider>
+            <Provider store={store}>
+              <ApolloProvider client={client}>
+                <PrivateRoute>
+                  <div className="flex  flex-row gap-1 justify-center items-start">
+                    <Sidebar />
 
-                  <div className="bg-gray-0 rounded-lg flex justify-center mt-2 items-center flex-1 m-2 ">
-                    {children}
+                    <div className="bg-gray-0 rounded-lg flex justify-center mt-2 items-center flex-1 m-2 ">
+                      {children}
+                    </div>
                   </div>
-                </div>
-              </PrivateRoute>
-            </ApolloProvider>
-          </Provider>
-        </NextUIProvider>
+                </PrivateRoute>
+              </ApolloProvider>
+            </Provider>
+          </NextUIProvider>
+        </Suspense>
       </body>
     </html>
   );
