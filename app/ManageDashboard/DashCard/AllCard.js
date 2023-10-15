@@ -8,14 +8,13 @@ export default function AllCard({ data, loading }) {
     const ActiveOrder = data?.order?.filter((i) => i.active === true)
     const DeliveredOrder = data?.order?.filter((i) => i.delivered === true)
     const UserCanceledOrder = data?.order?.filter((i) => i.canceledByUser === true)
-    const TotalEarning = DeliveredOrder || [{ totalAmount: "0" }, { totalAmount: "0" }]?.reduce((acc, val) => Number(acc?.totalAmount) + Number(val?.totalAmount))
+    const TotalEarning = DeliveredOrder?.reduce((acc, val) => Number(acc?.totalAmount) + Number(val?.totalAmount)) || 0
     const TodayOrder = data?.order?.filter((i) => i.createdAt === moment(new Date()).format("DD/MM/YYYY"))
     const TotalProcess = data?.order?.filter((i) => i.process === true && i.delivered === false)
 
 
     return (
         <>
-
             <div className='grid grid-cols-4 gap-10'>
                 <div className="">
                     <div class="flex items-center p-4 bg-white shadow rounded-lg">
