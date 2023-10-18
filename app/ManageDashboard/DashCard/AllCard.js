@@ -4,13 +4,13 @@ import { Spinner } from '@nextui-org/react';
 export default function AllCard({ data, loading }) {
     const TotalPro = data?.ProductData
     const TotalUser = data?.userData
-    const BlockUser = TotalUser?.filter((i) => i.Active === false)
-    const ActiveOrder = data?.order?.filter((i) => i.active === true)
-    const DeliveredOrder = data?.order?.filter((i) => i.delivered === true)
-    const UserCanceledOrder = data?.order?.filter((i) => i.canceledByUser === true)
-    const TotalEarning = DeliveredOrder?.reduce((acc, val) => Number(acc?.totalAmount) + Number(val?.totalAmount)) || 0
-    const TodayOrder = data?.order?.filter((i) => i.createdAt === moment(new Date()).format("DD/MM/YYYY"))
-    const TotalProcess = data?.order?.filter((i) => i.process === true && i.delivered === false)
+    const BlockUser = TotalUser?.filter((i) => i?.Active === false)
+    const ActiveOrder = data?.order?.filter((i) => i?.active === true)
+    const DeliveredOrder = data?.order?.filter((i) => i?.delivered === true)
+    const UserCanceledOrder = data?.order?.filter((i) => i?.canceledByUser === true)
+    const TotalEarning = DeliveredOrder?.length > 0 ? DeliveredOrder?.reduce((acc, val) => Number(acc?.totalAmount) + Number(val?.totalAmount), 0) : 0;
+    const TodayOrder = data?.order?.filter((i) => i?.createdAt === moment(new Date()).format("DD/MM/YYYY"))
+    const TotalProcess = data?.order?.filter((i) => i?.process === true && i?.delivered === false)
 
 
     return (
@@ -22,7 +22,7 @@ export default function AllCard({ data, loading }) {
                             {/* <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                             </svg> */}
-                            ₹{loading ? <Spinner size={`sm`} /> : !TotalEarning ? 0 : TotalEarning}
+                            ₹{loading ? <Spinner size={`sm`} /> : TotalEarning}
                         </div>
                         <div>
 
