@@ -308,7 +308,7 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                       )} */}
                     </div>
 
-                    <div>
+                    {/* <div>
                       <label
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="form"
@@ -326,12 +326,12 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                         <option value="solid">solid</option>
                         <option value="liquid">liquid</option>
                       </select>
-                      {/* {validationErrors.form && (
+                      {validationErrors.form && (
                         <p className="text-red-500 text-xs mt-1">
                           {validationErrors.form}
                         </p>
-                      )} */}
-                    </div>
+                      )}
+                    </div> */}
 
                     <div>
                       <label
@@ -370,22 +370,22 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                         className="block py-2.5  w-full text-sm text-black font-bold bg-transparent rounded-lg border-2 p-2 border-black appearance-none dark:text-white dark:border-gray-600 dark:focus:border-red-500 focus:outline-none focus:border-red-500 peer"
                       >
                         <option value="">Select Type</option>
-                        <option value="soil">soil</option>
-                        <option value="plant">plant</option>
-                        <option value="insectiside">insectiside</option>
-                        <option value="pesticide">pesticide</option>
-                        <option value="fertilizer">fertilizer</option>
-                        <option value="fungicide">fungicide</option>
+                        <option value="Cricket">Cricket</option>
+                        <option value="Football">Football</option>
+                        <option value="Hockey">Hockey</option>
+                        <option value="Gym">Gym</option>
+                        <option value="Basketball">Basketball</option>
 
-                        <option value="herbicide">herbicide</option>
-                        <option value="organic">organic</option>
-                        <option value="cow">cow</option>
+                        <option value="Tennis">Tennis</option>
+                        <option value="Badminton">Badminton</option>
+                        <option value="Boxing">Boxing</option>
                       </select>
-                      {/* {validationErrors.type && (
+
+                      {validationErrors.type && (
                         <p className="text-red-500 text-xs mt-1">
                           {validationErrors.type}
                         </p>
-                      )} */}
+                      )}
                     </div>
 
                     <div>
@@ -410,7 +410,7 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                       )} */}
                     </div>
 
-                    <div>
+                    {/* <div>
                       <label
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="praman"
@@ -425,12 +425,12 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                         autoComplete="off"
                         className="block py-2.5  w-full text-sm text-black font-bold bg-transparent rounded-lg border-2 p-2 border-black appearance-none dark:text-white dark:border-gray-600 dark:focus:border-red-500 focus:outline-none focus:border-red-500 peer"
                       />
-                      {/* {validationErrors.praman && (
+                      {validationErrors.praman && (
                         <p className="text-red-500 text-xs mt-1">
                           {validationErrors.praman}
                         </p>
-                      )} */}
-                    </div>
+                      )}
+                    </div> */}
                   </div>
                   {/* 
               <div>
