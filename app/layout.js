@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
           <NextUIProvider>
             <Provider store={store}>
               <ApolloProvider client={client}>
-                <PrivateRoute>
+                {/* <PrivateRoute> */}
                   <div className="flex  flex-row gap-1 justify-center items-start">
                     <Sidebar />
 
@@ -50,7 +50,7 @@ export default function RootLayout({ children }) {
                       {children}
                     </div>
                   </div>
-                </PrivateRoute>
+                {/* </PrivateRoute> */}
               </ApolloProvider>
             </Provider>
           </NextUIProvider>

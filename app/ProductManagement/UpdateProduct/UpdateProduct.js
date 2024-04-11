@@ -474,7 +474,7 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                           <Button
                             size="sm"
                             onClick={() => handleDeleteingred(index)}
-                            className="btn bg-red-500 hover:bg-red-400 btn-sm ml-2"
+                            className="btn bg-teal-500 hover:bg-red-400 btn-sm ml-2"
                           >
                             Delete
                           </Button>
@@ -505,7 +505,7 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                           <Button
                             size="sm"
                             onClick={() => handleDeleteQuantity(index)}
-                            className="btn bg-red-500 hover:bg-red-400 btn-sm ml-2"
+                            className="btn bg-teal-500 hover:bg-red-400 btn-sm ml-2"
                           >
                             Delete
                           </Button>
@@ -536,7 +536,7 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                           <Button
                             size="sm"
                             onClick={() => handleDeletepricelist(index)}
-                            className="btn bg-red-500 hover:bg-red-400 btn-sm ml-2"
+                            className="btn bg-teal-500 hover:bg-red-400 btn-sm ml-2"
                           >
                             Delete
                           </Button>
@@ -567,7 +567,7 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                           <Button
                             size="sm"
                             onClick={() => handleDeleteAdvantage(index)}
-                            className="btn bg-red-500 hover:bg-red-400 btn-sm ml-2"
+                            className="btn bg-teal-500 hover:bg-red-400 btn-sm ml-2"
                           >
                             Delete
                           </Button>
@@ -598,7 +598,7 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                           <Button
                             size="sm"
                             onClick={() => handleDeleteReview(index)}
-                            className="btn bg-red-500 hover:bg-red-400 btn-sm ml-2"
+                            className="btn bg-teal-500 hover:bg-red-400 btn-sm ml-2"
                           >
                             Delete
                           </Button>
@@ -629,7 +629,7 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                           <Button
                             size="sm"
                             onClick={() => handleDeleteImage(index)}
-                            className="btn bg-red-500 hover:bg-red-400 btn-sm ml-2"
+                            className="btn bg-teal-500 hover:bg-red-400 btn-sm ml-2"
                           >
                             Delete
                           </Button>

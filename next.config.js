@@ -12,7 +12,7 @@ module.exports = {
   darkMode: "class",
   plugins: [nextui()],
   env: {
-    GRAPHQL_SERVER: "https://sbtserver.vercel.app/graph",
+    GRAPHQL_SERVER: "http://localhost:8000/graph",
     SHIPPING: "Pays To Our Delivery Partner",
     Discount: "10"
   }
