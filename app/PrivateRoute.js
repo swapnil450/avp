@@ -1,6 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import SignIn from './login/SignIn';
+import Home from './page';
 
 function PrivateRoute({ children }) {
   const [user, setUser] = useState()
@@ -11,7 +12,8 @@ function PrivateRoute({ children }) {
 
   }, []);
 
-  return user?.email && user?.acctype === "admin" ? children : <SignIn />;
+  // return user?.email && user?.acctype === "admin" ? children : <SignIn />;
+  return <Home/>
 }
 
 export default PrivateRoute;
