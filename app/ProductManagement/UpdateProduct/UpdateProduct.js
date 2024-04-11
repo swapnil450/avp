@@ -551,7 +551,7 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                       </Button>
                     </div>
 
-                    <div className="col-span-2">
+                    {/* <div className="col-span-2">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
                         Advantages:
                       </label>
@@ -580,7 +580,7 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                       >
                         Add +
                       </Button>
-                    </div>
+                    </div> */}
 
                     <div className="col-span-2">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
