@@ -455,7 +455,7 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                 )}
               </div> */}
                   <div className="grid grid-cols-3 gap-6 bg-white shadow-md w-full rounded px-8 pt-6 pb-8 mb-4">
-                    <div className="col-span-2">
+                    {/* <div className="col-span-2">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
                         Add ingredients:
                       </label>
@@ -487,11 +487,11 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                       >
                         Add +
                       </Button>
-                    </div>
+                    </div> */}
 
                     <div className="col-span-2">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
-                        Quantity (kg/LTR):
+                        Quantity (Qnt):
                       </label>
                       {productData?.Quantity?.map((Quantity, index) => (
                         <div key={index} className="flex items-center mb-2">
