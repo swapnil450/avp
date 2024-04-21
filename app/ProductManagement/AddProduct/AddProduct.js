@@ -160,9 +160,9 @@ export default function AddProduct({ refetch }) {
       errors.product_name = "Product Name is required";
     }
 
-    if (!productData.price.trim()) {
-      errors.price = "Price is required";
-    }
+    // if (!productData.price.trim()) {
+    //   errors.price = "Price is required";
+    // }
     if (!productData.off.trim()) {
       errors.off = "Off is required";
     }
@@ -174,15 +174,14 @@ export default function AddProduct({ refetch }) {
       errors.description = "Description is required";
     }
 
-    
     if (!productData.type.trim()) {
       errors.type = "type of product is required";
     }
 
-    if (productData.stock.length < 1) {
-      errors.stock = "Minimum 10 stock reqiured !";
-    }
-   
+    // if (productData.stock.length < 1) {
+    //   errors.stock = "Minimum 10 stock reqiured !";
+    // }
+
     setValidationErrors(errors);
 
     return Object.keys(errors).length === 0;
@@ -198,7 +197,7 @@ export default function AddProduct({ refetch }) {
             key={size}
             onPress={() => handleOpen(size)}
           >
-            Add Product
+            Add Listing
           </Button>
         ))}
       </div>
@@ -212,7 +211,7 @@ export default function AddProduct({ refetch }) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add Product !
+                Add Listing !
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col justify-center items-center gap-5 ">
@@ -222,7 +221,7 @@ export default function AddProduct({ refetch }) {
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="product_name"
                       >
-                        Product Name:
+                        Listing Name:
                       </label>
                       <input
                         id="product_name"
@@ -240,7 +239,7 @@ export default function AddProduct({ refetch }) {
                       )}
                     </div>
 
-                    <div>
+                    {/* <div>
                       <label
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="price"
@@ -260,8 +259,8 @@ export default function AddProduct({ refetch }) {
                           {validationErrors.price}
                         </p>
                       )}
-                    </div>
-                    <div>
+                    </div> */}
+                    {/* <div>
                       <label
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="price"
@@ -281,7 +280,8 @@ export default function AddProduct({ refetch }) {
                           {validationErrors?.shipping}
                         </p>
                       )}
-                    </div>
+                    </div> */}
+
                     <div>
                       <label
                         className="block text-gray-700 text-sm font-bold mb-2"
@@ -356,6 +356,34 @@ export default function AddProduct({ refetch }) {
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="type"
                       >
+                        Location of Listing :
+                      </label>
+                      <select
+                        id="shipping"
+                        onChange={handleOnChange}
+                        name="shipping"
+                        value={productData.shipping}
+                        className="block py-2.5  w-full text-sm text-black font-bold bg-transparent rounded-lg border-2 p-2 border-black appearance-none dark:text-white dark:border-gray-600 dark:focus:border-red-500 focus:outline-none focus:border-red-500 peer"
+                      >
+                        <option value="">Select Type</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Hydrabad">Hydrabad</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Banglore">Banglore</option>
+                        <option value="Gujrat">Gujrat</option>
+                      </select>
+
+                      {validationErrors.type && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {validationErrors.type}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="type"
+                      >
                         Type of Product :
                       </label>
                       <select
@@ -366,15 +394,11 @@ export default function AddProduct({ refetch }) {
                         className="block py-2.5  w-full text-sm text-black font-bold bg-transparent rounded-lg border-2 p-2 border-black appearance-none dark:text-white dark:border-gray-600 dark:focus:border-red-500 focus:outline-none focus:border-red-500 peer"
                       >
                         <option value="">Select Type</option>
-                        <option value="Cricket">Cricket</option>
-                        <option value="Football">Football</option>
-                        <option value="Hockey">Hockey</option>
-                        <option value="Gym">Gym</option>
-                        <option value="Basketball">Basketball</option>
-
-                        <option value="Tennis">Tennis</option>
-                        <option value="Badminton">Badminton</option>
-                        <option value="Boxing">Boxing</option>
+                        <option value="Hotels">Hotels</option>
+                        <option value="Rooms">Rooms</option>
+                        <option value="Stationary">Stationary</option>
+                        <option value="Libraries">Libraries</option>
+                        <option value="Mess">Mess</option>
                       </select>
 
                       {validationErrors.type && (
@@ -389,7 +413,7 @@ export default function AddProduct({ refetch }) {
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="stock"
                       >
-                        Available stock :
+                        Listing location :
                       </label>
                       <input
                         id="stock"
@@ -428,32 +452,33 @@ export default function AddProduct({ refetch }) {
                       )}
                     </div> */}
                   </div>
-                  {/* 
-              <div>
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="Quantity"
-                >
-                  Quantity:
-                </label>
-                <input
-                  id="Quantity"
-                  onChange={handleOnChange}
-                  name="Quantity"
-                  value={productData.Quantity}
-                  autoComplete="off"
-                  className="block py-2.5  w-full text-sm text-black font-bold bg-transparent rounded-lg border-2 p-2 border-black appearance-none dark:text-white dark:border-gray-600 dark:focus:border-red-500 focus:outline-none focus:border-red-500 peer"
-                />
-                {validationErrors.Quantity && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {validationErrors.Quantity}
-                  </p>
-                )}
-              </div> */}
-                  <div className="grid grid-cols-3 gap-6 bg-white shadow-md w-full rounded p-2 mb-4">
-                    {/* <div className="col-span-2">
+
+                  <div>
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="Quantity"
+                    >
+                    Whatsapp No.
+                    </label>
+                    <input
+                      id="Quantity"
+                      onChange={handleOnChange}
+                      name="Quantity"
+                      value={productData.Quantity}
+                      autoComplete="off"
+                      className="block py-2.5  w-full text-sm text-black font-bold bg-transparent rounded-lg border-2 p-2 border-black appearance-none dark:text-white dark:border-gray-600 dark:focus:border-red-500 focus:outline-none focus:border-red-500 peer"
+                    />
+                    {validationErrors.Quantity && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {validationErrors.Quantity}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* <div className="grid grid-cols-3 gap-6 bg-white shadow-md w-full rounded p-2 mb-4">
+                    <div className="col-span-2">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
-                        Add ingredients:
+                        Timing :
                       </label>
                       {productData.main_ingredient.map((itm, index) => (
                         <div key={index} className="flex items-center mb-2">
@@ -487,7 +512,7 @@ export default function AddProduct({ refetch }) {
 
                     <div className="col-span-2">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
-                        Quantity (Qnt):
+                        Time :
                       </label>
                       {productData?.Quantity?.map((Quantity, index) => (
                         <div key={index} className="flex items-center mb-2">
@@ -518,7 +543,7 @@ export default function AddProduct({ refetch }) {
 
                     <div className="col-span-2">
                       <label className="block text-gray-700 text-sm font-bold mb-2">
-                        price according to quantity (₹):
+                        to
                       </label>
                       {productData?.pricelist?.map((pricelist, index) => (
                         <div key={index} className="flex items-center mb-2">
@@ -640,7 +665,7 @@ export default function AddProduct({ refetch }) {
                       </Button>
                     </div>
                   </div>
-                </div>
+              
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>

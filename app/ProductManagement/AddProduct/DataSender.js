@@ -17,7 +17,7 @@ export default async function DataSender(
     }
   }
 `;
-
+console.log(productData,validateInputs())
   if (validateInputs()) {
     await axios
       .post(process.env.GRAPHQL_SERVER, {
@@ -27,6 +27,7 @@ export default async function DataSender(
         },
       })
       .then((res) => {
+        console.log(res?.data)
         if (res.data?.data?.CreateProduct?.product_name) {
           toast.success(
             `${res.data?.data?.CreateProduct?.product_name} Added Sucessfully`,

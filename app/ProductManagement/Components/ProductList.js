@@ -45,9 +45,9 @@ export default function ProductList({ data, refechData, loading }) {
   const columnsToShow = [
     "product_name",
     "type",
-    "price",
-    "form",
-    "stock",
+    // "price",
+    // "form",
+    // "stock",
     "off",
     "shipping",
     "Actions",
