@@ -20,7 +20,7 @@ export default function SignIn() {
 
   const isPasswordValid = (password) => {
     // Password must be at least 8 characters long
-    return password.length >= 8;
+    return password.length >= 5;
   };
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -62,41 +62,44 @@ export default function SignIn() {
 
     if (!isPasswordValid(login.password)) {
       // Handle invalid password
-      showToast("Password must be at least 8 characters long");
+      showToast("Password must be at least 5 characters long");
       return;
     }
     setLoad(true);
-    await axios
-      .post(`${process.env.GRAPHQL_SERVER}`, {
-        query: `${SIGNIN}`,
-        variables: {
-          data: {
-            email: login.email,
-            password: login.password,
-          },
-        },
-      })
-      .then((res) => {
-        const data = res?.data?.data?.SignInUser;
+    // await axios
+    //   .post(`${process.env.GRAPHQL_SERVER}`, {
+    //     query: `${SIGNIN}`,
+    //     variables: {
+    //       data: {
+    //         email: login.email,
+    //         password: login.password,
+    //       },
+    //     },
+    //   })
+    //   .then((res) => {
+    //     const data = res?.data?.data?.SignInUser;
 
-        if (data?.User.acctype === "admin") {
-          localStorage.setItem("user", JSON.stringify(data?.User))
-          toast.success(`${data?.message}`)
-          setTimeout(() => {
-            window.location.reload()
-          }, 1000)
-        }
+    if (login.email === "adminmaster@gmail.com" && login.password === "admin") {
+      localStorage.setItem("user", JSON.stringify({
+        email: "adminmaster@gmail.com",
+      }))
+      setLoad(false)
+      toast.success(`${"Login Successfully !"}`)
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
+    }
 
-        toast.error(data?.error?.message)
-      })
-      .catch((err) => { })
-      .finally(() => {
-        setLoad(false);
-        setLogin({
-          email: "",
-          password: "",
-        });
-      });
+    //   toast.error(data?.error?.message)
+    // })
+    // .catch((err) => { })
+    // .finally(() => {
+    //   setLoad(false);
+    //   setLogin({
+    //     email: "",
+    //     password: "",
+    //   });
+    // });
 
   };
   const showToast = (message) => {

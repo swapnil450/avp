@@ -12,8 +12,8 @@ function PrivateRoute({ children }) {
 
   }, []);
 
-  // return user?.email && user?.acctype === "admin" ? children : <SignIn />;
-  return <Home/>
+  return user?.email === "adminmaster@gmail.com" ? children : <SignIn />;
+  return <Home />
 }
 
 export default PrivateRoute;

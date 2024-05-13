@@ -77,7 +77,7 @@ export default function DeleteProduct({ id, refechData }) {
         onClick={(event) =>
           DeleteDataToTheDatabase(event, id, DELETEPRODUCT, refechData)
         }
-        className=" gap-2 bg-teal-600  hover:bg-teal-500  capitalize text-sm text-white"
+        className=" gap-2 bg-black  hover:bg-black  capitalize text-sm text-white"
       >
         Remove
       </Button>
