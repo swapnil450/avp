@@ -678,7 +678,7 @@ export default function UpdateProduct({ productId, ProductData, refechData }) {
                   onClick={() => DataSender(productData, productId, refechData)}
                   className=" bg-black hover:bg-black text-white font-semibold "
                 >
-                  Update Product
+                  Update Listing
                 </Button>
               </ModalFooter>
             </>

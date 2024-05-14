@@ -683,7 +683,7 @@ export default function AddProduct({ refetch }) {
                   }
                   className=" bg-red-500 hover:bg-black text-white font-semibold "
                 >
-                  Add Product
+                  Add Listing
                 </Button>
               </ModalFooter>
             </>
